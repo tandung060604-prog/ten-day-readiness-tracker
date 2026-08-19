@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { ChiikawaSVG } from '../../components/common/ChiikawaSVG'
 import { audioSystem } from '../systems/GameAudioSystem'
 import { playChiikawaVoice } from '../../utils/chiikawaAudio'
+import { MapAnimationCanvas } from './MapAnimationCanvas'
 import type { LocationId, MapBuilding, TransitionType } from '../types'
 import type { ChiikawaCharacter } from '../../utils/chiikawaAudio'
 
@@ -579,22 +580,6 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
         <div className="soft-sky-cloud cloud-soft-3" />
       </div>
 
-      {/* ══════ DRIFTING SAKURA PETALS & BUTTERFLIES ══════ */}
-      <div className="living-world-ambient-layer">
-        <div className="ambient-sakura-particles">
-          <span className="petal pt1">🌸</span>
-          <span className="petal pt2">✨</span>
-          <span className="petal pt3">🌸</span>
-          <span className="petal pt4">🍃</span>
-          <span className="petal pt5">✨</span>
-          <span className="petal pt6">🌸</span>
-        </div>
-        <div className="ambient-butterflies">
-          <span className="butterfly b1">🦋</span>
-          <span className="butterfly b2">🦋</span>
-        </div>
-      </div>
-
       {/* ══════ MAIN INTERACTIVE MAP CANVAS (Zoom & Pan Layer) ══════ */}
       <div
         className="game-map-canvas"
@@ -610,6 +595,9 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
           className="map-terrain-background"
           draggable={false}
         />
+
+        {/* Real Dynamic Living Game Canvas: Flowing River, Swimming Ducks, Foam Waves, Chimney Smoke & Fountain Spray */}
+        <MapAnimationCanvas />
 
         {/* 2. Tailor-Made Road & Landscaping Overlay (Cobblestone Paths Linking Every Building) */}
         <svg className="custom-terrain-roads-svg" viewBox="0 0 100 100" preserveAspectRatio="none">

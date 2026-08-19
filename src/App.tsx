@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { AppLogo } from './components/common/AppLogo'
 import { DaySelector } from './components/common/DaySelector'
 import { MealModal } from './components/modals/MealModal'
 import { ExerciseModal } from './components/modals/ExerciseModal'
@@ -232,11 +233,7 @@ export function App() {
       {/* Sidebar for Desktop */}
       <aside className="sidebar">
         <div className="brand" onClick={() => setShowLanding(true)} style={{ cursor: 'pointer' }} title="Xem trang giới thiệu Landing Page">
-          <div className="logo">10</div>
-          <div>
-            <strong>{appTitle}</strong>
-            <small>Local-First · Sẵn Sàng 10 Ngày</small>
-          </div>
+          <AppLogo size={38} showText subtitle="Local-First · Sẵn Sàng 10 Ngày" />
         </div>
 
         <nav className="sidebar-nav">

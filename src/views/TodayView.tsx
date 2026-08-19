@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ProgressRing } from '../components/common/ProgressRing'
 import { AdviceCard } from '../components/common/AdviceCard'
+import { ChibiMascot } from '../components/common/ChibiMascot'
 import { BreathingTimer } from '../components/BreathingTimer'
 import { DeskBreakTracker } from '../components/features/DeskBreakTracker'
 import { WaterTrackerCard } from '../components/features/WaterTrackerCard'
@@ -134,7 +135,7 @@ export function TodayView({
           </div>
         </section>
 
-        <section className="card">
+        <section className="card advice-card-with-mascot">
           <div className="section-head">
             <div>
               <small>PHÂN TÍCH TỰ ĐỘNG</small>
@@ -142,7 +143,12 @@ export function TodayView({
             </div>
             <span className="soft-badge">AI Assistant</span>
           </div>
-          <AdviceCard log={log} day={day} />
+          <div className="advice-mascot-row">
+            <ChibiMascot role="guide" size={88} showSpeechBubble={false} interactive={true} />
+            <div className="advice-main-content">
+              <AdviceCard log={log} day={day} />
+            </div>
+          </div>
         </section>
       </div>
 

@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { AppLogo } from '../components/common/AppLogo'
+import { ChibiMascot, type MascotRole } from '../components/common/ChibiMascot'
 import { triggerHaptic } from '../utils/haptics'
 
 type Props = {
@@ -5,6 +8,8 @@ type Props = {
 }
 
 export function LandingPage({ onEnterApp }: Props) {
+  const [selectedMascot, setSelectedMascot] = useState<MascotRole>('guide')
+
   const handleStart = () => {
     triggerHaptic('success')
     onEnterApp()
@@ -14,19 +19,13 @@ export function LandingPage({ onEnterApp }: Props) {
     <div className="landing-page-wrapper animate-fade-in">
       {/* Top Navbar */}
       <header className="landing-navbar">
-        <div className="landing-brand">
-          <div className="logo">10</div>
-          <div>
-            <strong>10-Day Readiness</strong>
-            <small>Personal Wellness Protocol</small>
-          </div>
-        </div>
+        <AppLogo size={42} showText subtitle="Personal Wellness Protocol" />
         <button className="primary compact landing-nav-btn" onClick={handleStart}>
           Vào ứng dụng →
         </button>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero Section with Interactive Chibi Companion */}
       <section className="landing-hero-section">
         <div className="landing-hero-badge">
           <span>✦ Giao thức 10 Ngày Chuẩn Bị Toàn Diện</span>
@@ -39,6 +38,33 @@ export function LandingPage({ onEnterApp }: Props) {
           Ứng dụng cá nhân theo dõi 6 trụ cột hồi phục và sẵn sàng cao độ: Giấc ngủ sâu, Dinh dưỡng cân bằng, Tập luyện thông minh, Hydration thông minh, Giãn cơ & Bài thở.
         </p>
 
+        {/* Interactive Hero Chibi Mascot */}
+        <div className="landing-hero-mascot-container">
+          <ChibiMascot
+            role={selectedMascot}
+            size={160}
+            interactive={true}
+          />
+          <div className="mascot-selector-pills">
+            {(['guide', 'workout', 'healthy', 'nutrition', 'zen'] as MascotRole[]).map((r) => (
+              <button
+                key={r}
+                className={`mascot-pill-btn ${selectedMascot === r ? 'active' : ''}`}
+                onClick={() => {
+                  triggerHaptic('light')
+                  setSelectedMascot(r)
+                }}
+              >
+                {r === 'guide' && '📋 Hướng dẫn'}
+                {r === 'workout' && '🏋️ Đẩy tạ'}
+                {r === 'healthy' && '🥑 Ăn Healthy'}
+                {r === 'nutrition' && '💧 Nước uống'}
+                {r === 'zen' && '🧘 Thiền thở'}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="landing-hero-actions">
           <button className="primary landing-cta-large" onClick={handleStart}>
             ⚡ Bắt đầu hành trình 10 ngày
@@ -50,6 +76,57 @@ export function LandingPage({ onEnterApp }: Props) {
           <span>⚡ Nhận diện dinh dưỡng AI</span>
           <span>🌊 Hydration Wave Tracking</span>
           <span>👤 Khóa PIN & Face ID</span>
+        </div>
+      </section>
+
+      {/* Meet the 4 Mascot Companions Section */}
+      <section className="landing-mascots-showcase">
+        <div className="landing-section-header">
+          <small>BIỆT ĐỘI ĐỒNG HÀNH</small>
+          <h2>Gặp Gỡ 4 Chibi Mascots Của Bạn</h2>
+          <p className="section-subtext">Mỗi bé Chibi phụ trách một trụ cột giúp bạn duy trì kỷ luật và năng lượng vui vẻ mỗi ngày.</p>
+        </div>
+
+        <div className="chibi-showcase-grid">
+          {/* Card 1: Healthy */}
+          <div className="chibi-showcase-card">
+            <ChibiMascot role="healthy" size={120} showSpeechBubble={false} interactive={false} />
+            <div className="chibi-card-content">
+              <span className="chibi-card-role">🥑 Chibi Healthy Chef</span>
+              <h3>Ăn Uống Cân Bằng</h3>
+              <p>Tự động nhận diện Protein, Carb chậm và Rau củ. Hướng dẫn cấu trúc đĩa ăn no lâu và tiêu hóa nhẹ nhàng.</p>
+            </div>
+          </div>
+
+          {/* Card 2: Workout */}
+          <div className="chibi-showcase-card">
+            <ChibiMascot role="workout" size={120} showSpeechBubble={false} interactive={false} />
+            <div className="chibi-card-content">
+              <span className="chibi-card-role">🏋️ Chibi Gym Beast</span>
+              <h3>Tập Luyện & Đẩy Tạ</h3>
+              <p>Mô phỏng chuyển động động tác chuẩn từng rep, nhắc nhở giữ form lưng và bài tập sàn chậu Kegel.</p>
+            </div>
+          </div>
+
+          {/* Card 3: Nutrition & Water */}
+          <div className="chibi-showcase-card">
+            <ChibiMascot role="nutrition" size={120} showSpeechBubble={false} interactive={false} />
+            <div className="chibi-card-content">
+              <span className="chibi-card-role">💧 Chibi Hydration Coach</span>
+              <h3>Nước Uống & Vi Chất</h3>
+              <p>Bình nước sóng dâng sinh động, chia 6 mốc giờ uống thông minh giúp tế bào hấp thụ trọn vẹn.</p>
+            </div>
+          </div>
+
+          {/* Card 4: Zen Meditation */}
+          <div className="chibi-showcase-card">
+            <ChibiMascot role="zen" size={120} showSpeechBubble={false} interactive={false} />
+            <div className="chibi-card-content">
+              <span className="chibi-card-role">🧘 Chibi Zen Master</span>
+              <h3>Thở 4:6 & Giấc Ngủ</h3>
+              <p>Hướng dẫn bài thở nhịp phó giao cảm giải phóng căng thẳng, đưa bạn vào giấc ngủ sâu $\ge 8\text{h}$.</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -80,52 +157,6 @@ export function LandingPage({ onEnterApp }: Props) {
             <h3>Taper & Ready</h3>
             <span className="arc-day-tag">Ngày 8 – 10</span>
             <p>Giảm tải khối lượng tập nặng, loại bỏ hoàn toàn căng thẳng mệt mỏi để bước vào ngày quan trọng với 100% thể lực.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* 6 Core Pillars */}
-      <section className="landing-pillars-section">
-        <div className="landing-section-header">
-          <small>6 TRỤ CỘT ĐÁNH GIÁ</small>
-          <h2>Thuật Toán Điểm Readiness Toàn Diện</h2>
-        </div>
-
-        <div className="landing-pillars-grid">
-          <div className="pillar-item">
-            <div className="pillar-icon">🌙</div>
-            <h4>Giấc ngủ (25%)</h4>
-            <p>Tối ưu chu kỳ ngủ đêm từ 7.5 – 8 giờ và giấc ngủ ngắn nap phục hồi hệ thần kinh.</p>
-          </div>
-
-          <div className="pillar-item">
-            <div className="pillar-icon">🥗</div>
-            <h4>Dinh dưỡng (20%)</h4>
-            <p>Tự động nhận diện nhóm chất: Protein, Carb chậm, Rau củ và Trái cây sạch.</p>
-          </div>
-
-          <div className="pillar-item">
-            <div className="pillar-icon">⚡</div>
-            <h4>Tập luyện (20%)</h4>
-            <p>Lịch tập chi tiết từng ngày kèm mô phỏng chuyển động động tác trực quan.</p>
-          </div>
-
-          <div className="pillar-item">
-            <div className="pillar-icon">🌊</div>
-            <h4>Hydration (10%)</h4>
-            <p>Theo dõi cốc nước với animation sóng nước dâng sinh động và 6 mốc giờ uống.</p>
-          </div>
-
-          <div className="pillar-item">
-            <div className="pillar-icon">🧘</div>
-            <h4>Phục hồi & Thở (10%)</h4>
-            <p>Huấn luyện viên Kegel và Bài tập thở sâu 4:6 kích hoạt hệ thần kinh phó giao cảm.</p>
-          </div>
-
-          <div className="pillar-item">
-            <div className="pillar-icon">✨</div>
-            <h4>Tâm trạng & Cảm nhận (15%)</h4>
-            <p>Ghi nhận chỉ số Năng lượng, Căng thẳng và Nhật ký phản chiếu mỗi tối.</p>
           </div>
         </div>
       </section>

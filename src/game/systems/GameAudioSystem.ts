@@ -247,6 +247,92 @@ class GameAudioSystem {
       }
     }
   }
+
+  // Play building inspection jingle
+  public playBuildingInspectSFX(buildingId: string) {
+    if (this.settings.isMuted) return
+    triggerHaptic('medium')
+    this.initAudioContext()
+    if (!this.ctx) return
+
+    const now = this.ctx.currentTime
+    const masterGain = this.settings.sfxVolume
+
+    switch (buildingId) {
+      case 'water':
+      case 'beach': {
+        // Water splash bubbling
+        [800, 1200, 600, 1000].forEach((freq, i) => {
+          if (!this.ctx) return
+          const osc = this.ctx.createOscillator()
+          const gain = this.ctx.createGain()
+          osc.type = 'sine'
+          osc.frequency.setValueAtTime(freq, now + i * 0.05)
+          gain.gain.setValueAtTime(0.18 * masterGain, now + i * 0.05)
+          gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.05 + 0.15)
+          osc.connect(gain)
+          gain.connect(this.ctx.destination)
+          osc.start(now + i * 0.05)
+          osc.stop(now + i * 0.05 + 0.15)
+        })
+        break
+      }
+
+      case 'gym': {
+        // Workout power chime
+        [300, 450, 600, 900].forEach((freq, i) => {
+          if (!this.ctx) return
+          const osc = this.ctx.createOscillator()
+          const gain = this.ctx.createGain()
+          osc.type = 'triangle'
+          osc.frequency.setValueAtTime(freq, now + i * 0.04)
+          gain.gain.setValueAtTime(0.2 * masterGain, now + i * 0.04)
+          gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.04 + 0.2)
+          osc.connect(gain)
+          gain.connect(this.ctx.destination)
+          osc.start(now + i * 0.04)
+          osc.stop(now + i * 0.04 + 0.2)
+        })
+        break
+      }
+
+      case 'airport': {
+        // Flight boarding ding-dong
+        [587.33, 880].forEach((freq, i) => {
+          if (!this.ctx) return
+          const osc = this.ctx.createOscillator()
+          const gain = this.ctx.createGain()
+          osc.type = 'sine'
+          osc.frequency.setValueAtTime(freq, now + i * 0.18)
+          gain.gain.setValueAtTime(0.25 * masterGain, now + i * 0.18)
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.18 + 0.4)
+          osc.connect(gain)
+          gain.connect(this.ctx.destination)
+          osc.start(now + i * 0.18)
+          osc.stop(now + i * 0.18 + 0.4)
+        })
+        break
+      }
+
+      default: {
+        // Magical storybook chime
+        [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+          if (!this.ctx) return
+          const osc = this.ctx.createOscillator()
+          const gain = this.ctx.createGain()
+          osc.type = 'sine'
+          osc.frequency.setValueAtTime(freq, now + i * 0.06)
+          gain.gain.setValueAtTime(0.2 * masterGain, now + i * 0.06)
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.35)
+          osc.connect(gain)
+          gain.connect(this.ctx.destination)
+          osc.start(now + i * 0.06)
+          osc.stop(now + i * 0.06 + 0.35)
+        })
+        break
+      }
+    }
+  }
 }
 
 export const audioSystem = new GameAudioSystem()

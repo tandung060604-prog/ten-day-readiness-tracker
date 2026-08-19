@@ -54,10 +54,10 @@ export function MapAnimationCanvas() {
 
     // Chimney positions in 1920x1080 coordinates
     const chimneys = [
-      { x: 1920 * 0.155, y: 1080 * 0.22 }, // House chimney
-      { x: 1920 * 0.335, y: 1080 * 0.15 }, // Gym chimney
-      { x: 1920 * 0.26, y: 1080 * 0.71 }, // Restaurant chimney
-      { x: 1920 * 0.705, y: 1080 * 0.17 } // Library chimney
+      { x: 1920 * 0.355, y: 1080 * 0.28 }, // House chimney
+      { x: 1920 * 0.435, y: 1080 * 0.62 }, // Restaurant chimney
+      { x: 1920 * 0.820, y: 1080 * 0.33 }, // Gym chimney
+      { x: 1920 * 0.535, y: 1080 * 0.22 }  // Townhall dome
     ]
 
     // Particle state pools
@@ -66,8 +66,8 @@ export function MapAnimationCanvas() {
     const ripples: Ripple[] = []
     const sakuraPetals: SakuraPetal[] = []
 
-    // Fountain center
-    const fountain = { x: 1920 * 0.52, y: 1080 * 0.2 }
+    // Natural Waterfall & Fountain Center (North-East Cliff Pool)
+    const fountain = { x: 1920 * 0.68, y: 1080 * 0.16 }
 
     // Beach wave time
     let waveTime = 0
@@ -75,7 +75,7 @@ export function MapAnimationCanvas() {
     // Duck position along river
     let duckT = 0
 
-    // Mascot patrol along circular plaza
+    // Mascot patrol angle
     let mascotAngle = 0
 
     // Spawning timer
@@ -85,43 +85,42 @@ export function MapAnimationCanvas() {
       frameCount++
       ctx.clearRect(0, 0, width, height)
 
-      // ── 1. REAL WATER CURRENT & SHIMMER ON RIVER ──
+      // ── 1. REAL WATER CURRENT & SHIMMER ON RIVER & BAY ──
       ctx.save()
-      // Draw flowing curved water stream lines
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)'
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)'
       ctx.lineWidth = 2.5
       ctx.lineCap = 'round'
 
       for (let i = 0; i < 6; i++) {
-        const offset = ((frameCount * 1.5 + i * 120) % 800) / 800
-        const startX = 1920 * (0.05 + offset * 0.35)
-        const startY = 1080 * (0.42 + Math.sin(offset * Math.PI * 2) * 0.08)
+        const offset = ((frameCount * 1.2 + i * 140) % 800) / 800
+        const startX = 1920 * (0.12 + offset * 0.20)
+        const startY = 1080 * (0.45 + Math.sin(offset * Math.PI * 2) * 0.06)
 
         ctx.beginPath()
         ctx.moveTo(startX, startY)
         ctx.quadraticCurveTo(
-          startX + 40,
-          startY + Math.cos(frameCount * 0.05 + i) * 6,
-          startX + 80,
-          startY + Math.sin(frameCount * 0.05 + i) * 8
+          startX + 35,
+          startY + Math.cos(frameCount * 0.04 + i) * 5,
+          startX + 70,
+          startY + Math.sin(frameCount * 0.04 + i) * 6
         )
         ctx.stroke()
       }
       ctx.restore()
 
-      // ── 2. SWIMMING DUCKS WITH WAKE RIPPLES IN RIVER ──
-      duckT = (duckT + 0.0008) % 1
-      const duckX = 1920 * (0.08 + duckT * 0.3)
-      const duckY = 1080 * (0.45 + Math.sin(duckT * Math.PI * 3) * 0.05)
+      // ── 2. SWIMMING DUCKS WITH WAKE RIPPLES IN WESTERN BAY ──
+      duckT = (duckT + 0.0006) % 1
+      const duckX = 1920 * (0.14 + Math.sin(duckT * Math.PI * 2) * 0.08)
+      const duckY = 1080 * (0.50 + Math.cos(duckT * Math.PI * 2) * 0.05)
 
       // Duck wake ripples
-      if (frameCount % 20 === 0) {
+      if (frameCount % 24 === 0) {
         ripples.push({
           x: duckX,
-          y: duckY + 4,
-          radius: 2,
-          maxRadius: 18,
-          alpha: 0.6
+          y: duckY,
+          radius: 3,
+          maxRadius: 28,
+          alpha: 0.7
         })
       }
 

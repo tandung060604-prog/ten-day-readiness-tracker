@@ -39,9 +39,9 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     color: '#ff8da1',
     glow: 'rgba(255,141,161,0.7)',
     tag: 'Tổ Ấm',
-    size: 130,
-    x: 15.0,
-    y: 27.0,
+    size: 132,
+    x: 35.5,
+    y: 34.0,
     story: {
       chapter: 'CHƯƠNG I: TỔ ẤM YÊU THƯƠNG',
       jpTag: '愛の我が家 · HOME',
@@ -68,9 +68,9 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     color: '#ffd166',
     glow: 'rgba(255,209,102,0.7)',
     tag: 'Thể Lực',
-    size: 120,
-    x: 33.0,
-    y: 20.0,
+    size: 126,
+    x: 82.0,
+    y: 39.0,
     story: {
       chapter: 'CHƯƠNG II: ĐẤU TRƯỜNG LUYỆN THỂ',
       jpTag: '武道鍛錬場 · GYM DOJO',
@@ -97,9 +97,9 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     color: '#67b7ff',
     glow: 'rgba(103,183,255,0.7)',
     tag: 'Bù Nước',
-    size: 114,
-    x: 52.0,
-    y: 18.0,
+    size: 118,
+    x: 68.0,
+    y: 15.0,
     story: {
       chapter: 'CHƯƠNG III: ĐÀI NƯỚC TINH KHIẾT',
       jpTag: '生命の泉 · FOUNTAIN',
@@ -127,8 +127,8 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     glow: 'rgba(205,180,219,0.7)',
     tag: 'Nhật Ký',
     size: 126,
-    x: 70.0,
-    y: 22.0,
+    x: 31.5,
+    y: 60.5,
     story: {
       chapter: 'CHƯƠNG IV: THƯ VIỆN KÝ ỨC',
       jpTag: '記憶の図書館 · LIBRARY',
@@ -155,9 +155,9 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     color: '#ff8da1',
     glow: 'rgba(255,141,161,0.7)',
     tag: 'Ảnh Đôi',
-    size: 126,
-    x: 85.0,
-    y: 27.0,
+    size: 125,
+    x: 64.5,
+    y: 34.5,
     story: {
       chapter: 'CHƯƠNG V: TIỆM ẢNH HẸN HÒ',
       jpTag: '写真館 · PHOTO STUDIO',
@@ -184,9 +184,9 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     color: '#7b68ee',
     glow: 'rgba(123,104,238,0.7)',
     tag: 'Giấc Ngủ',
-    size: 128,
-    x: 13.0,
-    y: 56.0,
+    size: 125,
+    x: 38.5,
+    y: 48.0,
     story: {
       chapter: 'CHƯƠNG VI: THUNG LŨNG GIẤC MƠ',
       jpTag: '夢の城 · SLEEP HAVEN',
@@ -213,9 +213,9 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     color: '#e0aa4d',
     glow: 'rgba(224,170,77,0.7)',
     tag: 'Nhiệm Vụ',
-    size: 106,
-    x: 50.0,
-    y: 38.0,
+    size: 118,
+    x: 62.5,
+    y: 48.5,
     story: {
       chapter: 'CHƯƠNG VII: BẢNG NHIỆM VỤ LÀNG',
       jpTag: '冒険広場 · QUEST BOARD',
@@ -242,9 +242,9 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     color: '#38b283',
     glow: 'rgba(56,178,131,0.7)',
     tag: 'Dinh Dưỡng',
-    size: 120,
-    x: 74.0,
-    y: 47.0,
+    size: 128,
+    x: 56.5,
+    y: 68.0,
     story: {
       chapter: 'CHƯƠNG VIII: KHU CHỢ XANH',
       jpTag: '新鮮市場 · MARKET',
@@ -271,9 +271,9 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     color: '#e57385',
     glow: 'rgba(229,115,133,0.7)',
     tag: 'Hẹn Hò',
-    size: 130,
-    x: 25.0,
-    y: 76.0,
+    size: 128,
+    x: 43.5,
+    y: 68.0,
     story: {
       chapter: 'CHƯƠNG IX: TIỆM ĂN ÁNH NẾN',
       jpTag: '恋人レストラン · BISTRO',
@@ -300,9 +300,9 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     color: '#a8dadc',
     glow: 'rgba(168,218,220,0.7)',
     tag: 'Hệ Thống',
-    size: 140,
-    x: 48.0,
-    y: 79.0,
+    size: 138,
+    x: 53.5,
+    y: 28.0,
     story: {
       chapter: 'CHƯƠNG X: TÒA THỊ CHÍNH THỊ TRẤN',
       jpTag: '町役場 · TOWN HALL',
@@ -329,9 +329,9 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     color: '#67b7ff',
     glow: 'rgba(103,183,255,0.7)',
     tag: 'Chuyến Bay',
-    size: 136,
-    x: 71.0,
-    y: 70.0,
+    size: 134,
+    x: 89.0,
+    y: 64.0,
     story: {
       chapter: 'CHƯƠNG XI: ĐƯỜNG BĂNG MƠ ƯỚC',
       jpTag: '国際空港 · AIRPORT',
@@ -358,9 +358,9 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     color: '#4ee1aa',
     glow: 'rgba(78,225,170,0.7)',
     tag: 'Nha Trang',
-    size: 136,
-    x: 88.0,
-    y: 74.0,
+    size: 132,
+    x: 67.0,
+    y: 80.0,
     story: {
       chapter: 'CHƯƠNG XII: THIÊN ĐƯỜNG BIỂN NHA TRANG',
       jpTag: 'ニャチャン海岸 · NHA TRANG BEACH',
@@ -599,99 +599,6 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
 
         {/* Real Dynamic Living Game Canvas: Flowing River, Swimming Ducks, Foam Waves, Chimney Smoke & Fountain Spray */}
         <MapAnimationCanvas />
-
-        {/* 2. Tailor-Made Road & Landscaping Overlay (Cobblestone Paths Linking Every Building) */}
-        <svg className="custom-terrain-roads-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-          {/* Stone Road Paths connecting Town Hall -> Central Plaza -> Buildings -> Beach */}
-          <path
-            d="M 48,79 Q 49,65 50,52"
-            fill="none"
-            stroke="#f5e6d3"
-            strokeWidth="3.2"
-            strokeDasharray="1.2 0.4"
-            opacity="0.85"
-          />
-          <path
-            d="M 50,52 Q 38,45 33,20"
-            fill="none"
-            stroke="#f5e6d3"
-            strokeWidth="2.8"
-            strokeDasharray="1.2 0.4"
-            opacity="0.8"
-          />
-          <path
-            d="M 33,20 Q 24,24 15,27"
-            fill="none"
-            stroke="#f5e6d3"
-            strokeWidth="2.6"
-            strokeDasharray="1.2 0.4"
-            opacity="0.8"
-          />
-          <path
-            d="M 50,52 Q 51,32 52,18"
-            fill="none"
-            stroke="#f5e6d3"
-            strokeWidth="2.8"
-            strokeDasharray="1.2 0.4"
-            opacity="0.8"
-          />
-          <path
-            d="M 50,52 Q 62,35 70,22"
-            fill="none"
-            stroke="#f5e6d3"
-            strokeWidth="2.8"
-            strokeDasharray="1.2 0.4"
-            opacity="0.8"
-          />
-          <path
-            d="M 70,22 Q 78,24 85,27"
-            fill="none"
-            stroke="#f5e6d3"
-            strokeWidth="2.6"
-            strokeDasharray="1.2 0.4"
-            opacity="0.8"
-          />
-          <path
-            d="M 50,52 Q 64,50 74,47"
-            fill="none"
-            stroke="#f5e6d3"
-            strokeWidth="3.0"
-            strokeDasharray="1.2 0.4"
-            opacity="0.8"
-          />
-          <path
-            d="M 74,47 Q 72,60 71,70"
-            fill="none"
-            stroke="#f5e6d3"
-            strokeWidth="3.2"
-            strokeDasharray="1.2 0.4"
-            opacity="0.85"
-          />
-          <path
-            d="M 71,70 Q 80,72 88,74"
-            fill="none"
-            stroke="#ffe3aa"
-            strokeWidth="3.6"
-            strokeDasharray="1.4 0.5"
-            opacity="0.9"
-          />
-          <path
-            d="M 50,52 Q 35,66 25,76"
-            fill="none"
-            stroke="#f5e6d3"
-            strokeWidth="3.0"
-            strokeDasharray="1.2 0.4"
-            opacity="0.8"
-          />
-          <path
-            d="M 50,52 Q 30,54 13,56"
-            fill="none"
-            stroke="#f5e6d3"
-            strokeWidth="2.8"
-            strokeDasharray="1.2 0.4"
-            opacity="0.8"
-          />
-        </svg>
 
         {/* Dynamic Water Shimmer & Nha Trang Ocean Waves */}
         <div className="terrain-water-shimmer" />

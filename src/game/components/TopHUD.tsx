@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { GameStats } from '../types'
 import { audioSystem } from '../systems/GameAudioSystem'
+import { GameIcon } from '../../components/common/GameIcons'
 
 type Props = {
   stats: GameStats
@@ -32,7 +33,7 @@ export function TopHUD({ stats, activeRole = 'chiikawa', onOpenSettings, onOpenH
         </div>
         <div className="hud-profile__info">
           <strong>
-            {activeRole === 'chiikawa' ? 'Dũng (Chiikawa)' : 'Em Yêu (Usagi)'} <span className="hud-heart-mini">❤️</span>
+            {activeRole === 'chiikawa' ? 'Dũng (Chiikawa)' : 'Em Yêu (Usagi)'} <GameIcon name="heart" size={13} style={{ marginLeft: 3 }} />
           </strong>
           <div className="hud-level-row">
             <span className="hud-level-tag">Level {stats.level}</span>
@@ -41,7 +42,7 @@ export function TopHUD({ stats, activeRole = 'chiikawa', onOpenSettings, onOpenH
           </div>
         </div>
         <button className="hud-quest-bell" onClick={(e) => { e.stopPropagation(); audioSystem.playClick('soft'); onOpenQuests() }}>
-          <span>🔔</span>
+          <GameIcon name="bell" size={16} color="#fd7e14" />
           <small>Nhiệm vụ</small>
         </button>
       </button>
@@ -49,22 +50,30 @@ export function TopHUD({ stats, activeRole = 'chiikawa', onOpenSettings, onOpenH
       {/* ── center: currencies ── */}
       <div className="hud-currencies">
         <div className="hud-cur hud-cur--heart">
-          <span className="hud-cur__icon">❤️</span>
+          <span className="hud-cur__icon">
+            <GameIcon name="heart" size={16} />
+          </span>
           <span className="hud-cur__val">{stats.hearts.toLocaleString()}</span>
           <button className="hud-cur__plus" onClick={() => audioSystem.playClick('soft')}>＋</button>
         </div>
         <div className="hud-cur hud-cur--star">
-          <span className="hud-cur__icon">⭐</span>
+          <span className="hud-cur__icon">
+            <GameIcon name="star" size={16} />
+          </span>
           <span className="hud-cur__val">{stats.stars.toLocaleString()}</span>
           <button className="hud-cur__plus" onClick={() => audioSystem.playClick('soft')}>＋</button>
         </div>
         <div className="hud-cur hud-cur--gem">
-          <span className="hud-cur__icon">💎</span>
+          <span className="hud-cur__icon">
+            <GameIcon name="gem" size={16} />
+          </span>
           <span className="hud-cur__val">{stats.gems.toLocaleString()}</span>
           <button className="hud-cur__plus" onClick={() => audioSystem.playClick('soft')}>＋</button>
         </div>
         <div className="hud-cur hud-cur--energy">
-          <span className="hud-cur__icon">⚡</span>
+          <span className="hud-cur__icon">
+            <GameIcon name="energy" size={16} />
+          </span>
           <span className="hud-cur__val">{stats.energy}/{stats.energyMax}</span>
         </div>
       </div>
@@ -72,7 +81,9 @@ export function TopHUD({ stats, activeRole = 'chiikawa', onOpenSettings, onOpenH
       {/* ── right: time + settings ── */}
       <div className="hud-right">
         <span className="hud-time">{timeStr}</span>
-        <button className="hud-settings-btn" onClick={() => { audioSystem.playClick('soft'); onOpenSettings() }}>⚙️</button>
+        <button className="hud-settings-btn" onClick={() => { audioSystem.playClick('soft'); onOpenSettings() }}>
+          <GameIcon name="gear" size={18} color="#495057" />
+        </button>
       </div>
     </header>
   )

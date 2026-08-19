@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { ChiikawaSVG } from '../../components/common/ChiikawaSVG'
+import { GameIcon } from '../../components/common/GameIcons'
 import { audioSystem } from '../systems/GameAudioSystem'
 import { playChiikawaVoice } from '../../utils/chiikawaAudio'
 import { MapAnimationCanvas } from './MapAnimationCanvas'
@@ -753,7 +754,9 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
         >
           <div className="mascot-pair">
             <ChiikawaSVG character="chiikawa" size={76} className="animate-bounce-gentle" />
-            <span className="mascot-heart-badge">💖</span>
+            <span className="mascot-heart-badge">
+              <GameIcon name="heart" size={24} />
+            </span>
             <ChiikawaSVG character="usagi" size={76} className="animate-bounce-gentle" />
           </div>
           <div className="mascot-dialog-bubble">
@@ -769,20 +772,26 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
         <button className="zoom-btn" onClick={() => handleZoom(0.25)} title="Phóng to">+</button>
         <span className="zoom-level-text">{Math.round(zoom * 100)}%</span>
         <button className="zoom-btn" onClick={() => handleZoom(-0.25)} title="Thu nhỏ">-</button>
-        <button className="zoom-reset-btn" onClick={handleResetZoom} title="Đặt lại góc nhìn">🎯</button>
+        <button className="zoom-reset-btn" onClick={handleResetZoom} title="Đặt lại góc nhìn">
+          <GameIcon name="target" size={16} color="#d6336c" />
+        </button>
       </div>
 
       {/* 2. Floating Voice Bubble Notification */}
       {activeVoicePhrase && (
         <div className="voice-floating-chip animate-slide-up interactive-control">
-          <span className="voice-sound-icon">🔊</span>
+          <span className="voice-sound-icon">
+            <GameIcon name="sound" size={16} />
+          </span>
           <strong>{activeVoicePhrase}</strong>
         </div>
       )}
 
       {/* 3. Bottom Left Love Counter Widget */}
       <div className="game-love-counter-chip animate-slide-up interactive-control">
-        <span className="love-chip-icon">💖</span>
+        <span className="love-chip-icon">
+          <GameIcon name="heart" size={20} />
+        </span>
         <div className="love-chip-content">
           <small>Đếm Ngày Yêu Nhau</small>
           <strong>{loveDays.toLocaleString()} <span>ngày</span></strong>
@@ -835,14 +844,18 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
 
               {/* Story Narrative Text */}
               <div className="story-narrative-box">
-                <span className="scroll-icon">📜</span>
+                <span className="scroll-icon">
+                  <GameIcon name="scroll" size={20} color="#ff8da1" />
+                </span>
                 <p>{activeStoryBuilding.story.storyNarrative}</p>
               </div>
 
               {/* Character Dialogue Quote with Replay Button */}
               <div className="story-character-quote-box">
                 <div className="quote-speech-line">
-                  <span className="quote-mark">💬</span>
+                  <span className="quote-mark">
+                    <GameIcon name="speech" size={18} color="#67b7ff" />
+                  </span>
                   <p>"{activeStoryBuilding.story.quote}"</p>
                 </div>
                 <button
@@ -850,18 +863,25 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
                   onClick={() => handleReplayVoice(activeStoryBuilding.story.voiceChar, activeStoryBuilding.story.charName)}
                   title="Nghe lại giọng lồng tiếng"
                 >
-                  <span>🔊 Nghe Lời Thoại</span>
+                  <GameIcon name="sound" size={15} color="#20bf6b" />
+                  <span>Nghe Lời Thoại</span>
                 </button>
               </div>
 
               {/* Quest Goal & Rewards */}
               <div className="story-quest-meta-grid">
                 <div className="quest-meta-item">
-                  <span className="meta-label">🎯 Mục Tiêu:</span>
+                  <span className="meta-label">
+                    <GameIcon name="target" size={14} style={{ marginRight: 4 }} />
+                    Mục Tiêu:
+                  </span>
                   <span className="meta-val">{activeStoryBuilding.story.objective}</span>
                 </div>
                 <div className="quest-meta-item">
-                  <span className="meta-label">🏆 Phần Thưởng:</span>
+                  <span className="meta-label">
+                    <GameIcon name="trophy" size={14} style={{ marginRight: 4 }} />
+                    Phần Thưởng:
+                  </span>
                   <span className="meta-val reward-val">{activeStoryBuilding.story.reward}</span>
                 </div>
               </div>
@@ -876,7 +896,7 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
                   style={{ backgroundColor: activeStoryBuilding.color }}
                   onClick={handleEnterBuilding}
                 >
-                  <span>✨ TIẾP TỤC HÀNH TRÌNH</span>
+                  <span>TIẾP TỤC HÀNH TRÌNH</span>
                   <span className="btn-arrow-icon">→</span>
                 </button>
               </div>

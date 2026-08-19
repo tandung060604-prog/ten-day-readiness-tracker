@@ -1,4 +1,6 @@
 import { audioSystem } from '../systems/GameAudioSystem'
+import { GameIcon } from '../../components/common/GameIcons'
+import type { GameIconName } from '../../components/common/GameIcons'
 import type { LocationId } from '../types'
 
 type Props = {
@@ -7,13 +9,13 @@ type Props = {
   onOpenInventory: () => void
 }
 
-const DOCK_ITEMS: { loc: LocationId | 'map'; icon: string; label: string }[] = [
-  { loc: 'map',      icon: '🗺️', label: 'Bản Đồ'       },
-  { loc: 'quests',    icon: '🎒', label: 'Kho Báu'       },
-  { loc: 'market',    icon: '🏪', label: 'Cửa Hàng'      },
-  { loc: 'album',     icon: '🎈', label: 'Sự Kiện'       },
-  { loc: 'journal',   icon: '👫', label: 'Bạn Bè'        },
-  { loc: 'settings',  icon: '🏆', label: 'Bảng Xếp Hạng' },
+const DOCK_ITEMS: { loc: LocationId | 'map'; icon: GameIconName; label: string }[] = [
+  { loc: 'map',      icon: 'map',     label: 'Bản Đồ'       },
+  { loc: 'quests',    icon: 'bag',     label: 'Kho Báu'       },
+  { loc: 'market',    icon: 'shop',    label: 'Cửa Hàng'      },
+  { loc: 'album',     icon: 'event',   label: 'Sự Kiện'       },
+  { loc: 'journal',   icon: 'friends', label: 'Bạn Bè'        },
+  { loc: 'settings',  icon: 'trophy',  label: 'Bảng Xếp Hạng' },
 ]
 
 export function BottomHUD({ currentLocation, onNavigate, onOpenInventory }: Props) {
@@ -25,10 +27,21 @@ export function BottomHUD({ currentLocation, onNavigate, onOpenInventory }: Prop
           className={`hud-dock ${currentLocation === d.loc ? 'hud-dock--active' : ''}`}
           onClick={() => { audioSystem.playClick('soft'); onNavigate(d.loc) }}
         >
-          <span className="hud-dock__icon">{d.icon}</span>
+          <span className="hud-dock__icon">
+            <GameIcon name={d.icon} size={20} />
+          </span>
           <span className="hud-dock__label">{d.label}</span>
         </button>
       ))}
+      <button
+        className="hud-dock hud-dock--inventory"
+        onClick={() => { audioSystem.playClick('pop'); onOpenInventory() }}
+      >
+        <span className="hud-dock__icon">
+          <GameIcon name="bag" size={20} color="#ff922b" />
+        </span>
+        <span className="hud-dock__label">Túi Đồ</span>
+      </button>
     </nav>
   )
 }

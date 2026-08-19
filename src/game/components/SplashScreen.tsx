@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ChiikawaSVG } from '../../components/common/ChiikawaSVG'
+import { GameIcon } from '../../components/common/GameIcons'
 import { audioSystem } from '../systems/GameAudioSystem'
 import { playChiikawaVoice } from '../../utils/chiikawaAudio'
 import type { ChiikawaCharacter } from '../../utils/chiikawaAudio'
@@ -170,9 +171,9 @@ export function SplashScreen({ onEnterGame }: Props) {
       {screenStage === 'title' && (
         <div className="splash-landscape-title-card animate-slide-up">
           <div className="title-top-badge">
-            <span className="star-icon">⭐</span>
+            <GameIcon name="star" size={14} />
             <span>A COZY ANIME STORYBOOK ADVENTURE FOR OUR LOVE JOURNEY</span>
-            <span className="star-icon">⭐</span>
+            <GameIcon name="star" size={14} />
           </div>
 
           <h1 className="title-game-brand">
@@ -187,30 +188,30 @@ export function SplashScreen({ onEnterGame }: Props) {
 
           {/* Entire Chiikawa Family Gathering Hero Illustration */}
           <div className="title-family-lineup">
-            <div className="family-char-slot char-rakko" title="Sư Phụ Rakko ⭐">
+            <div className="family-char-slot char-rakko" title="Sư Phụ Rakko">
               <ChiikawaSVG character="rakko" size={62} />
               <small>Rakko</small>
             </div>
-            <div className="family-char-slot char-hachiware" title="Hachiware 🐱">
+            <div className="family-char-slot char-hachiware" title="Hachiware">
               <ChiikawaSVG character="hachiware" size={74} />
               <small>Hachiware</small>
             </div>
-            <div className="family-char-slot char-chiikawa main-hero" title="Chiikawa (Dũng) 🐹">
+            <div className="family-char-slot char-chiikawa main-hero" title="Chiikawa (Dũng)">
               <ChiikawaSVG character="chiikawa" size={96} className="animate-bounce-gentle" />
               <span className="hero-crown-tag">👑 Dũng</span>
             </div>
             <div className="family-heart-connector">
-              <span>💖</span>
+              <GameIcon name="heart" size={28} />
             </div>
-            <div className="family-char-slot char-usagi main-hero" title="Usagi (Em Yêu) 🐰">
+            <div className="family-char-slot char-usagi main-hero" title="Usagi (Em Yêu)">
               <ChiikawaSVG character="usagi" size={96} className="animate-bounce-gentle" />
               <span className="hero-crown-tag">👑 Em Yêu</span>
             </div>
-            <div className="family-char-slot char-momonga" title="Momonga 🐿️">
+            <div className="family-char-slot char-momonga" title="Momonga">
               <ChiikawaSVG character="momonga" size={74} />
               <small>Momonga</small>
             </div>
-            <div className="family-char-slot char-kurimanju" title="Kurimanju 🦦">
+            <div className="family-char-slot char-kurimanju" title="Kurimanju">
               <ChiikawaSVG character="kurimanju" size={62} />
               <small>Kurimanju</small>
             </div>
@@ -219,7 +220,7 @@ export function SplashScreen({ onEnterGame }: Props) {
           {/* Action Button: Start Game */}
           <div className="title-action-box">
             <button className="title-start-btn animate-pop" onClick={handleStartTitle}>
-              <span className="sparkle-sym">✨</span>
+              <GameIcon name="star" size={16} />
               <span>BẮT ĐẦU HÀNH TRÌNH (START GAME)</span>
               <span className="arrow-sym">→</span>
             </button>
@@ -243,7 +244,7 @@ export function SplashScreen({ onEnterGame }: Props) {
           {/* Locked Notice Alert Popup */}
           {lockedNotice && (
             <div className="locked-notice-banner animate-bounce-gentle">
-              <span className="lock-icon">🔒</span>
+              <GameIcon name="lock" size={16} color="#856404" />
               <p>{lockedNotice}</p>
             </div>
           )}
@@ -252,7 +253,6 @@ export function SplashScreen({ onEnterGame }: Props) {
           <div className="characters-selection-grid">
             {CHARACTERS.map((char) => {
               const isSelected = selectedChar === char.id
-              const isSelectable = !char.isLocked
 
               return (
                 <div
@@ -264,7 +264,7 @@ export function SplashScreen({ onEnterGame }: Props) {
                   {/* Lock Indicator or Selected Badge */}
                   {char.isLocked ? (
                     <div className="card-lock-badge">
-                      <span className="lock-sym">🔒</span>
+                      <GameIcon name="lock" size={12} color="#ffd166" />
                       <small>Sắp ra mắt</small>
                     </div>
                   ) : isSelected ? (
@@ -307,7 +307,8 @@ export function SplashScreen({ onEnterGame }: Props) {
               ← Quay Lại
             </button>
             <button className="select-enter-btn animate-pop" onClick={handleConfirmStart}>
-              <span>✨ BẮT ĐẦU VỚI {selectedChar.toUpperCase()}</span>
+              <GameIcon name="star" size={16} />
+              <span>BẮT ĐẦU VỚI {selectedChar.toUpperCase()}</span>
               <span className="arrow-sym">→</span>
             </button>
           </div>

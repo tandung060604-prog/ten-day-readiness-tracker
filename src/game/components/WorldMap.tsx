@@ -453,13 +453,16 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
   // Tutorial Step Change -> Smooth Zoom In & Center Building directly on screen
   const handleTutorialStepChange = useCallback((step: TutorialStep) => {
     setTutorialActiveBuildingId(step.locationId)
-    const targetZoom = 2.0
+    const isMobileLandscape = window.innerHeight < 520 && window.innerWidth > window.innerHeight
+    const targetZoom = isMobileLandscape ? 1.65 : 2.0
     setZoom(targetZoom)
     const vw = window.innerWidth
     const vh = window.innerHeight
-    // Exact translation so that (step.x%, step.y%) is centered at (50vw, 50vh)
+
+    // In mobile landscape, center building at 35% height so the bottom dialogue box doesn't cover it
+    const centerYRatio = isMobileLandscape ? 0.35 : 0.50
     const targetPanX = (0.5 - step.x / 100) * vw * targetZoom
-    const targetPanY = (0.5 - step.y / 100) * vh * targetZoom
+    const targetPanY = (centerYRatio - step.y / 100) * vh * targetZoom
     setPan({ x: targetPanX, y: targetPanY })
   }, [])
 

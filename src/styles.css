@@ -7812,30 +7812,111 @@ html, body, #root, .app-shell {
 
 @media (orientation: landscape) and (max-height: 520px) {
   .tutorial-dialog-container {
-    bottom: 8px;
+    bottom: 4px;
     max-width: 580px;
-    gap: 6px;
+    gap: 3px;
+  }
+  .tutorial-step-dots {
+    gap: 4px;
+  }
+  .step-dot {
+    width: 18px;
+    height: 18px;
+    font-size: 9px;
   }
   .tutorial-speech-card {
-    padding: 10px 16px;
-    gap: 6px;
+    padding: 6px 14px;
+    gap: 4px;
+    border-radius: 18px;
   }
   .tutorial-card-topbar {
-    padding-bottom: 4px;
+    padding-bottom: 2px;
   }
   .tutorial-avatar-pill {
     gap: 6px;
   }
+  .tutorial-avatar-pill strong {
+    font-size: 11px;
+  }
+  .tutorial-avatar-pill small {
+    font-size: 9px;
+  }
+  .tutorial-location-tag span {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+  .tutorial-step-indicator span {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
   .tutorial-speech-text-wrap {
-    padding: 6px 10px;
+    padding: 4px 8px;
+    gap: 6px;
   }
   .tutorial-speech-p {
-    font-size: 11px;
-    line-height: 1.35;
+    font-size: 10px;
+    line-height: 1.25;
+  }
+  .tutorial-voice-btn {
+    padding: 2px 6px;
+    font-size: 9px;
   }
   .tut-next-btn, .tut-prev-btn {
-    padding: 6px 14px;
-    font-size: 11px;
+    padding: 4px 12px;
+    font-size: 10px;
+  }
+  .tut-skip-btn {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  /* Love Hospital Landscape Adaptation */
+  .hospital-hero-card {
+    padding: 10px 14px !important;
+    gap: 8px !important;
+  }
+  .hospital-hero-title {
+    font-size: 15px !important;
+  }
+  .hospital-hero-subtitle {
+    font-size: 10.5px !important;
+  }
+  .hospital-tracker-tab-grid {
+    grid-template-columns: 280px 1fr !important;
+    gap: 10px !important;
+  }
+  .flo-cycle-dial-card {
+    padding: 12px !important;
+    gap: 8px !important;
+  }
+  .cycle-dial-container {
+    width: 130px !important;
+    height: 130px !important;
+  }
+  .cycle-dial-inner-circle {
+    width: 104px !important;
+    height: 104px !important;
+  }
+  .cycle-day-number strong {
+    font-size: 24px !important;
+  }
+  .cycle-phase-title {
+    font-size: 13px !important;
+  }
+  .symptoms-logging-card {
+    padding: 12px 14px !important;
+    gap: 8px !important;
+  }
+  .care-guide-cards-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  .cal-day-cell {
+    min-height: 36px !important;
+    padding: 2px !important;
+  }
+  .cal-cell-badge {
+    font-size: 7.5px !important;
   }
 }
 

@@ -95,7 +95,7 @@ export function LandingPage({ onEnterApp }: Props) {
           <div className="pillar-item">
             <div className="pillar-icon">🌙</div>
             <h4>Giấc ngủ (25%)</h4>
-            <p>Tối ưu chu kỳ ngủ đêm $\ge 8\text{h}$ và giấc ngủ ngắn nap phục hồi hệ thần kinh.</p>
+            <p>Tối ưu chu kỳ ngủ đêm từ 7.5 – 8 giờ và giấc ngủ ngắn nap phục hồi hệ thần kinh.</p>
           </div>
 
           <div className="pillar-item">

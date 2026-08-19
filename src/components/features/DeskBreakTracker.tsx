@@ -1,5 +1,5 @@
 type Props = {
-  breaks: [string, string][]
+  breaks: string[][] | [string, string][]
   completedBreaks: string[]
   onToggleBreak: (time: string) => void
 }

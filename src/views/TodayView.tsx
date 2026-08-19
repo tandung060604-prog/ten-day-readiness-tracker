@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ProgressRing } from '../components/common/ProgressRing'
 import { AdviceCard } from '../components/common/AdviceCard'
 import { ChibiMascot } from '../components/common/ChibiMascot'
+import { ChiikawaVoiceCard } from '../components/common/ChiikawaVoiceCard'
 import { CoupleHeroCard } from '../components/couple/CoupleHeroCard'
 import { NhaTrangTripCard } from '../components/couple/NhaTrangTripCard'
 import { BreathingTimer } from '../components/BreathingTimer'
@@ -92,6 +93,12 @@ export function TodayView({
       {/* Flight to Nha Trang 27/08 & MoMo Couple Fund */}
       <NhaTrangTripCard />
 
+      {/* Chiikawa Companion Banner */}
+      <ChiikawaVoiceCard
+        character="chiikawa"
+        customQuote="Bé Chiikawa cổ vũ Dũng & Em Yêu rèn luyện thể lực mỗi ngày! (Bấm để nghe tiếng kêu cute ✨)"
+      />
+
       {/* Hero Banner */}
       <section className="hero-card">
         <div className="hero-content">
@@ -161,14 +168,26 @@ export function TodayView({
         </section>
       </div>
 
-      {/* Water Tracker Pro with Wave Animation & Drink Selector */}
+      {/* Water Tracker Pro with Hachiware Character Theme */}
+      <div style={{ marginBottom: '8px' }}>
+        <ChiikawaVoiceCard
+          character="hachiware"
+          customQuote="Mèo Hachiware: Nhớ uống từng ngụm nhỏ nhe! Nanto kanaare~ (Bấm để nghe tiếng meo 🐱)"
+        />
+      </div>
       <WaterTrackerCard
         currentMl={log.hydrationMl}
         targetMl={settings.waterTargetMl}
         onAddWater={handleAddWater}
       />
 
-      {/* Sleep Tracker Pro with 90-min Cycle Hypnogram & Wind-down Soundscapes */}
+      {/* Sleep Tracker Pro with Kurimanju Character Theme */}
+      <div style={{ marginBottom: '8px' }}>
+        <ChiikawaVoiceCard
+          character="kurimanju"
+          customQuote="Rái cá Kurimanju: Thư giãn với âm thanh ru ngủ rồi ngủ sớm nào~ Haaaa! 🦦"
+        />
+      </div>
       <SleepTrackerPro
         sleep={log.sleep}
         targetBedtime={settings.bedtimeTarget}
@@ -176,7 +195,13 @@ export function TodayView({
         onOpenSleepModal={() => setShowSleepModal(true)}
       />
 
-      {/* Training Card */}
+      {/* Training Card with Usagi Character Theme */}
+      <div style={{ marginBottom: '8px' }}>
+        <ChiikawaVoiceCard
+          character="usagi"
+          customQuote="Thỏ Usagi: Uraaaa! Ya-ha! Tập luyện sung sức chuẩn bị bay Nha Trang! 🐰"
+        />
+      </div>
       <section className="metric-card training-card">
         <div className="metric-header">
           <small>TRAINING · TẬP LUYỆN</small>

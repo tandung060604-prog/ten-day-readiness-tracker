@@ -4558,6 +4558,161 @@ html, body, #root, .app-shell {
   }
 }
 
+/* ==========================================================================
+   CHIIKAWA & FRIENDS (ちいかわ) CUTE UNIVERSE STYLES
+   ========================================================================== */
+.chiikawa-interactive-tag {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--line);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+  user-select: none;
+  backdrop-filter: blur(8px);
+}
+
+.chiikawa-interactive-tag:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.chiikawa-interactive-tag.bouncing {
+  animation: chiikawaHop 0.5s ease;
+}
+
+@keyframes chiikawaHop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.08) translateY(-4px); }
+  60% { transform: scale(0.95) translateY(2px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+.chiikawa-emoji {
+  font-size: 24px;
+  display: inline-block;
+  animation: floatEmoji 3s ease-in-out infinite alternate;
+}
+
+@keyframes floatEmoji {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-3px); }
+}
+
+.chiikawa-tag-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  line-height: 1.3;
+}
+
+.chiikawa-tag-info strong {
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chiikawa-tag-info strong small {
+  font-size: 10px;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.chiikawa-tag-info span {
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+/* Pop Speech Bubble on Click */
+.chiikawa-pop-speech {
+  position: absolute;
+  top: -38px;
+  right: 16px;
+  background: #ffffff;
+  color: #1a1a1a;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  z-index: 20;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.chiikawa-pop-speech::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 20px;
+  border-width: 6px 6px 0;
+  border-style: solid;
+  border-color: #ffffff transparent;
+  display: block;
+  width: 0;
+}
+
+.animate-pop {
+  animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5) translateY(10px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Chiikawa Showcase Universe Grid (Landing Page) */
+.chiikawa-universe-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.chiikawa-char-card {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.chiikawa-char-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.char-card-body p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.45;
+  margin: 6px 0 0;
+}
+
+.char-role-badge {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+  padding: 3px 8px;
+  border-radius: 99px;
+}
+
+@media (max-width: 768px) {
+  .chiikawa-universe-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 
 
 

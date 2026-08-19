@@ -2,6 +2,7 @@ import { trainingPlan, defaultSettings } from '../data/plan'
 import { readiness } from '../utils/readiness'
 import { downloadCalendarICS } from '../utils/calendarSync'
 import { triggerHaptic } from '../utils/haptics'
+import { ChiikawaVoiceCard } from '../components/common/ChiikawaVoiceCard'
 import type { DailyLog } from '../types'
 
 type Props = {
@@ -20,6 +21,13 @@ export function PlanView({ currentDay, logs, waterTarget, onSelectDay, onNavigat
 
   return (
     <div className="view-container animate-fade-in">
+      <div style={{ marginBottom: '14px' }}>
+        <ChiikawaVoiceCard
+          character="rakko"
+          customQuote="Sư phụ Rakko: Daijoubu da! Hãy kiên trì từng bước một trên lộ trình 10 ngày này! ⭐"
+        />
+      </div>
+
       <section className="card">
         <div className="section-head">
           <div>

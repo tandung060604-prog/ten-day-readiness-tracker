@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AppLogo } from '../components/common/AppLogo'
 import { YouTubeBGMPlayer } from '../components/common/YouTubeBGMPlayer'
 import { ChibiMascot, type MascotRole } from '../components/common/ChibiMascot'
+import { ChiikawaVoiceCard } from '../components/common/ChiikawaVoiceCard'
 import { CoupleHeroCard } from '../components/couple/CoupleHeroCard'
 import { NhaTrangTripCard } from '../components/couple/NhaTrangTripCard'
 import { CozyAtmosphere } from '../components/couple/CozyAtmosphere'
@@ -95,52 +96,66 @@ export function LandingPage({ onEnterApp }: Props) {
         </div>
       </section>
 
-      {/* Meet the 4 Mascot Companions Section */}
+      {/* Meet the Chiikawa & Friends Showcase Section */}
       <section className="landing-mascots-showcase">
         <div className="landing-section-header">
-          <small>BIỆT ĐỘI ĐỒNG HÀNH</small>
-          <h2>Gặp Gỡ 4 Chibi Mascots Của Bạn</h2>
-          <p className="section-subtext">Mỗi bé Chibi phụ trách một trụ cột giúp bạn duy trì kỷ luật và năng lượng vui vẻ mỗi ngày.</p>
+          <small>CHIIKAWA & FRIENDS UNIVERSE · ちいかわ</small>
+          <h2>Biệt Đội Chiikawa Đồng Hành Cùng Hai Bạn</h2>
+          <p className="section-subtext">Mỗi bé nhân vật mang một màu sắc và giọng nói riêng giúp bạn duy trì năng lượng và nụ cười rạng rỡ mỗi ngày.</p>
         </div>
 
-        <div className="chibi-showcase-grid">
-          {/* Card 1: Healthy */}
-          <div className="chibi-showcase-card">
-            <ChibiMascot role="healthy" size={110} showSpeechBubble={false} interactive={false} />
-            <div className="chibi-card-content">
-              <span className="chibi-card-role">🥑 Chibi Healthy Chef</span>
-              <h3>Ăn Uống Cân Bằng</h3>
-              <p>Tự động nhận diện Protein, Carb chậm và Rau củ. Hướng dẫn cấu trúc đĩa ăn no lâu và tiêu hóa nhẹ nhàng.</p>
+        <div className="chiikawa-universe-grid">
+          {/* 1. Chiikawa */}
+          <div className="chiikawa-char-card char-chiikawa">
+            <ChiikawaVoiceCard character="chiikawa" />
+            <div className="char-card-body">
+              <span className="char-role-badge">🐹 Phục Hồi & Giấc Ngủ</span>
+              <p>Bé mầm trắng dịu dàng, giúp Dũng & Em Yêu xoa dịu mệt mỏi và ngủ thật ngon giấc.</p>
             </div>
           </div>
 
-          {/* Card 2: Workout */}
-          <div className="chibi-showcase-card">
-            <ChibiMascot role="workout" size={110} showSpeechBubble={false} interactive={false} />
-            <div className="chibi-card-content">
-              <span className="chibi-card-role">🏋️ Chibi Gym Beast</span>
-              <h3>Tập Luyện & Đẩy Tạ</h3>
-              <p>Mô phỏng chuyển động động tác chuẩn từng rep, nhắc nhở giữ form lưng và bài tập sàn chậu Kegel.</p>
+          {/* 2. Hachiware */}
+          <div className="chiikawa-char-card char-hachiware">
+            <ChiikawaVoiceCard character="hachiware" />
+            <div className="char-card-body">
+              <span className="char-role-badge">🐱 Bù Nước & Lạc Quan</span>
+              <p>Mèo tai xanh thông minh với câu thần chú <em>"Nanto kanaare! (Mọi chuyện sẽ ổn thôi!)"</em>.</p>
             </div>
           </div>
 
-          {/* Card 3: Nutrition & Water */}
-          <div className="chibi-showcase-card">
-            <ChibiMascot role="nutrition" size={110} showSpeechBubble={false} interactive={false} />
-            <div className="chibi-card-content">
-              <span className="chibi-card-role">💧 Chibi Hydration Coach</span>
-              <h3>Nước Uống & Vi Chất</h3>
-              <p>Bình nước sóng dâng sinh động, chia 6 mốc giờ uống thông minh giúp tế bào hấp thụ trọn vẹn.</p>
+          {/* 3. Usagi */}
+          <div className="chiikawa-char-card char-usagi">
+            <ChiikawaVoiceCard character="usagi" />
+            <div className="char-card-body">
+              <span className="char-role-badge">🐰 Thể Lực & Đẩy Tạ</span>
+              <p>Thỏ vàng siêu năng lượng, luôn tràn ngập nhiệt huyết <em>"Uraaa! Ya-ha!"</em> tiếp lửa tập luyện.</p>
             </div>
           </div>
 
-          {/* Card 4: Zen Meditation */}
-          <div className="chibi-showcase-card">
-            <ChibiMascot role="zen" size={110} showSpeechBubble={false} interactive={false} />
-            <div className="chibi-card-content">
-              <span className="chibi-card-role">🧘 Chibi Zen Master</span>
-              <h3>Thở 4:6 & Giấc Ngủ</h3>
-              <p>Hướng dẫn bài thở nhịp phó giao cảm giải phóng căng thẳng, đưa bạn vào giấc ngủ sâu từ 7.5 đến 8 tiếng mỗi đêm.</p>
+          {/* 4. Momonga */}
+          <div className="chiikawa-char-card char-momonga">
+            <ChiikawaVoiceCard character="momonga" />
+            <div className="char-card-body">
+              <span className="char-role-badge">🐿️ Dinh Dưỡng & Ăn Sạch</span>
+              <p>Sóc bay lông xù sành ăn, hướng dẫn cấu trúc bữa ăn ngon miệng và giàu năng lượng sạch.</p>
+            </div>
+          </div>
+
+          {/* 5. Kurimanju */}
+          <div className="chiikawa-char-card char-kurimanju">
+            <ChiikawaVoiceCard character="kurimanju" />
+            <div className="char-card-body">
+              <span className="char-role-badge">🦦 Thư Giãn & Âm Thanh</span>
+              <p>Rái cá điềm tĩnh thích nhâm nhi trà, phát âm thanh sóng biển và mưa rơi ru ngủ cực êm.</p>
+            </div>
+          </div>
+
+          {/* 6. Rakko Master */}
+          <div className="chiikawa-char-card char-rakko">
+            <ChiikawaVoiceCard character="rakko" />
+            <div className="char-card-body">
+              <span className="char-role-badge">⭐ Sư Phụ Kỷ Luật 10 Ngày</span>
+              <p>Chiến binh rái cá dẫn đường, giúp bạn hoàn thành xuất sắc từng ngày trong lộ trình về đích.</p>
             </div>
           </div>
         </div>

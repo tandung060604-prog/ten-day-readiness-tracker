@@ -325,19 +325,6 @@ export function SplashScreen({ onEnterGame }: Props) {
                 <span className="mascot-heart-float">💖</span>
               </div>
             </div>
-
-            {/* ── PROMINENT MASTER START GAME BUTTON BAR ── */}
-            <div className="title-screen-start-bar animate-bounce-gentle">
-              <button
-                className="master-start-game-btn"
-                onClick={() => handleTriggerHotspot('map', 'Bản Đồ Thị Trấn')}
-                title="Nhấn để bắt đầu chuyến phiêu lưu"
-              >
-                <span className="btn-sparkle">✨</span>
-                <span className="btn-text">BẮT ĐẦU VÀO GAME · START ADVENTURE</span>
-                <span className="btn-arrow">➜</span>
-              </button>
-            </div>
           </div>
         </div>
       )}

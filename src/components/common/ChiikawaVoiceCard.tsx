@@ -4,13 +4,15 @@ import {
   type ChiikawaCharacter,
   playChiikawaVoice
 } from '../../utils/chiikawaAudio'
+import { ChiikawaSVG } from './ChiikawaSVG'
 
 type Props = {
   character: ChiikawaCharacter
   customQuote?: string
+  size?: number
 }
 
-export function ChiikawaVoiceCard({ character, customQuote }: Props) {
+export function ChiikawaVoiceCard({ character, customQuote, size = 52 }: Props) {
   const char = CHIIKAWA_CHARACTERS[character]
   const [activePhrase, setActivePhrase] = useState<string | null>(null)
   const [isBouncing, setIsBouncing] = useState(false)
@@ -33,7 +35,10 @@ export function ChiikawaVoiceCard({ character, customQuote }: Props) {
       }}
       title={`Bấm vào ${char.name} (${char.jpName}) để nghe tiếng kêu cute!`}
     >
-      <span className="chiikawa-emoji">{char.avatarEmoji}</span>
+      <div className="chiikawa-svg-wrap">
+        <ChiikawaSVG character={character} size={size} />
+      </div>
+
       <div className="chiikawa-tag-info">
         <strong style={{ color: char.color }}>
           {char.name} <small>({char.jpName})</small>

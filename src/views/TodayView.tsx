@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ProgressRing } from '../components/common/ProgressRing'
 import { AdviceCard } from '../components/common/AdviceCard'
-import { ChibiMascot } from '../components/common/ChibiMascot'
+import { ChiikawaSVG } from '../components/common/ChiikawaSVG'
 import { ChiikawaVoiceCard } from '../components/common/ChiikawaVoiceCard'
 import { CoupleHeroCard } from '../components/couple/CoupleHeroCard'
 import { NhaTrangTripCard } from '../components/couple/NhaTrangTripCard'
@@ -157,10 +157,10 @@ export function TodayView({
               <small>PHÂN TÍCH TỰ ĐỘNG</small>
               <h3>Lời khuyên hồi phục</h3>
             </div>
-            <span className="soft-badge">AI Assistant</span>
+            <span className="soft-badge">Chiikawa Companion</span>
           </div>
           <div className="advice-mascot-row">
-            <ChibiMascot role="guide" size={88} showSpeechBubble={false} interactive={true} />
+            <ChiikawaSVG character="chiikawa" size={88} className="animate-bounce-gentle" />
             <div className="advice-main-content">
               <AdviceCard log={log} day={day} />
             </div>

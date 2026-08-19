@@ -1,11 +1,16 @@
 import { useState } from 'react'
 import { AppLogo } from '../components/common/AppLogo'
 import { YouTubeBGMPlayer } from '../components/common/YouTubeBGMPlayer'
-import { ChibiMascot, type MascotRole } from '../components/common/ChibiMascot'
 import { ChiikawaVoiceCard } from '../components/common/ChiikawaVoiceCard'
+import { ChiikawaSVG } from '../components/common/ChiikawaSVG'
 import { CoupleHeroCard } from '../components/couple/CoupleHeroCard'
 import { NhaTrangTripCard } from '../components/couple/NhaTrangTripCard'
 import { CozyAtmosphere } from '../components/couple/CozyAtmosphere'
+import {
+  CHIIKAWA_CHARACTERS,
+  type ChiikawaCharacter,
+  playChiikawaVoice
+} from '../utils/chiikawaAudio'
 import { triggerHaptic } from '../utils/haptics'
 
 type Props = {
@@ -13,11 +18,21 @@ type Props = {
 }
 
 export function LandingPage({ onEnterApp }: Props) {
-  const [selectedMascot, setSelectedMascot] = useState<MascotRole>('guide')
+  const [selectedChar, setSelectedChar] = useState<ChiikawaCharacter>('chiikawa')
+  const [activeQuote, setActiveQuote] = useState(
+    'Bé Chiikawa và những người bạn chào đón Dũng & Em Yêu! Bấm vào tụi mình để nghe tiếng kêu cute nhé ✨'
+  )
 
   const handleStart = () => {
     triggerHaptic('success')
     onEnterApp()
+  }
+
+  const handleSelectChar = (charKey: ChiikawaCharacter) => {
+    setSelectedChar(charKey)
+    const spoken = playChiikawaVoice(charKey)
+    const char = CHIIKAWA_CHARACTERS[charKey]
+    setActiveQuote(`${char.name} (${char.jpName}): "${spoken}" · ${char.quotes[0]}`)
   }
 
   return (
@@ -42,43 +57,50 @@ export function LandingPage({ onEnterApp }: Props) {
       {/* Flight Countdown & MoMo Couple Fund */}
       <NhaTrangTripCard />
 
-      {/* Hero Section with Interactive Chibi Companion */}
+      {/* Hero Section with Interactive Real Chiikawa Character Model */}
       <section className="landing-hero-section">
         <div className="landing-hero-badge">
-          <span>✦ Giao thức 10 Ngày Chuẩn Bị Toàn Diện Cho Chuyến Đi</span>
+          <span>✦ Chiikawa & Friends · Giao Thức 10 Ngày Chuẩn Bị Toàn Diện</span>
         </div>
         <h1 className="landing-hero-title">
           Build Energy. Track Recovery. <br />
           <span className="gradient-text">Ready For Nha Trang 27/08!</span>
         </h1>
         <p className="landing-hero-desc">
-          Không gian riêng tư theo dõi 6 trụ cột hồi phục và sẵn sàng cao độ: Giấc ngủ sâu, Dinh dưỡng sạch, Tập luyện chuẩn form, Uống nước đều đặn, và Đếm từng khoảnh khắc yêu thương.
+          Không gian riêng tư đồng hành cùng 6 bé nhân vật Chiikawa: Giấc ngủ sâu, Dinh dưỡng sạch, Tập luyện chuẩn form, Uống nước đều đặn, và Đếm từng khoảnh khắc yêu thương.
         </p>
 
-        {/* Interactive Hero Chibi Mascot */}
+        {/* Interactive Real Chiikawa Character Model Showcase */}
         <div className="landing-hero-mascot-container">
-          <ChibiMascot
-            role={selectedMascot}
-            size={150}
-            interactive={true}
-          />
+          <div className="chiikawa-hero-display" onClick={() => handleSelectChar(selectedChar)}>
+            <div className="chiikawa-speech-bubble animate-pop">
+              <p>{activeQuote}</p>
+              <span className="bubble-arrow" />
+            </div>
+            <div className="chiikawa-model-stage">
+              <ChiikawaSVG character={selectedChar} size={140} className="animate-bounce-gentle" />
+            </div>
+            <small className="tap-hint">👆 Chạm vào bé để nghe tiếng kêu cute!</small>
+          </div>
+
           <div className="mascot-selector-pills">
-            {(['guide', 'workout', 'healthy', 'nutrition', 'zen'] as MascotRole[]).map((r) => (
-              <button
-                key={r}
-                className={`mascot-pill-btn ${selectedMascot === r ? 'active' : ''}`}
-                onClick={() => {
-                  triggerHaptic('light')
-                  setSelectedMascot(r)
-                }}
-              >
-                {r === 'guide' && '📋 Hướng dẫn'}
-                {r === 'workout' && '🏋️ Đẩy tạ'}
-                {r === 'healthy' && '🥑 Ăn Healthy'}
-                {r === 'nutrition' && '💧 Nước uống'}
-                {r === 'zen' && '🧘 Thiền thở'}
-              </button>
-            ))}
+            {(['chiikawa', 'hachiware', 'usagi', 'momonga', 'kurimanju', 'rakko'] as ChiikawaCharacter[]).map((cKey) => {
+              const c = CHIIKAWA_CHARACTERS[cKey]
+              return (
+                <button
+                  key={cKey}
+                  className={`mascot-pill-btn ${selectedChar === cKey ? 'active' : ''}`}
+                  onClick={() => handleSelectChar(cKey)}
+                  style={{
+                    borderColor: selectedChar === cKey ? c.color : undefined,
+                    color: selectedChar === cKey ? c.color : undefined
+                  }}
+                >
+                  <span>{c.avatarEmoji}</span>
+                  <span>{c.name}</span>
+                </button>
+              )
+            })}
           </div>
         </div>
 
@@ -107,7 +129,7 @@ export function LandingPage({ onEnterApp }: Props) {
         <div className="chiikawa-universe-grid">
           {/* 1. Chiikawa */}
           <div className="chiikawa-char-card char-chiikawa">
-            <ChiikawaVoiceCard character="chiikawa" />
+            <ChiikawaVoiceCard character="chiikawa" size={60} />
             <div className="char-card-body">
               <span className="char-role-badge">🐹 Phục Hồi & Giấc Ngủ</span>
               <p>Bé mầm trắng dịu dàng, giúp Dũng & Em Yêu xoa dịu mệt mỏi và ngủ thật ngon giấc.</p>
@@ -116,7 +138,7 @@ export function LandingPage({ onEnterApp }: Props) {
 
           {/* 2. Hachiware */}
           <div className="chiikawa-char-card char-hachiware">
-            <ChiikawaVoiceCard character="hachiware" />
+            <ChiikawaVoiceCard character="hachiware" size={60} />
             <div className="char-card-body">
               <span className="char-role-badge">🐱 Bù Nước & Lạc Quan</span>
               <p>Mèo tai xanh thông minh với câu thần chú <em>"Nanto kanaare! (Mọi chuyện sẽ ổn thôi!)"</em>.</p>
@@ -125,7 +147,7 @@ export function LandingPage({ onEnterApp }: Props) {
 
           {/* 3. Usagi */}
           <div className="chiikawa-char-card char-usagi">
-            <ChiikawaVoiceCard character="usagi" />
+            <ChiikawaVoiceCard character="usagi" size={60} />
             <div className="char-card-body">
               <span className="char-role-badge">🐰 Thể Lực & Đẩy Tạ</span>
               <p>Thỏ vàng siêu năng lượng, luôn tràn ngập nhiệt huyết <em>"Uraaa! Ya-ha!"</em> tiếp lửa tập luyện.</p>
@@ -134,7 +156,7 @@ export function LandingPage({ onEnterApp }: Props) {
 
           {/* 4. Momonga */}
           <div className="chiikawa-char-card char-momonga">
-            <ChiikawaVoiceCard character="momonga" />
+            <ChiikawaVoiceCard character="momonga" size={60} />
             <div className="char-card-body">
               <span className="char-role-badge">🐿️ Dinh Dưỡng & Ăn Sạch</span>
               <p>Sóc bay lông xù sành ăn, hướng dẫn cấu trúc bữa ăn ngon miệng và giàu năng lượng sạch.</p>
@@ -143,7 +165,7 @@ export function LandingPage({ onEnterApp }: Props) {
 
           {/* 5. Kurimanju */}
           <div className="chiikawa-char-card char-kurimanju">
-            <ChiikawaVoiceCard character="kurimanju" />
+            <ChiikawaVoiceCard character="kurimanju" size={60} />
             <div className="char-card-body">
               <span className="char-role-badge">🦦 Thư Giãn & Âm Thanh</span>
               <p>Rái cá điềm tĩnh thích nhâm nhi trà, phát âm thanh sóng biển và mưa rơi ru ngủ cực êm.</p>
@@ -152,7 +174,7 @@ export function LandingPage({ onEnterApp }: Props) {
 
           {/* 6. Rakko Master */}
           <div className="chiikawa-char-card char-rakko">
-            <ChiikawaVoiceCard character="rakko" />
+            <ChiikawaVoiceCard character="rakko" size={60} />
             <div className="char-card-body">
               <span className="char-role-badge">⭐ Sư Phụ Kỷ Luật 10 Ngày</span>
               <p>Chiến binh rái cá dẫn đường, giúp bạn hoàn thành xuất sắc từng ngày trong lộ trình về đích.</p>

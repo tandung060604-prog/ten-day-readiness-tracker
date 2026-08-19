@@ -15,7 +15,7 @@
   --panel3: #182a3c;
   --text: #f4f7f8;
   --text-dim: #d1dde5;
-  --muted: #8fa1b2;
+  --muted: #a5b8c9; /* Boosted for WCAG 2.1 AA 4.5:1 contrast */
   --line: #203244;
   --line-light: rgba(255, 255, 255, 0.08);
   
@@ -48,7 +48,7 @@
   --panel3: #edf4f1;
   --text: #0d1e18;
   --text-dim: #2d4239;
-  --muted: #5e736a;
+  --muted: #4e635a;
   --line: #d8e4df;
   --line-light: rgba(0, 0, 0, 0.06);
   --primary: #119e72;
@@ -67,6 +67,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -89,6 +90,8 @@ button {
   background: var(--panel2);
   border-radius: var(--radius-md);
   padding: 10px 16px;
+  min-height: 44px; /* iOS HIG touch target standard */
+  min-width: 44px;
   font-weight: 600;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
@@ -1995,16 +1998,26 @@ input:focus, select:focus, textarea:focus {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 3px;
-    padding: 6px 10px;
+    padding: 6px 12px;
+    min-height: 48px; /* Standard iOS 48pt thumb zone tap target */
+    min-width: 48px;
     font-size: 11px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    transition: all 0.15s ease;
+  }
+  .mobile-nav-btn:active {
+    transform: scale(0.92);
+    background: rgba(255, 255, 255, 0.05);
   }
   .mobile-nav-btn.active {
     color: var(--primary);
     font-weight: 700;
   }
   .mobile-nav-icon {
-    font-size: 18px;
+    font-size: 19px;
   }
 }
 

@@ -5,6 +5,7 @@ import { BreathingTimer } from '../components/BreathingTimer'
 import { DeskBreakTracker } from '../components/features/DeskBreakTracker'
 import { SleepModal } from '../components/modals/SleepModal'
 import { triggerConfetti } from '../utils/confetti'
+import { triggerHaptic } from '../utils/haptics'
 import { deskBreaks, schedule, trainingPlan } from '../data/plan'
 import type { AppSettings, DailyLog, Exercise, SleepEntry } from '../types'
 
@@ -43,14 +44,18 @@ export function TodayView({
   const handleToggleChecklist = (id: string) => {
     const item = log.checklist.find(c => c.id === id)
     const doneCount = log.checklist.filter(c => c.done).length
-    // If completing the last remaining item, trigger confetti!
+    // If completing the last remaining item, trigger confetti & success haptic!
     if (item && !item.done && doneCount + 1 === log.checklist.length) {
       triggerConfetti()
+      triggerHaptic('success')
+    } else {
+      triggerHaptic(item && !item.done ? 'medium' : 'light')
     }
     toggleChecklist(id)
   }
 
   const handleToggleBreak = (time: string) => {
+    triggerHaptic('light')
     updateLog((l) => {
       const current = l.deskBreaksCompleted || []
       const next = current.includes(time)
@@ -58,6 +63,16 @@ export function TodayView({
         : [...current, time]
       return { ...l, deskBreaksCompleted: next }
     })
+  }
+
+  const handleAddWater = (amount: number) => {
+    triggerHaptic('light')
+    addWater(amount)
+  }
+
+  const handleToggleWorkout = () => {
+    triggerHaptic('medium')
+    toggleWorkout()
   }
 
   const handleSaveSleep = (sleep: SleepEntry) => {
@@ -152,13 +167,13 @@ export function TodayView({
           </div>
           <p>Mục tiêu: {settings.waterTargetMl.toLocaleString()} ml</p>
           <div className="actions">
-            <button className="water-btn" onClick={() => addWater(250)}>
+            <button className="water-btn" onClick={() => handleAddWater(250)}>
               +250ml
             </button>
-            <button className="water-btn" onClick={() => addWater(500)}>
+            <button className="water-btn" onClick={() => handleAddWater(500)}>
               +500ml
             </button>
-            <button className="water-btn secondary" onClick={() => addWater(-250)} title="Trừ bớt">
+            <button className="water-btn secondary" onClick={() => handleAddWater(-250)} title="Trừ bớt">
               -250
             </button>
           </div>
@@ -202,7 +217,7 @@ export function TodayView({
           <p>{plan.subtitle}</p>
           <button
             className={log.workout?.completed ? 'success wide' : 'primary wide'}
-            onClick={toggleWorkout}
+            onClick={handleToggleWorkout}
           >
             {log.workout?.completed ? '✓ Đã hoàn thành bài tập' : 'Đánh dấu đã tập'}
           </button>

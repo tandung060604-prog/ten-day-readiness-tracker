@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { triggerHaptic } from '../../utils/haptics'
 
 type Props = {
   onMinutes?: (minutes: number) => void
@@ -15,16 +16,28 @@ export function BreathingTimer({ onMinutes }: Props) {
 
   useEffect(() => {
     if (!running) return
-    const timer = window.setInterval(() => setSeconds((s) => s + 1), 1000)
+    const timer = window.setInterval(() => {
+      setSeconds((s) => {
+        const next = s + 1
+        const nextCycle = next % 10
+        // Trigger soft haptic at start of Inhale (0s) and Exhale (4s)
+        if (nextCycle === 0 || nextCycle === 4) {
+          triggerHaptic('light')
+        }
+        return next
+      })
+    }, 1000)
     return () => window.clearInterval(timer)
   }, [running])
 
   const reset = () => {
+    triggerHaptic('light')
     setRunning(false)
     setSeconds(0)
   }
 
   const logSession = () => {
+    triggerHaptic('success')
     const mins = Math.max(1, Math.round(seconds / 60))
     onMinutes?.(mins)
     reset()

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { triggerHaptic } from '../../utils/haptics'
 
 type Props = {
   isCompleted: boolean
@@ -24,6 +25,11 @@ export function KegelTimer({ isCompleted, onToggleComplete }: Props) {
     const timer = window.setInterval(() => {
       setSeconds((prev) => {
         const next = prev + 1
+        const phaseTime = next % cycleDuration
+        // Trigger haptic at boundary of contract and relax
+        if (phaseTime === 0 || phaseTime === contractDuration) {
+          triggerHaptic('medium')
+        }
         if (next > 0 && next % cycleDuration === 0) {
           setRepsDone((r) => r + 1)
         }
@@ -31,15 +37,17 @@ export function KegelTimer({ isCompleted, onToggleComplete }: Props) {
       })
     }, 1000)
     return () => window.clearInterval(timer)
-  }, [running, cycleDuration])
+  }, [running, cycleDuration, contractDuration])
 
   const handleReset = () => {
+    triggerHaptic('light')
     setRunning(false)
     setSeconds(0)
     setRepsDone(0)
   }
 
   const handleFinish = () => {
+    triggerHaptic('success')
     setRunning(false)
     if (!isCompleted) {
       onToggleComplete()

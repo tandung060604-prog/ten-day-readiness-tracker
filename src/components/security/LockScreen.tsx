@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { verifyPin, authenticateWithBiometrics, isBiometricsSupported } from '../../utils/security'
+import { triggerHaptic } from '../../utils/haptics'
 
 type Props = {
   storedPinHash: string
@@ -19,13 +20,17 @@ export function LockScreen({ storedPinHash, enableBiometrics = true, appTitle = 
     // Try auto biometrics once on mount if enabled
     if (enableBiometrics && isBiometricsSupported()) {
       authenticateWithBiometrics().then((success) => {
-        if (success) onUnlock()
+        if (success) {
+          triggerHaptic('success')
+          onUnlock()
+        }
       })
     }
   }, [enableBiometrics, onUnlock])
 
   const handleDigitClick = (digit: string) => {
     if (pin.length >= 6) return
+    triggerHaptic('light')
     const nextPin = pin + digit
     setPin(nextPin)
     setErrorMessage('')
@@ -37,6 +42,7 @@ export function LockScreen({ storedPinHash, enableBiometrics = true, appTitle = 
   }
 
   const handleDelete = () => {
+    triggerHaptic('light')
     setPin((prev) => prev.slice(0, -1))
     setErrorMessage('')
   }
@@ -44,9 +50,11 @@ export function LockScreen({ storedPinHash, enableBiometrics = true, appTitle = 
   const checkPinMatch = async (candidatePin: string) => {
     const isMatch = await verifyPin(candidatePin, storedPinHash)
     if (isMatch) {
+      triggerHaptic('success')
       onUnlock()
     } else {
-      // Shake animation
+      // Shake animation & error haptic
+      triggerHaptic('error')
       setIsShaking(true)
       setErrorMessage('Mã PIN không chính xác')
       setTimeout(() => {
@@ -57,8 +65,12 @@ export function LockScreen({ storedPinHash, enableBiometrics = true, appTitle = 
   }
 
   const handleBiometricsClick = async () => {
+    triggerHaptic('medium')
     const success = await authenticateWithBiometrics()
-    if (success) onUnlock()
+    if (success) {
+      triggerHaptic('success')
+      onUnlock()
+    }
   }
 
   return (

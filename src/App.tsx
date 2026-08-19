@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { AppLogo } from './components/common/AppLogo'
-import { BackgroundMusicPlayer } from './components/common/BackgroundMusicPlayer'
+import { YouTubeBGMPlayer } from './components/common/YouTubeBGMPlayer'
 import { DaySelector } from './components/common/DaySelector'
 import { MealModal } from './components/modals/MealModal'
 import { ExerciseModal } from './components/modals/ExerciseModal'
@@ -274,7 +274,7 @@ export function App() {
           </div>
 
           <div className="top-actions">
-            <BackgroundMusicPlayer defaultVolume={0.18} />
+            <YouTubeBGMPlayer />
 
             <button
               className="icon-btn"

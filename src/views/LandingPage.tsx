@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { AppLogo } from '../components/common/AppLogo'
-import { BackgroundMusicPlayer } from '../components/common/BackgroundMusicPlayer'
+import { YouTubeBGMPlayer } from '../components/common/YouTubeBGMPlayer'
 import { ChibiMascot, type MascotRole } from '../components/common/ChibiMascot'
 import { CoupleHeroCard } from '../components/couple/CoupleHeroCard'
 import { NhaTrangTripCard } from '../components/couple/NhaTrangTripCard'
@@ -28,7 +28,7 @@ export function LandingPage({ onEnterApp }: Props) {
       <header className="landing-navbar">
         <AppLogo size={42} showText subtitle="Dũng & Em Yêu · 10-Day Readiness" />
         <div className="landing-navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <BackgroundMusicPlayer defaultVolume={0.18} />
+          <YouTubeBGMPlayer />
           <button className="primary compact landing-nav-btn" onClick={handleStart}>
             Vào ứng dụng →
           </button>

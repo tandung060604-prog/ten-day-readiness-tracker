@@ -66,3 +66,26 @@ The MVP includes the already-known Day 1–3 entries so development starts with 
 ## Scope note
 
 This is intentionally an MVP. Future improvements could include PWA installability, notification reminders, richer food categorization, photo export ZIP, and optional encrypted sync.
+
+## Create the GitHub repository from this local repo
+
+The included local folder is already a Git repository with commits.
+For privacy, create the remote as **private** first because the seeded MVP contains personal routine/meal data.
+
+If GitHub CLI is installed and authenticated:
+
+```bash
+./scripts/publish-github.sh
+```
+
+Or choose another name:
+
+```bash
+./scripts/publish-github.sh my-readiness-tracker
+```
+
+To intentionally create a public repository:
+
+```bash
+./scripts/publish-github.sh ten-day-readiness-tracker --public
+```

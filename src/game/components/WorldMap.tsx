@@ -246,8 +246,8 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     glow: 'rgba(255, 71, 126, 0.75)',
     tag: 'Chu Kỳ Flo',
     size: 126,
-    x: 47.0,
-    y: 64.0,
+    x: 15.0,
+    y: 48.0,
     story: {
       chapter: 'CHƯƠNG XIII: BỆNH VIỆN TÌNH YÊU & SỨC KHỎE PHÁI ĐẸP',
       jpTag: '愛のクリニック · LOVE CLINIC',

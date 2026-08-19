@@ -5582,18 +5582,21 @@ html, body, #root, .app-shell {
    4. 3D LIVING GAME WORLD MAP  –  Storybook Interactive Engine
    ═══════════════════════════════════════════════════════════════════════ */
 .game-world-map-viewport {
-  position: relative;
+  position: fixed;
+  inset: 0;
   width: 100vw;
-  min-height: 100vh;
-  background: radial-gradient(circle at 50% 30%, #f6fcf4 0%, #e1f0fe 100%);
+  height: 100vh;
+  background: #62a356;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 56px 0 68px;
+  padding: 0;
+  margin: 0;
   cursor: grab;
   user-select: none;
   touch-action: none;
+  z-index: 10;
 }
 
 .game-world-map-viewport:active {
@@ -5675,64 +5678,18 @@ html, body, #root, .app-shell {
   100% { transform: translateX(calc(100vw + 600px)); }
 }
 
-/* ── Falling Sakura Petals & Butterflies ── */
-.living-world-ambient-layer {
+/* ── Main Map Canvas (Zoom/Pan Stage - Fullscreen Full-Bleed) ── */
+.game-map-canvas {
   position: absolute;
   inset: 0;
-  pointer-events: none;
-  z-index: 20;
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  min-height: 100vh;
+  box-shadow: none;
+  border-radius: 0;
   overflow: hidden;
-}
-
-.ambient-sakura-particles .petal {
-  position: absolute;
-  font-size: 16px;
-  opacity: 0;
-  animation: sakuraDrift 14s linear infinite;
-}
-
-.pt1 { top: 5%; left: 20%; animation-delay: 0s; }
-.pt2 { top: 12%; left: 55%; animation-delay: 2.5s; font-size: 13px; }
-.pt3 { top: 18%; left: 80%; animation-delay: 5s; }
-.pt4 { top: 8%; left: 35%; animation-delay: 7.5s; }
-.pt5 { top: 22%; left: 10%; animation-delay: 10s; font-size: 14px; }
-.pt6 { top: 15%; left: 70%; animation-delay: 12.5s; }
-
-@keyframes sakuraDrift {
-  0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
-  15% { opacity: 0.75; }
-  85% { opacity: 0.75; }
-  100% { transform: translate(140px, 80vh) rotate(540deg); opacity: 0; }
-}
-
-.ambient-butterflies .butterfly {
-  position: absolute;
-  font-size: 16px;
-  animation: butterflyFlutter 18s ease-in-out infinite alternate;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
-}
-
-.b1 { top: 45%; left: 30%; animation-duration: 20s; }
-.b2 { top: 60%; left: 65%; animation-duration: 16s; }
-
-@keyframes butterflyFlutter {
-  0% { transform: translate(0, 0) rotate(-10deg) scale(0.9); }
-  25% { transform: translate(40px, -25px) rotate(15deg) scale(1.05); }
-  50% { transform: translate(-30px, -50px) rotate(-12deg) scale(0.95); }
-  75% { transform: translate(50px, -20px) rotate(18deg) scale(1); }
-  100% { transform: translate(0, 0) rotate(-10deg) scale(0.9); }
-}
-
-/* ── Main Map Canvas (Zoom/Pan Stage) ── */
-.game-map-canvas {
-  position: relative;
-  width: 100%;
-  max-width: 1540px;
-  aspect-ratio: 16 / 9;
-  box-shadow: 0 24px 70px rgba(100, 80, 90, 0.32);
-  border-radius: 18px;
-  overflow: hidden;
-  background: #eef8eb;
+  background: #62a356;
   transform-origin: center center;
 }
 
@@ -6167,16 +6124,19 @@ html, body, #root, .app-shell {
 /* ═══════════════════════════════════════════════════════════════════════
    SPLIT-VIEW STORYBOOK RPG INSPECTION MODAL (Left: Model, Right: Story)
    ═══════════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════════
+   SPLIT-VIEW STORYBOOK RPG INSPECTION MODAL (Left: Model, Right: Story)
+   ═══════════════════════════════════════════════════════════════════════ */
 .storybook-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(12, 22, 18, 0.65);
-  backdrop-filter: blur(8px);
-  z-index: 200;
+  background: rgba(12, 22, 18, 0.72);
+  backdrop-filter: blur(10px);
+  z-index: 250;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 16px;
 }
 
 .storybook-modal-split-card {
@@ -6184,26 +6144,26 @@ html, body, #root, .app-shell {
   background: #ffffff;
   border: 2px solid #ffe3ec;
   border-radius: 26px;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
   max-width: 920px;
   width: 100%;
   max-height: 88vh;
   display: grid;
-  grid-template-columns: 360px 1fr;
+  grid-template-columns: 340px 1fr;
   overflow: hidden;
 }
 
 .storybook-close-btn {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 32px;
-  height: 32px;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: #f1f3f5;
-  border: none;
-  color: #555;
-  font-size: 15px;
+  border: 1px solid #dee2e6;
+  color: #495057;
+  font-size: 16px;
   font-weight: 900;
   cursor: pointer;
   display: grid;
@@ -6211,7 +6171,7 @@ html, body, #root, .app-shell {
   padding: 0;
   min-height: auto;
   min-width: auto;
-  z-index: 10;
+  z-index: 30;
   transition: all 0.2s ease;
 }
 
@@ -6228,7 +6188,7 @@ html, body, #root, .app-shell {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 30px 24px 24px;
+  padding: 26px 20px 20px;
   border-right: 1.5px solid #ffccd5;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 235, 242, 0.95) 100%);
   overflow: hidden;
@@ -6237,7 +6197,7 @@ html, body, #root, .app-shell {
 .showcase-model-container {
   position: relative;
   width: 100%;
-  height: 220px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -6302,13 +6262,34 @@ html, body, #root, .app-shell {
   margin-top: 10px;
 }
 
-/* ── RIGHT COLUMN: Story Narrative & Quest Info ── */
+/* ── RIGHT COLUMN: Story Narrative & Quest Info with Custom Scrollbar ── */
 .storybook-right-col {
-  padding: 28px 30px 24px;
+  padding: 26px 30px 22px;
   display: flex;
   flex-direction: column;
   gap: 14px;
   overflow-y: auto;
+  max-height: 88vh;
+  scrollbar-width: thin;
+  scrollbar-color: #ffccd5 #f8f9fa;
+}
+
+.storybook-right-col::-webkit-scrollbar {
+  width: 6px;
+}
+
+.storybook-right-col::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 999px;
+}
+
+.storybook-right-col::-webkit-scrollbar-thumb {
+  background: #ffccd5;
+  border-radius: 999px;
+}
+
+.storybook-right-col::-webkit-scrollbar-thumb:hover {
+  background: #ff8da1;
 }
 
 .story-header-area {
@@ -6354,9 +6335,190 @@ html, body, #root, .app-shell {
 }
 
 .scroll-icon {
-  font-size: 20px;
   flex-shrink: 0;
   margin-top: 2px;
+}
+
+.story-narrative-box p {
+  margin: 0;
+  font-size: 13px;
+  color: #495057;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+/* Character Dialogue Quote Box */
+.story-character-quote-box {
+  background: #f0f7ff;
+  border: 1.5px solid #d0e3ff;
+  border-radius: 16px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quote-speech-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.quote-mark {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.quote-speech-line p {
+  margin: 0;
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 700;
+  color: #1c7ed6;
+  line-height: 1.45;
+}
+
+.voice-replay-btn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #74c0fc;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #1971c2;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: auto;
+  min-width: auto;
+}
+
+.voice-replay-btn:hover {
+  background: #e7f5ff;
+  border-color: #339af0;
+  transform: scale(1.04);
+}
+
+/* Quest Objectives & Rewards Grid */
+.story-quest-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.quest-meta-item {
+  background: #f8f9fa;
+  border: 1.5px solid #e9ecef;
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.meta-label {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+}
+
+.meta-val {
+  font-size: 12px;
+  font-weight: 700;
+  color: #2b2d42;
+  line-height: 1.35;
+}
+
+.meta-val.reward-val {
+  color: #d6336c;
+  font-weight: 800;
+}
+
+/* Actions Row */
+.story-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid #f1f3f5;
+}
+
+.story-back-btn {
+  background: #f8f9fa;
+  border: 1.5px solid #dee2e6;
+  color: #495057;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.story-back-btn:hover {
+  background: #e9ecef;
+}
+
+.story-enter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #d6336c;
+  border: none;
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(214, 51, 108, 0.4);
+  transition: all 0.2s ease;
+}
+
+.story-enter-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 12px 32px rgba(214, 51, 108, 0.55);
+}
+
+.btn-arrow-icon {
+  font-size: 15px;
+  transition: transform 0.2s ease;
+}
+
+.story-enter-btn:hover .btn-arrow-icon {
+  transform: translateX(4px);
+}
+
+/* Mobile Split Card Responsive */
+@media (max-width: 768px) {
+  .storybook-modal-split-card {
+    grid-template-columns: 1fr;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+  .storybook-left-col {
+    border-right: none;
+    border-bottom: 1.5px solid #ffccd5;
+    padding: 20px 16px;
+  }
+  .showcase-model-container {
+    height: 140px;
+  }
+  .storybook-right-col {
+    padding: 18px 18px;
+    max-height: none;
+  }
+  .story-quest-meta-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .story-narrative-box p {

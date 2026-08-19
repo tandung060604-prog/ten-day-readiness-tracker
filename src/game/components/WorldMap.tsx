@@ -392,7 +392,7 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
   const [mascotBounce, setMascotBounce] = useState(false)
   const [activeVoicePhrase, setActiveVoicePhrase] = useState<string | null>(null)
 
-  // Zoom & Pan Engine with full Touch & Mouse support
+  // Zoom & Clamped Pan Engine (Farm Game Style - cannot drag out of bounds)
   const [zoom, setZoom] = useState(1.0)
   const [pan, setPan] = useState({ x: 0, y: 0 })
   const isDraggingRef = useRef(false)
@@ -401,31 +401,63 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
   const touchDistanceRef = useRef<number | null>(null)
   const initialZoomRef = useRef(1.0)
   const containerRef = useRef<HTMLDivElement>(null)
-  const hideHudTimerRef = useRef<number | null>(null)
+  const idleTimerRef = useRef<number | null>(null)
 
-  const triggerHudHide = useCallback((moving: boolean) => {
-    if (onDragStateChange) {
-      if (moving) {
-        if (hideHudTimerRef.current) clearTimeout(hideHudTimerRef.current)
-        onDragStateChange(true)
-      } else {
-        hideHudTimerRef.current = window.setTimeout(() => {
-          onDragStateChange(false)
-        }, 800)
-      }
+  // Clamping boundary calculation (keeps map tightly within view bounds)
+  const clampCoords = useCallback((x: number, y: number, z: number) => {
+    if (z <= 1.0) return { x: 0, y: 0 }
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+    const maxPanX = (vw * (z - 1)) / 2
+    const maxPanY = (vh * (z - 1)) / 2
+    return {
+      x: Math.max(-maxPanX, Math.min(maxPanX, x)),
+      y: Math.max(-maxPanY, Math.min(maxPanY, y))
     }
+  }, [])
+
+  // 5-Second Idle Inactivity Timer for Top & Bottom HUD Auto-Hide
+  const recordMapActivity = useCallback(() => {
+    if (onDragStateChange) {
+      onDragStateChange(true) // Hide HUD during interaction
+    }
+    if (idleTimerRef.current) {
+      window.clearTimeout(idleTimerRef.current)
+    }
+    // After 5s of no interaction, reveal HUD again
+    idleTimerRef.current = window.setTimeout(() => {
+      if (onDragStateChange) {
+        onDragStateChange(false)
+      }
+    }, 5000)
   }, [onDragStateChange])
+
+  // Recalculate on screen orientation change (Portrait <-> Landscape)
+  useEffect(() => {
+    const handleResize = () => {
+      setPan((prev) => clampCoords(prev.x, prev.y, zoom))
+    }
+    window.addEventListener('resize', handleResize)
+    window.addEventListener('orientationchange', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('orientationchange', handleResize)
+    }
+  }, [clampCoords, zoom])
 
   // Zoom controls
   const handleZoom = (delta: number) => {
+    recordMapActivity()
     setZoom((prev) => {
-      const next = Math.max(0.75, Math.min(2.4, prev + delta))
+      const next = Math.max(1.0, Math.min(2.5, +(prev + delta).toFixed(2)))
+      setPan((curr) => clampCoords(curr.x, curr.y, next))
       audioSystem.playClick('soft')
       return next
     })
   }
 
   const handleResetZoom = () => {
+    recordMapActivity()
     setZoom(1.0)
     setPan({ x: 0, y: 0 })
     audioSystem.playClick('soft')
@@ -433,51 +465,50 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
 
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault()
-    triggerHudHide(true)
-    const delta = e.deltaY < 0 ? 0.12 : -0.12
-    setZoom((prev) => Math.max(0.75, Math.min(2.4, prev + delta)))
-    triggerHudHide(false)
+    recordMapActivity()
+    const delta = e.deltaY < 0 ? 0.15 : -0.15
+    setZoom((prev) => {
+      const next = Math.max(1.0, Math.min(2.5, +(prev + delta).toFixed(2)))
+      setPan((curr) => clampCoords(curr.x, curr.y, next))
+      return next
+    })
   }
 
   // 1. Mouse Drag Gestures
   const handleMouseDown = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('.interactive-control')) return
+    recordMapActivity()
     isDraggingRef.current = true
     dragStartRef.current = { x: e.clientX, y: e.clientY }
     initialPanRef.current = { ...pan }
-    triggerHudHide(true)
   }
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!isDraggingRef.current) return
+    recordMapActivity()
     const dx = e.clientX - dragStartRef.current.x
     const dy = e.clientY - dragStartRef.current.y
-    setPan({
-      x: initialPanRef.current.x + dx,
-      y: initialPanRef.current.y + dy
-    })
-  }, [])
+    setPan(clampCoords(initialPanRef.current.x + dx, initialPanRef.current.y + dy, zoom))
+  }, [clampCoords, recordMapActivity, zoom])
 
   const handleMouseUp = useCallback(() => {
     if (isDraggingRef.current) {
       isDraggingRef.current = false
-      triggerHudHide(false)
+      recordMapActivity()
     }
-  }, [triggerHudHide])
+  }, [recordMapActivity])
 
   // 2. Multi-Touch Drag & Pinch-to-Zoom for Mobile
   const handleTouchStart = (e: React.TouchEvent) => {
     if ((e.target as HTMLElement).closest('.interactive-control')) return
-    triggerHudHide(true)
+    recordMapActivity()
 
     if (e.touches.length === 1) {
-      // Single finger drag
       isDraggingRef.current = true
       dragStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }
       initialPanRef.current = { ...pan }
       touchDistanceRef.current = null
     } else if (e.touches.length >= 2) {
-      // 2-finger pinch zoom
       isDraggingRef.current = false
       const dx = e.touches[0].clientX - e.touches[1].clientX
       const dy = e.touches[0].clientY - e.touches[1].clientY
@@ -487,27 +518,26 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
   }
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    recordMapActivity()
     if (e.touches.length === 1 && isDraggingRef.current) {
       const dx = e.touches[0].clientX - dragStartRef.current.x
       const dy = e.touches[0].clientY - dragStartRef.current.y
-      setPan({
-        x: initialPanRef.current.x + dx,
-        y: initialPanRef.current.y + dy
-      })
+      setPan(clampCoords(initialPanRef.current.x + dx, initialPanRef.current.y + dy, zoom))
     } else if (e.touches.length >= 2 && touchDistanceRef.current !== null) {
       const dx = e.touches[0].clientX - e.touches[1].clientX
       const dy = e.touches[0].clientY - e.touches[1].clientY
       const currentDist = Math.hypot(dx, dy)
       const scaleFactor = currentDist / touchDistanceRef.current
-      const newZoom = Math.max(0.75, Math.min(2.4, initialZoomRef.current * scaleFactor))
+      const newZoom = Math.max(1.0, Math.min(2.5, +(initialZoomRef.current * scaleFactor).toFixed(2)))
       setZoom(newZoom)
+      setPan((curr) => clampCoords(curr.x, curr.y, newZoom))
     }
   }
 
   const handleTouchEnd = () => {
     isDraggingRef.current = false
     touchDistanceRef.current = null
-    triggerHudHide(false)
+    recordMapActivity()
   }
 
   useEffect(() => {
@@ -521,6 +551,7 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
 
   // Click on Building -> Play SFX & Open Story Modal (WITHOUT moving or displacing the map)
   const handleBuildingClick = (b: (typeof MAP_BUILDINGS)[0]) => {
+    recordMapActivity()
     audioSystem.playBuildingInspectSFX(b.id)
     const phrase = playChiikawaVoice(b.story.voiceChar)
     setActiveVoicePhrase(`${b.story.charName}: "${phrase}"`)
@@ -544,6 +575,7 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
   }
 
   const handleMascotClick = () => {
+    recordMapActivity()
     const phrase = playChiikawaVoice('usagi')
     setMascotBounce(true)
     setDialogIdx((prev) => (prev + 1) % DIALOG_LINES.length)
@@ -558,6 +590,12 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
     <div
       className="game-world-map-viewport"
       ref={containerRef}
+      onMouseDown={handleMouseDown}
+      onWheel={handleWheel}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
     >
       {/* ══════ SUNLIGHT GOD RAYS & VOLUMETRIC ATMOSPHERE ══════ */}
       <div className="sunlight-god-rays" />
@@ -569,8 +607,14 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
         <div className="soft-sky-cloud cloud-soft-3" />
       </div>
 
-      {/* ══════ MAIN INTERACTIVE MAP CANVAS (Firmly Fixed Fullscreen) ══════ */}
-      <div className="game-map-canvas">
+      {/* ══════ MAIN INTERACTIVE MAP CANVAS (Full Bleed with Clamped Pan & Zoom) ══════ */}
+      <div
+        className="game-map-canvas"
+        style={{
+          transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${zoom})`,
+          transition: isDraggingRef.current ? 'none' : 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)'
+        }}
+      >
         {/* 1. Base Terrain Background (Clean, High-Res, Guaranteed Load) */}
         <img
           src="./assets/game_terrain.jpg"

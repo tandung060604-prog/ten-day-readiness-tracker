@@ -124,7 +124,7 @@ export function LandingPage({ onEnterApp }: Props) {
             <div className="chibi-card-content">
               <span className="chibi-card-role">🧘 Chibi Zen Master</span>
               <h3>Thở 4:6 & Giấc Ngủ</h3>
-              <p>Hướng dẫn bài thở nhịp phó giao cảm giải phóng căng thẳng, đưa bạn vào giấc ngủ sâu $\ge 8\text{h}$.</p>
+              <p>Hướng dẫn bài thở nhịp phó giao cảm giải phóng căng thẳng, đưa bạn vào giấc ngủ sâu từ 7.5 đến 8 tiếng mỗi đêm.</p>
             </div>
           </div>
         </div>

@@ -8,6 +8,7 @@ import type { ChiikawaCharacter } from '../../utils/chiikawaAudio'
 type Props = {
   onSelectBuilding: (id: LocationId, transition: TransitionType) => void
   loveDays: number
+  onDragStateChange?: (isDragging: boolean) => void
 }
 
 interface BuildingStoryData {
@@ -37,8 +38,8 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     glow: 'rgba(255,141,161,0.7)',
     tag: 'Tổ Ấm',
     size: 130,
-    x: 14.0,
-    y: 28.0,
+    x: 15.0,
+    y: 27.0,
     story: {
       chapter: 'CHƯƠNG I: TỔ ẤM YÊU THƯƠNG',
       jpTag: '愛の我が家 · HOME',
@@ -66,8 +67,8 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     glow: 'rgba(255,209,102,0.7)',
     tag: 'Thể Lực',
     size: 120,
-    x: 32.0,
-    y: 22.0,
+    x: 33.0,
+    y: 20.0,
     story: {
       chapter: 'CHƯƠNG II: ĐẤU TRƯỜNG LUYỆN THỂ',
       jpTag: '武道鍛錬場 · GYM DOJO',
@@ -96,7 +97,7 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     tag: 'Bù Nước',
     size: 114,
     x: 52.0,
-    y: 19.0,
+    y: 18.0,
     story: {
       chapter: 'CHƯƠNG III: ĐÀI NƯỚC TINH KHIẾT',
       jpTag: '生命の泉 · FOUNTAIN',
@@ -124,8 +125,8 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     glow: 'rgba(205,180,219,0.7)',
     tag: 'Nhật Ký',
     size: 126,
-    x: 69.0,
-    y: 23.0,
+    x: 70.0,
+    y: 22.0,
     story: {
       chapter: 'CHƯƠNG IV: THƯ VIỆN KÝ ỨC',
       jpTag: '記憶の図書館 · LIBRARY',
@@ -153,8 +154,8 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     glow: 'rgba(255,141,161,0.7)',
     tag: 'Ảnh Đôi',
     size: 126,
-    x: 84.0,
-    y: 28.0,
+    x: 85.0,
+    y: 27.0,
     story: {
       chapter: 'CHƯƠNG V: TIỆM ẢNH HẸN HÒ',
       jpTag: '写真館 · PHOTO STUDIO',
@@ -383,33 +384,35 @@ const DIALOG_LINES = [
   'Nhấn vào bất kỳ địa điểm nào trên bản đồ để mở cốt truyện nha! 🚀'
 ]
 
-export function WorldMap({ onSelectBuilding, loveDays }: Props) {
+export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Props) {
   const [activeStoryBuilding, setActiveStoryBuilding] = useState<(typeof MAP_BUILDINGS)[0] | null>(null)
   const [dialogIdx, setDialogIdx] = useState(0)
   const [mascotBounce, setMascotBounce] = useState(false)
   const [activeVoicePhrase, setActiveVoicePhrase] = useState<string | null>(null)
 
-  // Zoom & Pan Engine
+  // Zoom & Pan Engine with full Touch & Mouse support
   const [zoom, setZoom] = useState(1.0)
   const [pan, setPan] = useState({ x: 0, y: 0 })
   const isDraggingRef = useRef(false)
   const dragStartRef = useRef({ x: 0, y: 0 })
   const initialPanRef = useRef({ x: 0, y: 0 })
+  const touchDistanceRef = useRef<number | null>(null)
+  const initialZoomRef = useRef(1.0)
   const containerRef = useRef<HTMLDivElement>(null)
+  const hideHudTimerRef = useRef<number | null>(null)
 
-  // Auto Landscape Request on mobile
-  useEffect(() => {
-    const requestLandscape = async () => {
-      try {
-        if (screen.orientation && (screen.orientation as any).lock) {
-          await (screen.orientation as any).lock('landscape')
-        }
-      } catch {
-        // Ignored if user hasn't engaged fullscreen or unsupported
+  const triggerHudHide = useCallback((moving: boolean) => {
+    if (onDragStateChange) {
+      if (moving) {
+        if (hideHudTimerRef.current) clearTimeout(hideHudTimerRef.current)
+        onDragStateChange(true)
+      } else {
+        hideHudTimerRef.current = window.setTimeout(() => {
+          onDragStateChange(false)
+        }, 800)
       }
     }
-    requestLandscape()
-  }, [])
+  }, [onDragStateChange])
 
   // Zoom controls
   const handleZoom = (delta: number) => {
@@ -428,15 +431,19 @@ export function WorldMap({ onSelectBuilding, loveDays }: Props) {
 
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault()
+    triggerHudHide(true)
     const delta = e.deltaY < 0 ? 0.12 : -0.12
     setZoom((prev) => Math.max(0.75, Math.min(2.4, prev + delta)))
+    triggerHudHide(false)
   }
 
+  // 1. Mouse Drag Gestures
   const handleMouseDown = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('.interactive-control')) return
     isDraggingRef.current = true
     dragStartRef.current = { x: e.clientX, y: e.clientY }
     initialPanRef.current = { ...pan }
+    triggerHudHide(true)
   }
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
@@ -450,8 +457,56 @@ export function WorldMap({ onSelectBuilding, loveDays }: Props) {
   }, [])
 
   const handleMouseUp = useCallback(() => {
+    if (isDraggingRef.current) {
+      isDraggingRef.current = false
+      triggerHudHide(false)
+    }
+  }, [triggerHudHide])
+
+  // 2. Multi-Touch Drag & Pinch-to-Zoom for Mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if ((e.target as HTMLElement).closest('.interactive-control')) return
+    triggerHudHide(true)
+
+    if (e.touches.length === 1) {
+      // Single finger drag
+      isDraggingRef.current = true
+      dragStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+      initialPanRef.current = { ...pan }
+      touchDistanceRef.current = null
+    } else if (e.touches.length >= 2) {
+      // 2-finger pinch zoom
+      isDraggingRef.current = false
+      const dx = e.touches[0].clientX - e.touches[1].clientX
+      const dy = e.touches[0].clientY - e.touches[1].clientY
+      touchDistanceRef.current = Math.hypot(dx, dy)
+      initialZoomRef.current = zoom
+    }
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 1 && isDraggingRef.current) {
+      const dx = e.touches[0].clientX - dragStartRef.current.x
+      const dy = e.touches[0].clientY - dragStartRef.current.y
+      setPan({
+        x: initialPanRef.current.x + dx,
+        y: initialPanRef.current.y + dy
+      })
+    } else if (e.touches.length >= 2 && touchDistanceRef.current !== null) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX
+      const dy = e.touches[0].clientY - e.touches[1].clientY
+      const currentDist = Math.hypot(dx, dy)
+      const scaleFactor = currentDist / touchDistanceRef.current
+      const newZoom = Math.max(0.75, Math.min(2.4, initialZoomRef.current * scaleFactor))
+      setZoom(newZoom)
+    }
+  }
+
+  const handleTouchEnd = () => {
     isDraggingRef.current = false
-  }, [])
+    touchDistanceRef.current = null
+    triggerHudHide(false)
+  }
 
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove)
@@ -462,7 +517,7 @@ export function WorldMap({ onSelectBuilding, loveDays }: Props) {
     }
   }, [handleMouseMove, handleMouseUp])
 
-  // Click on Building -> Play Building SFX, Play Voice, Camera Pan & Open Story Modal
+  // Click on Building -> Play SFX & Focus Camera & Open Story Modal
   const handleBuildingClick = (b: (typeof MAP_BUILDINGS)[0]) => {
     audioSystem.playBuildingInspectSFX(b.id)
     const phrase = playChiikawaVoice(b.story.voiceChar)
@@ -509,6 +564,10 @@ export function WorldMap({ onSelectBuilding, loveDays }: Props) {
       ref={containerRef}
       onMouseDown={handleMouseDown}
       onWheel={handleWheel}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
     >
       {/* ══════ SUNLIGHT GOD RAYS & VOLUMETRIC ATMOSPHERE ══════ */}
       <div className="sunlight-god-rays" />
@@ -544,7 +603,7 @@ export function WorldMap({ onSelectBuilding, loveDays }: Props) {
           transition: isDraggingRef.current ? 'none' : 'transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)'
         }}
       >
-        {/* 1. Clean High-Res Terrain Background (NO text, NO baked UI) */}
+        {/* 1. Base Terrain Background (Clean, High-Res, NO Baked UI) */}
         <img
           src="./assets/game_terrain.jpg"
           alt="Little Days Town Map"
@@ -552,11 +611,104 @@ export function WorldMap({ onSelectBuilding, loveDays }: Props) {
           draggable={false}
         />
 
-        {/* Dynamic Water & Waves Effect */}
+        {/* 2. Tailor-Made Road & Landscaping Overlay (Cobblestone Paths Linking Every Building) */}
+        <svg className="custom-terrain-roads-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+          {/* Stone Road Paths connecting Town Hall -> Central Plaza -> Buildings -> Beach */}
+          <path
+            d="M 48,79 Q 49,65 50,52"
+            fill="none"
+            stroke="#f5e6d3"
+            strokeWidth="3.2"
+            strokeDasharray="1.2 0.4"
+            opacity="0.85"
+          />
+          <path
+            d="M 50,52 Q 38,45 33,20"
+            fill="none"
+            stroke="#f5e6d3"
+            strokeWidth="2.8"
+            strokeDasharray="1.2 0.4"
+            opacity="0.8"
+          />
+          <path
+            d="M 33,20 Q 24,24 15,27"
+            fill="none"
+            stroke="#f5e6d3"
+            strokeWidth="2.6"
+            strokeDasharray="1.2 0.4"
+            opacity="0.8"
+          />
+          <path
+            d="M 50,52 Q 51,32 52,18"
+            fill="none"
+            stroke="#f5e6d3"
+            strokeWidth="2.8"
+            strokeDasharray="1.2 0.4"
+            opacity="0.8"
+          />
+          <path
+            d="M 50,52 Q 62,35 70,22"
+            fill="none"
+            stroke="#f5e6d3"
+            strokeWidth="2.8"
+            strokeDasharray="1.2 0.4"
+            opacity="0.8"
+          />
+          <path
+            d="M 70,22 Q 78,24 85,27"
+            fill="none"
+            stroke="#f5e6d3"
+            strokeWidth="2.6"
+            strokeDasharray="1.2 0.4"
+            opacity="0.8"
+          />
+          <path
+            d="M 50,52 Q 64,50 74,47"
+            fill="none"
+            stroke="#f5e6d3"
+            strokeWidth="3.0"
+            strokeDasharray="1.2 0.4"
+            opacity="0.8"
+          />
+          <path
+            d="M 74,47 Q 72,60 71,70"
+            fill="none"
+            stroke="#f5e6d3"
+            strokeWidth="3.2"
+            strokeDasharray="1.2 0.4"
+            opacity="0.85"
+          />
+          <path
+            d="M 71,70 Q 80,72 88,74"
+            fill="none"
+            stroke="#ffe3aa"
+            strokeWidth="3.6"
+            strokeDasharray="1.4 0.5"
+            opacity="0.9"
+          />
+          <path
+            d="M 50,52 Q 35,66 25,76"
+            fill="none"
+            stroke="#f5e6d3"
+            strokeWidth="3.0"
+            strokeDasharray="1.2 0.4"
+            opacity="0.8"
+          />
+          <path
+            d="M 50,52 Q 30,54 13,56"
+            fill="none"
+            stroke="#f5e6d3"
+            strokeWidth="2.8"
+            strokeDasharray="1.2 0.4"
+            opacity="0.8"
+          />
+        </svg>
+
+        {/* Dynamic Water Shimmer & Nha Trang Ocean Waves */}
         <div className="terrain-water-shimmer" />
         <div className="beach-waves-animation" />
 
-        {/* 2. Farming-Game Style 3D Isometric Buildings (Natural Idle Bobbing, Zero Permanent Text) */}
+        {/* 3. Farming-Game Style 3D Isometric Buildings (Natural Idle Bobbing, Zero Permanent Text) */}
         {MAP_BUILDINGS.map((b) => {
           const isSelected = activeStoryBuilding?.id === b.id
 
@@ -602,7 +754,7 @@ export function WorldMap({ onSelectBuilding, loveDays }: Props) {
           )
         })}
 
-        {/* 3. Central Plaza Mascots (Chiikawa & Usagi) */}
+        {/* 4. Central Plaza Mascots (Chiikawa & Usagi) */}
         <div
           className={`central-mascots-group ${mascotBounce ? 'mascots-excited' : ''}`}
           onClick={(e) => {

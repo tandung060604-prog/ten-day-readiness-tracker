@@ -5491,6 +5491,48 @@ html, body, #root, .app-shell {
   pointer-events: none;
 }
 
+/* ── Custom Tailor-Made Road Network (Overlay Paths) ── */
+.custom-terrain-roads-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  filter: drop-shadow(0 2px 4px rgba(60, 40, 20, 0.3));
+}
+
+/* ── HUD Auto-Slide Retraction When Moving on Map ── */
+.hud-top-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 80;
+  transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.3s ease;
+}
+
+.hud-top-wrapper.hud-slide-up {
+  transform: translateY(-120%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hud-bottom-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 80;
+  transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.3s ease;
+}
+
+.hud-bottom-wrapper.hud-slide-down {
+  transform: translateY(120%);
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Dynamic Water & Waves Effect */
 .terrain-water-shimmer {
   position: absolute;

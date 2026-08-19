@@ -108,6 +108,7 @@ export function App() {
   const [showAddMealModal, setShowAddMealModal] = useState(false)
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null)
   const [inventoryItems] = useState<InventoryItem[]>(INITIAL_INVENTORY)
+  const [isHudHidden, setIsHudHidden] = useState(false)
 
   // Security Lock State
   const [isLocked, setIsLocked] = useState<boolean>(() => {
@@ -315,19 +316,25 @@ export function App() {
         <SplashScreen onEnterGame={handleEnterFromSplash} />
       ) : (
         /* 2. Main Game World Scene */
-        <div className="game-canvas-container">
+        <div className={`game-canvas-container ${isHudHidden && currentLocation === 'map' ? 'hud-auto-hidden' : ''}`}>
           {/* Top HUD */}
-          <TopHUD
-            stats={gameStats}
-            onOpenSettings={() => triggerTransition('gear', 'settings')}
-            onOpenHome={() => triggerTransition('heart', 'home')}
-            onOpenQuests={() => triggerTransition('cloud', 'quests')}
-          />
+          <div className={`hud-top-wrapper ${isHudHidden && currentLocation === 'map' ? 'hud-slide-up' : ''}`}>
+            <TopHUD
+              stats={gameStats}
+              onOpenSettings={() => triggerTransition('gear', 'settings')}
+              onOpenHome={() => triggerTransition('heart', 'home')}
+              onOpenQuests={() => triggerTransition('cloud', 'quests')}
+            />
+          </div>
 
           {/* Main Stage: World Map or Active Building Module */}
           <main className="game-viewport">
             {currentLocation === 'map' ? (
-              <WorldMap onSelectBuilding={handleSelectBuilding} loveDays={loveDays} />
+              <WorldMap
+                onSelectBuilding={handleSelectBuilding}
+                loveDays={loveDays}
+                onDragStateChange={(isMoving) => setIsHudHidden(isMoving)}
+              />
             ) : (
               <BuildingModuleModal
                 locationId={currentLocation}
@@ -507,11 +514,13 @@ export function App() {
           </main>
 
           {/* Bottom Dock HUD */}
-          <BottomHUD
-            currentLocation={currentLocation}
-            onNavigate={(loc) => triggerTransition('cloud', loc)}
-            onOpenInventory={() => setIsInventoryOpen(true)}
-          />
+          <div className={`hud-bottom-wrapper ${isHudHidden && currentLocation === 'map' ? 'hud-slide-down' : ''}`}>
+            <BottomHUD
+              currentLocation={currentLocation}
+              onNavigate={(loc) => triggerTransition('cloud', loc)}
+              onOpenInventory={() => setIsInventoryOpen(true)}
+            />
+          </div>
         </div>
       )}
 

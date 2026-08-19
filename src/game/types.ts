@@ -30,17 +30,16 @@ export type BuildingState =
   | 'locked'
   | 'completed'
 
-export interface GameBuilding {
+export interface MapBuilding {
   id: LocationId
   name: string
-  subtitle: string
   icon: string
-  character: 'chiikawa' | 'hachiware' | 'usagi' | 'momonga' | 'kurimanju' | 'rakko'
   transition: TransitionType
-  gridCol: number
-  gridRow: number
   color: string
-  tag: string
+  glow: string
+  /** Position on the map as percentage (0–100) */
+  x: number
+  y: number
 }
 
 export interface GameStats {
@@ -48,6 +47,10 @@ export interface GameStats {
   stars: number
   gems: number
   energy: number
+  energyMax: number
+  level: number
+  levelProgress: number
+  loveDays: number
   day: number
   maxDays: number
 }

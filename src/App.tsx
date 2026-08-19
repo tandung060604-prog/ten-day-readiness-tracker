@@ -271,12 +271,22 @@ export function App() {
     triggerTransition(transition, locationId)
   }
 
+  // Love days counter
+  const loveStart = new Date('2026-06-11T00:00:00')
+  const nowDate = new Date()
+  const loveDays = Math.max(0, Math.floor((nowDate.getTime() - loveStart.getTime()) / 86400000))
+
   // Game Stats for Top HUD
+  const completedDays = logs.filter((l) => l.checklist.every((c) => c.done)).length
   const gameStats: GameStats = {
-    hearts: 520,
-    stars: logs.filter((l) => l.checklist.every((c) => c.done)).length * 10 + 10,
-    gems: logs.filter((l) => l.workout?.completed).length * 2 + 8,
-    energy: currentScore,
+    hearts: 12520 + loveDays * 10,
+    stars: completedDays * 864 + 200,
+    gems: logs.filter((l) => l.workout?.completed).length * 125 + 500,
+    energy: 60,
+    energyMax: 60,
+    level: 28 + completedDays,
+    levelProgress: Math.min(100, currentScore),
+    loveDays,
     day,
     maxDays: 10
   }
@@ -311,12 +321,13 @@ export function App() {
             stats={gameStats}
             onOpenSettings={() => triggerTransition('gear', 'settings')}
             onOpenHome={() => triggerTransition('heart', 'home')}
+            onOpenQuests={() => triggerTransition('cloud', 'quests')}
           />
 
           {/* Main Stage: World Map or Active Building Module */}
           <main className="game-viewport">
             {currentLocation === 'map' ? (
-              <WorldMap onSelectBuilding={handleSelectBuilding} />
+              <WorldMap onSelectBuilding={handleSelectBuilding} loveDays={loveDays} />
             ) : (
               <BuildingModuleModal
                 locationId={currentLocation}

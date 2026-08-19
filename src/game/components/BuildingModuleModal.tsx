@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { ChiikawaSVG } from '../../components/common/ChiikawaSVG'
 import { audioSystem } from '../systems/GameAudioSystem'
-import { WORLD_BUILDINGS } from './WorldMap'
+import { MAP_BUILDINGS } from './WorldMap'
 import type { LocationId } from '../types'
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 }
 
 export function BuildingModuleModal({ locationId, onBackToMap, children }: Props) {
-  const building = WORLD_BUILDINGS.find((b) => b.id === locationId) || WORLD_BUILDINGS[0]
+  const building = MAP_BUILDINGS.find((b) => b.id === locationId) || MAP_BUILDINGS[0]
 
   const handleBack = () => {
     audioSystem.playClick('soft')
@@ -30,13 +30,12 @@ export function BuildingModuleModal({ locationId, onBackToMap, children }: Props
         <div className="module-scene-title-group">
           <span className="module-building-icon">{building.icon}</span>
           <div>
-            <h2>{building.name}</h2>
-            <small>{building.subtitle}</small>
+            <h2>{building.name.replace('\n', ' ')}</h2>
           </div>
         </div>
 
-        <div className="module-char-badge" title={`Bé ${building.character} đang đồng hành cùng bạn`}>
-          <ChiikawaSVG character={building.character} size={42} className="animate-bounce-gentle" />
+        <div className="module-char-badge" title="Bé Chiikawa đang đồng hành cùng bạn">
+          <ChiikawaSVG character="chiikawa" size={42} className="animate-bounce-gentle" />
         </div>
       </header>
 

@@ -6,89 +6,68 @@ type Props = {
   stats: GameStats
   onOpenSettings: () => void
   onOpenHome: () => void
+  onOpenQuests: () => void
 }
 
-export function TopHUD({ stats, onOpenSettings, onOpenHome }: Props) {
+export function TopHUD({ stats, onOpenSettings, onOpenHome, onOpenQuests }: Props) {
   const [timeStr, setTimeStr] = useState('')
-  const [isNight, setIsNight] = useState(false)
 
   useEffect(() => {
-    const updateTime = () => {
-      const d = new Date()
-      const hours = d.getHours()
-      setIsNight(hours < 6 || hours >= 18)
-      setTimeStr(d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }))
-    }
-    updateTime()
-    const timer = setInterval(updateTime, 10000)
-    return () => clearInterval(timer)
+    const tick = () => setTimeStr(new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }))
+    tick()
+    const t = setInterval(tick, 10_000)
+    return () => clearInterval(t)
   }, [])
 
   return (
-    <header className="game-top-hud">
-      {/* Couple Profile Chip */}
-      <button
-        className="hud-profile-btn"
-        onClick={() => {
-          audioSystem.playClick('pop')
-          onOpenHome()
-        }}
-        title="Xem không gian Nhà Của Chúng Mình"
-      >
-        <div className="hud-avatars-duo">
-          <img src="./assets/dung.jpg" alt="Dũng" className="hud-avatar-thumb" />
-          <span className="hud-heart-connector">❤️</span>
-          <img src="./assets/nguoiyeu.jpg" alt="Em Yêu" className="hud-avatar-thumb" />
+    <header className="hud-top">
+      {/* ── left: couple profile chip ── */}
+      <button className="hud-profile" onClick={() => { audioSystem.playClick('pop'); onOpenHome() }}>
+        <div className="hud-profile__avatars">
+          <img src="./assets/dung.jpg" alt="Dũng" />
+          <img src="./assets/nguoiyeu.jpg" alt="Em Yêu" className="hud-profile__av2" />
         </div>
-        <div className="hud-couple-info">
-          <strong>Dũng & Em Yêu</strong>
-          <small>Day {stats.day} / {stats.maxDays} · Ready Day</small>
+        <div className="hud-profile__info">
+          <strong>Nhà Của Dũng &amp; Gấu <span className="hud-heart-mini">❤️</span></strong>
+          <div className="hud-level-row">
+            <span className="hud-level-tag">Level {stats.level}</span>
+            <div className="hud-level-bar"><div className="hud-level-fill" style={{ width: `${stats.levelProgress}%` }} /></div>
+            <span className="hud-level-pct">{stats.levelProgress}%</span>
+          </div>
         </div>
+        <button className="hud-quest-bell" onClick={(e) => { e.stopPropagation(); audioSystem.playClick('soft'); onOpenQuests() }}>
+          <span>🔔</span>
+          <small>Nhiệm vụ</small>
+        </button>
       </button>
 
-      {/* Center Game Currencies */}
-      <div className="hud-currencies-bar">
-        <div className="hud-stat-pill heart-stat" title="Điểm Tình Yêu (Love Hearts)">
-          <span className="stat-icon">💖</span>
-          <span className="stat-val">{stats.hearts}</span>
+      {/* ── center: currencies ── */}
+      <div className="hud-currencies">
+        <div className="hud-cur hud-cur--heart">
+          <span className="hud-cur__icon">❤️</span>
+          <span className="hud-cur__val">{stats.hearts.toLocaleString()}</span>
+          <button className="hud-cur__plus" onClick={() => audioSystem.playClick('soft')}>＋</button>
         </div>
-
-        <div className="hud-stat-pill star-stat" title="Ngôi Sao Kỷ Luật (Discipline Stars)">
-          <span className="stat-icon">⭐</span>
-          <span className="stat-val">{stats.stars}</span>
+        <div className="hud-cur hud-cur--star">
+          <span className="hud-cur__icon">⭐</span>
+          <span className="hud-cur__val">{stats.stars.toLocaleString()}</span>
+          <button className="hud-cur__plus" onClick={() => audioSystem.playClick('soft')}>＋</button>
         </div>
-
-        <div className="hud-stat-pill gem-stat" title="Ngọc Kỷ Niệm (Memory Gems)">
-          <span className="stat-icon">💎</span>
-          <span className="stat-val">{stats.gems}</span>
+        <div className="hud-cur hud-cur--gem">
+          <span className="hud-cur__icon">💎</span>
+          <span className="hud-cur__val">{stats.gems.toLocaleString()}</span>
+          <button className="hud-cur__plus" onClick={() => audioSystem.playClick('soft')}>＋</button>
         </div>
-
-        <div className="hud-stat-pill energy-stat" title="Năng Lượng Sẵn Sàng (Readiness Energy)">
-          <span className="stat-icon">⚡</span>
-          <div className="energy-bar-wrap">
-            <div className="energy-bar-fill" style={{ width: `${stats.energy}%` }} />
-          </div>
-          <span className="stat-val">{stats.energy}%</span>
+        <div className="hud-cur hud-cur--energy">
+          <span className="hud-cur__icon">⚡</span>
+          <span className="hud-cur__val">{stats.energy}/{stats.energyMax}</span>
         </div>
       </div>
 
-      {/* Right Time & Quick Settings */}
-      <div className="hud-right-actions">
-        <div className="hud-time-badge">
-          <span>{isNight ? '🌙' : '☀️'}</span>
-          <span>{timeStr}</span>
-        </div>
-
-        <button
-          className="hud-action-btn"
-          onClick={() => {
-            audioSystem.playClick('soft')
-            onOpenSettings()
-          }}
-          title="Tòa Thị Chính & Cài Đặt (Town Hall Settings)"
-        >
-          ⚙️
-        </button>
+      {/* ── right: time + settings ── */}
+      <div className="hud-right">
+        <span className="hud-time">{timeStr}</span>
+        <button className="hud-settings-btn" onClick={() => { audioSystem.playClick('soft'); onOpenSettings() }}>⚙️</button>
       </div>
     </header>
   )

@@ -262,8 +262,11 @@ export function App() {
     }, 450)
   }
 
-  // Handle Splash Screen enter
-  const handleEnterFromSplash = () => {
+  const [activeRole, setActiveRole] = useState<'chiikawa' | 'usagi'>('chiikawa')
+
+  // Handle Splash Screen enter with selected character
+  const handleEnterFromSplash = (role: 'chiikawa' | 'usagi') => {
+    setActiveRole(role)
     triggerTransition('cloud', 'map')
   }
 
@@ -321,6 +324,7 @@ export function App() {
           <div className={`hud-top-wrapper ${isHudHidden && currentLocation === 'map' ? 'hud-slide-up' : ''}`}>
             <TopHUD
               stats={gameStats}
+              activeRole={activeRole}
               onOpenSettings={() => triggerTransition('gear', 'settings')}
               onOpenHome={() => triggerTransition('heart', 'home')}
               onOpenQuests={() => triggerTransition('cloud', 'quests')}

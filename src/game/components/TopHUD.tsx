@@ -4,12 +4,13 @@ import { audioSystem } from '../systems/GameAudioSystem'
 
 type Props = {
   stats: GameStats
+  activeRole?: 'chiikawa' | 'usagi'
   onOpenSettings: () => void
   onOpenHome: () => void
   onOpenQuests: () => void
 }
 
-export function TopHUD({ stats, onOpenSettings, onOpenHome, onOpenQuests }: Props) {
+export function TopHUD({ stats, activeRole = 'chiikawa', onOpenSettings, onOpenHome, onOpenQuests }: Props) {
   const [timeStr, setTimeStr] = useState('')
 
   useEffect(() => {
@@ -21,14 +22,18 @@ export function TopHUD({ stats, onOpenSettings, onOpenHome, onOpenQuests }: Prop
 
   return (
     <header className="hud-top">
-      {/* ── left: couple profile chip ── */}
+      {/* ── left: couple profile chip with active character role ── */}
       <button className="hud-profile" onClick={() => { audioSystem.playClick('pop'); onOpenHome() }}>
         <div className="hud-profile__avatars">
-          <img src="./assets/dung.jpg" alt="Dũng" />
-          <img src="./assets/nguoiyeu.jpg" alt="Em Yêu" className="hud-profile__av2" />
+          <img src={activeRole === 'chiikawa' ? './assets/dung.jpg' : './assets/nguoiyeu.jpg'} alt="Avatar" />
+          <span className="hud-char-role-badge">
+            {activeRole === 'chiikawa' ? '🐹' : '🐰'}
+          </span>
         </div>
         <div className="hud-profile__info">
-          <strong>Nhà Của Dũng &amp; Gấu <span className="hud-heart-mini">❤️</span></strong>
+          <strong>
+            {activeRole === 'chiikawa' ? 'Dũng (Chiikawa)' : 'Em Yêu (Usagi)'} <span className="hud-heart-mini">❤️</span>
+          </strong>
           <div className="hud-level-row">
             <span className="hud-level-tag">Level {stats.level}</span>
             <div className="hud-level-bar"><div className="hud-level-fill" style={{ width: `${stats.levelProgress}%` }} /></div>

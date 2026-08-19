@@ -12,6 +12,7 @@ import { JournalView } from './views/JournalView'
 import { InsightsView } from './views/InsightsView'
 import { SettingsView } from './views/SettingsView'
 import { SplashScreen } from './game/components/SplashScreen'
+import { OrientationPrompt } from './game/components/OrientationPrompt'
 import { WorldMap } from './game/components/WorldMap'
 import { TopHUD } from './game/components/TopHUD'
 import { BottomHUD } from './game/components/BottomHUD'
@@ -298,6 +299,9 @@ export function App() {
     <div className="game-app-root">
       {/* Background BGM Player */}
       <YouTubeBGMPlayer />
+
+      {/* Orientation Guide Prompt (Landscape requirement on mobile) */}
+      <OrientationPrompt />
 
       {/* Cinematic Transition Overlay */}
       <TransitionSystem type={activeTransition.type} isActive={activeTransition.isActive} />

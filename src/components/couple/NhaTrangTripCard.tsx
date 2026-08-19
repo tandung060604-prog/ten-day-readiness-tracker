@@ -4,21 +4,49 @@ const NHA_TRANG_FLIGHT_DATE = new Date('2026-08-27T08:00:00')
 const TOTAL_FUND = 8000000
 const DUNG_FUND = 5000000
 
-const NHA_TRANG_GALLERY = [
+// Exact 6 romantic itinerary spots for Dũng & Lover in Nha Trang
+const NHA_TRANG_DESTINATIONS = [
   {
-    title: 'Bãi Biển Nha Trang & Nắng Vàng',
-    desc: 'Bãi cát dài thoai thoải, nước biển trong vắt màu ngọc bích.',
-    img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80'
+    tag: '🏖️ Tour 3 Đảo',
+    title: 'Mini Beach Nha Trang',
+    desc: 'Thiên đường bãi biển riêng tư cát trắng mịn như nhung, nước biển trong vắt màu ngọc bích.',
+    img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
+    highlight: 'Check-in xích đu biển & tắm nắng'
   },
   {
-    title: 'VinWonders & Cáp Treo Vượt Biển',
-    desc: 'Lâu đài cổ tích trên đảo Hòn Tre ngắm trọn hoàng hôn.',
-    img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80'
+    tag: '🤿 Tour 3 Đảo',
+    title: 'Đảo Hòn Mun',
+    desc: 'Khu bảo tồn biển san hô đẹp nhất Việt Nam, cùng em lặn ngắm những rạn san hô kỳ ảo và đàn cá rực rỡ.',
+    img: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80',
+    highlight: 'Lặn ngắm san hô đôi'
   },
   {
-    title: 'Lặn Ngắm San Hô Hòn Mun',
-    desc: 'Trải nghiệm lặn biển khám phá rạn san hô kỳ ảo cùng em.',
-    img: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80'
+    tag: '🦞 Tour 3 Đảo',
+    title: 'Làng Chài Bè Nổi',
+    desc: 'Trải nghiệm nhà bè nổi giữa vịnh, tự tay chọn hải sản tươi sống và thưởng thức bữa trưa biển nồng nàn.',
+    img: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=800&q=80',
+    highlight: 'Ăn hải sản tươi sống trên bè'
+  },
+  {
+    tag: '🍸 Bữa Tối Lãng Mạn',
+    title: 'Queen Ann Sky Lounge',
+    desc: 'Lounge sang trọng trên tầng cao ngắm trọn vịnh Nha Trang lấp lánh ánh đèn đêm, cùng em nâng ly cocktail ngọt ngào.',
+    img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80',
+    highlight: 'Ngắm vịnh đêm & Dinner đôi'
+  },
+  {
+    tag: '🎨 Nghệ Thuật Check-in',
+    title: 'Làng Bức Họa Vĩnh Trường',
+    desc: 'Những bức tranh tường 3D sống động về cuộc sống ngư dân miền biển, lưu giữ bộ ảnh kỷ niệm thanh xuân của 2 đứa.',
+    img: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80',
+    highlight: 'Chụp ảnh kỷ niệm ngọt ngào'
+  },
+  {
+    tag: '🐠 Khám Phá Đại Dương',
+    title: 'Viện Hải Dương Học',
+    desc: 'Thủy cung cổ kính trăm tuổi với đường hầm kính sinh vật biển khổng lồ, rùa biển và những đàn cá đại dương.',
+    img: 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&w=800&q=80',
+    highlight: 'Đường hầm kính đại dương'
   }
 ]
 
@@ -49,7 +77,7 @@ export function NhaTrangTripCard() {
           <small>CHUYẾN BAY DU LỊCH NHA TRANG 🌊</small>
           <h3>Đếm ngược ngày bay: 27/08/2026</h3>
         </div>
-        <span className="nha-trang-badge">✈️ Flight Confirmed</span>
+        <span className="nha-trang-badge">✈️ Flight Confirmed · 6 Điểm Đến</span>
       </div>
 
       {/* Real-time Countdown Display */}
@@ -98,16 +126,28 @@ export function NhaTrangTripCard() {
         </p>
       </div>
 
-      {/* Real Nha Trang Travel Photos */}
+      {/* 6 Exact Nha Trang Itinerary Spots */}
       <div className="nha-trang-real-gallery">
-        <span className="gallery-section-label">📸 Những địa điểm hai đứa mình sẽ cùng đi:</span>
-        <div className="real-photos-grid">
-          {NHA_TRANG_GALLERY.map((item, idx) => (
-            <div key={idx} className="real-photo-card">
-              <img src={item.img} alt={item.title} className="real-photo-thumb" loading="lazy" />
-              <div className="real-photo-info">
-                <strong>{item.title}</strong>
-                <small>{item.desc}</small>
+        <div className="gallery-header-row">
+          <span className="gallery-section-label">🏝️ Lịch trình 6 địa điểm Dũng & Em Yêu sẽ đi tại Nha Trang:</span>
+          <span className="soft-badge">Tour 3 Đảo · Sky Lounge · Viện Hải Dương</span>
+        </div>
+
+        <div className="real-photos-grid-6">
+          {NHA_TRANG_DESTINATIONS.map((spot, idx) => (
+            <div key={idx} className="real-spot-card">
+              <div className="spot-thumb-wrapper">
+                <img src={spot.img} alt={spot.title} className="real-spot-thumb" loading="lazy" />
+                <span className="spot-tag-chip">{spot.tag}</span>
+              </div>
+              <div className="real-spot-info">
+                <div className="spot-title-row">
+                  <strong>{spot.title}</strong>
+                </div>
+                <p className="spot-desc-text">{spot.desc}</p>
+                <div className="spot-highlight-pill">
+                  <span>✨ {spot.highlight}</span>
+                </div>
               </div>
             </div>
           ))}

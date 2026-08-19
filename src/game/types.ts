@@ -33,10 +33,14 @@ export type BuildingState =
 export interface MapBuilding {
   id: LocationId
   name: string
+  subtitle: string
   icon: string
+  img: string
   transition: TransitionType
   color: string
   glow: string
+  tag: string
+  size: number
   /** Position on the map as percentage (0–100) */
   x: number
   y: number

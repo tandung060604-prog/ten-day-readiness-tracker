@@ -5326,9 +5326,9 @@ html, body, #root, .app-shell {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   4. ARTWORK WORLD MAP  –  Storybook Game Town Illustration
+   4. 3D ISOMETRIC GAME WORLD MAP  –  Storybook Town Engine
    ═══════════════════════════════════════════════════════════════════════ */
-.art-world-viewport {
+.game-world-map-viewport {
   position: relative;
   width: 100vw;
   min-height: 100vh;
@@ -5337,22 +5337,22 @@ html, body, #root, .app-shell {
   align-items: center;
   justify-content: center;
   overflow: auto;
-  padding: 56px 0 70px;
+  padding: 56px 0 68px;
 }
 
-.art-map-stage {
+.game-map-canvas {
   position: relative;
   width: 100%;
   max-width: 1540px;
   aspect-ratio: 16 / 9;
-  box-shadow: 0 12px 48px rgba(180, 140, 150, 0.25);
-  border-radius: 12px;
+  box-shadow: 0 16px 50px rgba(160, 120, 135, 0.28);
+  border-radius: 14px;
   overflow: hidden;
   user-select: none;
-  background: #fcefe9;
+  background: #eef8eb;
 }
 
-.art-map-image {
+.map-terrain-background {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -5360,154 +5360,195 @@ html, body, #root, .app-shell {
   pointer-events: none;
 }
 
-/* ── Interactive Building Hotspots ── */
-.art-building-hotspot {
+/* ── 3D Building Entities ── */
+.map-building-entity {
   position: absolute;
   transform: translate(-50%, -50%);
   z-index: 10;
-  background: transparent;
-  border: none;
-  padding: 0;
-  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
-  min-width: 60px;
-  min-height: 60px;
+  cursor: pointer;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), z-index 0.2s ease;
 }
 
-.art-building-hotspot:hover {
-  transform: translate(-50%, -50%) scale(1.15);
-  z-index: 25;
+.map-building-entity:hover {
+  transform: translate(-50%, -58%) scale(1.14);
+  z-index: 35;
 }
 
-.art-building-hotspot--active {
-  animation: hotspotPop 0.38s ease;
+.map-building-entity.entity-selected {
+  animation: entityBouncePop 0.38s ease;
 }
 
-@keyframes hotspotPop {
+@keyframes entityBouncePop {
   0% { transform: translate(-50%, -50%) scale(1); }
-  40% { transform: translate(-50%, -50%) scale(0.9); }
-  75% { transform: translate(-50%, -50%) scale(1.22); }
-  100% { transform: translate(-50%, -50%) scale(1); }
+  40% { transform: translate(-50%, -50%) scale(0.92); }
+  75% { transform: translate(-50%, -62%) scale(1.24); }
+  100% { transform: translate(-50%, -58%) scale(1.14); }
 }
 
-.hotspot-pulse-ring {
-  position: absolute;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--hotspot-glow, rgba(255, 141, 161, 0.4));
-  box-shadow: 0 0 16px 4px var(--hotspot-glow, rgba(255, 141, 161, 0.4));
-  animation: pulseGlow 2.4s ease-in-out infinite alternate;
-  opacity: 0.65;
-  pointer-events: none;
-}
-
-@keyframes pulseGlow {
-  0% { transform: scale(0.85); opacity: 0.35; }
-  100% { transform: scale(1.3); opacity: 0.75; }
-}
-
-.hotspot-tap-badge {
+.building-sprite-wrapper {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(10px);
-  border: 1.5px solid var(--hotspot-color, #ff8da1);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12), 0 0 10px var(--hotspot-glow, transparent);
-  padding: 4px 10px;
-  border-radius: 999px;
-  transition: all 0.2s ease;
+  justify-content: center;
+  filter: drop-shadow(0 10px 18px rgba(30, 45, 30, 0.24));
+  transition: filter 0.25s ease;
+}
+
+.map-building-entity:hover .building-sprite-wrapper {
+  filter: drop-shadow(0 16px 26px var(--bldg-theme-glow, rgba(255, 141, 161, 0.5)));
+}
+
+.building-3d-model {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
   pointer-events: none;
-  opacity: 0.85;
+  transition: transform 0.25s ease;
 }
 
-.art-building-hotspot:hover .hotspot-tap-badge {
-  opacity: 1;
-  background: #ffffff;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18), 0 0 16px var(--hotspot-glow, transparent);
+.building-ambient-shadow {
+  position: absolute;
+  bottom: -4px;
+  width: 70%;
+  height: 12px;
+  background: radial-gradient(ellipse, rgba(20, 40, 20, 0.35) 0%, transparent 75%);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
-.hotspot-icon {
-  font-size: 14px;
-}
-
-.hotspot-title {
-  font-size: 10px;
-  font-weight: 800;
-  color: #3a2328;
+/* ── Wooden Signboard Label ── */
+.building-signboard {
+  margin-top: -6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(180deg, #fffdfa 0%, #fef3e2 100%);
+  border: 1.5px solid #d4a373;
+  box-shadow: 0 4px 12px rgba(100, 60, 30, 0.18), inset 0 1px 0 #ffffff;
+  padding: 3px 10px;
+  border-radius: 999px;
+  pointer-events: none;
   white-space: nowrap;
-  line-height: 1.2;
+  transition: all 0.2s ease;
 }
 
-/* ── Central Mascots (Chiikawa & Usagi) ── */
-.art-mascots-center {
+.map-building-entity:hover .building-signboard {
+  background: #ffffff;
+  border-color: var(--bldg-theme-color, #ff8da1);
+  box-shadow: 0 6px 18px rgba(100, 60, 30, 0.25), 0 0 10px var(--bldg-theme-glow, transparent);
+  transform: translateY(2px);
+}
+
+.signboard-icon {
+  font-size: 13px;
+}
+
+.signboard-text {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #4a3427;
+  letter-spacing: 0.02em;
+}
+
+/* ── Central Plaza Mascots ── */
+.central-mascots-group {
   position: absolute;
   left: 50%;
-  top: 54%;
+  top: 53.5%;
   transform: translate(-50%, -50%);
-  z-index: 15;
+  z-index: 25;
   display: flex;
-  align-items: flex-end;
-  gap: 8px;
+  flex-direction: column;
+  align-items: center;
   cursor: pointer;
-  padding: 10px 16px;
-  border-radius: 999px;
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.art-mascots-center:hover {
-  transform: translate(-50%, -50%) scale(1.1);
+.central-mascots-group:hover {
+  transform: translate(-50%, -54%) scale(1.12);
 }
 
-.mascot-item {
-  transition: transform 0.2s ease;
+.mascots-excited {
+  animation: mascotsCheer 0.6s ease;
 }
 
-.mascot-heart-pulse {
+@keyframes mascotsCheer {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -60%) scale(1.22) rotate(-3deg); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+.mascot-pair {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.mascot-heart-badge {
   font-size: 22px;
   animation: heartBeat 1.2s ease-in-out infinite;
   margin-bottom: 20px;
 }
 
-.mascot-sparkle-active {
-  animation: mascotPopSparkle 0.6s ease;
+.mascot-dialog-bubble {
+  margin-top: 4px;
+  background: #ffffff;
+  border: 1.5px solid #ffccd5;
+  border-radius: 12px;
+  padding: 6px 12px;
+  box-shadow: 0 6px 18px rgba(220, 100, 130, 0.2);
+  max-width: 220px;
+  text-align: center;
+  position: relative;
 }
 
-@keyframes mascotPopSparkle {
-  0% { transform: translate(-50%, -50%) scale(1); }
-  50% { transform: translate(-50%, -50%) scale(1.2) rotate(4deg); }
-  100% { transform: translate(-50%, -50%) scale(1); }
-}
-
-/* ── Live Love Days Counter (Bottom Left) ── */
-.art-love-card {
+.mascot-dialog-bubble::before {
+  content: '';
   position: absolute;
-  bottom: 24px;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 6px 6px;
+  border-style: solid;
+  border-color: transparent transparent #ffffff;
+}
+
+.mascot-dialog-bubble p {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 800;
+  color: #3a2328;
+  line-height: 1.35;
+}
+
+/* ── Love Counter Chip (Bottom Left) ── */
+.game-love-counter-chip {
+  position: absolute;
+  bottom: 20px;
   left: 20px;
-  z-index: 30;
+  z-index: 40;
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: linear-gradient(135deg, rgba(255, 240, 245, 0.92), rgba(255, 230, 238, 0.95));
+  gap: 10px;
+  background: linear-gradient(135deg, rgba(255, 245, 248, 0.95), rgba(255, 235, 242, 0.98));
   backdrop-filter: blur(14px);
-  border: 2px solid #ffccd5;
-  padding: 8px 16px;
+  border: 2px solid #ffb3c1;
+  padding: 8px 18px;
   border-radius: 999px;
-  box-shadow: 0 8px 24px rgba(220, 120, 140, 0.25);
-  pointer-events: auto;
+  box-shadow: 0 8px 24px rgba(220, 100, 130, 0.25);
 }
 
-.love-card-heart {
+.love-chip-icon {
   font-size: 24px;
   animation: heartBeat 1.3s ease-in-out infinite;
 }
 
-.art-love-card small {
+.love-chip-content small {
   display: block;
   font-size: 9px;
   font-weight: 800;
@@ -5516,7 +5557,7 @@ html, body, #root, .app-shell {
   letter-spacing: 0.04em;
 }
 
-.art-love-card strong {
+.love-chip-content strong {
   display: block;
   font-size: 16px;
   font-weight: 900;
@@ -5524,50 +5565,60 @@ html, body, #root, .app-shell {
   line-height: 1.1;
 }
 
-.art-love-card strong span {
+.love-chip-content strong span {
   font-size: 11px;
   font-weight: 700;
   color: #a34860;
   margin-left: 2px;
 }
 
-/* ── Couple Sticky Memo Note (Bottom Right) ── */
-.art-sticky-note {
+/* ── Hover Building Tooltip (Bottom Right) ── */
+.building-hover-hud {
   position: absolute;
-  bottom: 24px;
+  bottom: 20px;
   right: 20px;
-  z-index: 30;
-  background: #fff8eb;
-  border: 1.5px solid #f3d9b1;
-  border-radius: 12px;
-  padding: 10px 14px;
-  box-shadow: 0 8px 20px rgba(120, 90, 60, 0.15);
-  max-width: 240px;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  pointer-events: auto;
+  z-index: 40;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid #d4a373;
+  border-radius: 14px;
+  padding: 12px 18px;
+  box-shadow: 0 10px 30px rgba(100, 60, 30, 0.2);
+  min-width: 220px;
+  max-width: 280px;
+  pointer-events: none;
 }
 
-.art-sticky-note:hover {
-  transform: translateY(-3px) rotate(1deg);
-  box-shadow: 0 12px 28px rgba(120, 90, 60, 0.22);
+.hud-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 800;
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-bottom: 4px;
 }
 
-.sticky-pin {
-  position: absolute;
-  top: -8px;
-  right: 12px;
+.building-hover-hud h4 {
+  margin: 0 0 2px;
   font-size: 14px;
+  font-weight: 800;
+  color: #3a2328;
 }
 
-.art-sticky-note p {
-  margin: 0;
+.building-hover-hud p {
+  margin: 0 0 6px;
   font-size: 11px;
-  font-weight: 700;
-  color: #4a382c;
-  line-height: 1.35;
-  white-space: pre-line;
+  color: #7a6070;
 }
+
+.hud-tap-prompt {
+  font-size: 10px;
+  font-weight: 800;
+  color: #38b283;
+}
+
+
 
 
 /* ═══════════════════════════════════════════════════════════════════════

@@ -5,7 +5,7 @@ import { audioSystem } from '../systems/GameAudioSystem'
 import { playChiikawaVoice } from '../../utils/chiikawaAudio'
 import { speakVietnamese, BUILDING_VIETNAMESE_VOICES } from '../../utils/vietnameseAudio'
 import { MapAnimationCanvas } from './MapAnimationCanvas'
-import { GameTutorialModal } from './GameTutorialModal'
+import { GameTutorialModal, TUTORIAL_STEPS } from './GameTutorialModal'
 import type { TutorialStep } from './GameTutorialModal'
 import type { LocationId, MapBuilding, TransitionType } from '../types'
 import type { ChiikawaCharacter } from '../../utils/chiikawaAudio'
@@ -450,18 +450,18 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
     }
   }, [])
 
-  // Tutorial Step Change -> Smooth Zoom In & Center Building
+  // Tutorial Step Change -> Smooth Zoom In & Center Building directly on screen
   const handleTutorialStepChange = useCallback((step: TutorialStep) => {
     setTutorialActiveBuildingId(step.locationId)
-    const targetZoom = 1.7
+    const targetZoom = 2.0
     setZoom(targetZoom)
     const vw = window.innerWidth
     const vh = window.innerHeight
-    const deltaX = ((50 - step.x) / 100) * vw * (targetZoom - 1)
-    const deltaY = ((50 - step.y) / 100) * vh * (targetZoom - 1)
-    const clamped = clampCoords(deltaX, deltaY, targetZoom)
-    setPan(clamped)
-  }, [clampCoords])
+    // Exact translation so that (step.x%, step.y%) is centered at (50vw, 50vh)
+    const targetPanX = (0.5 - step.x / 100) * vw * targetZoom
+    const targetPanY = (0.5 - step.y / 100) * vh * targetZoom
+    setPan({ x: targetPanX, y: targetPanY })
+  }, [])
 
   const handleCloseTutorial = useCallback(() => {
     setShowTutorial(false)
@@ -692,6 +692,9 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
         <div className="terrain-water-shimmer" />
         <div className="beach-waves-animation" />
 
+        {/* ── Darkened Canvas Overlay during Tutorial (Dims everything except active building) ── */}
+        {showTutorial && <div className="map-tutorial-dimmed-backdrop animate-fade-in" />}
+
         {/* 3. Farming-Game Style 3D Isometric Buildings (Natural Idle Bobbing, Zero Permanent Text) */}
         {MAP_BUILDINGS.map((b) => {
           const isSelected = activeStoryBuilding?.id === b.id
@@ -716,6 +719,9 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
               {/* Divine Sunbeam Light Pillar & Holy Halo for Tutorial Step */}
               {isTutorialTarget && (
                 <div className="tutorial-building-illumination animate-fade-in">
+                  <div className="spotlight-building-number-pin animate-bounce-gentle">
+                    <span>{TUTORIAL_STEPS.find((s) => s.locationId === b.id)?.step || 1}</span>
+                  </div>
                   <div className="building-heaven-beam" />
                   <div className="building-divine-aura-ring" />
                 </div>

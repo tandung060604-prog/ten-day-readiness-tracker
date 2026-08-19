@@ -30,7 +30,7 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     character: 'chiikawa',
     characterName: 'Haru (Chiikawa)',
     characterRole: 'Bé Giữ Lửa Tổ Ấm',
-    text: 'Xin chào Haru & Mai Trang! Đây là Tổ Ấm của chúng mình — nơi đếm từng ngày yêu nhau từ ngày 11/06/2026 và theo dõi điểm số sẵn sàng 10 ngày!',
+    text: 'Xin chào Haru & Mai Trang! Đây là Tổ Ấm của chúng mình — nơi đếm từng ngày yêu nhau từ 11/06/2026 và theo dõi điểm số sẵn sàng 10 ngày!',
     speechLine: 'Xin chào Haru và Mai Trang! Đây là Tổ Ấm của chúng mình, nơi đếm số ngày yêu nhau và theo dõi điểm số sẵn sàng mười ngày!'
   },
   {
@@ -61,6 +61,19 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
   },
   {
     step: 4,
+    locationId: 'hospital',
+    title: 'BỆNH VIỆN TÌNH YÊU',
+    locationName: 'Bệnh Viện Tình Yêu (Chu Kỳ Flo)',
+    x: 47.0,
+    y: 64.0,
+    character: 'usagi',
+    characterName: 'Mai Trang & Bác Sĩ Chiikawa',
+    characterRole: 'Sức Khỏe & Chu Kỳ Phái Đẹp',
+    text: 'Bệnh Viện Tình Yêu — theo dõi chu kỳ kinh nguyệt chuẩn Flo App từ kỳ 29/07, cảnh báo ngày bay Nha Trang 27/08 và cẩm nang chăm sóc bạn gái cho Haru!',
+    speechLine: 'Bệnh viện tình yêu, theo dõi chu kỳ kinh nguyệt chuẩn ứng dụng Flo từ ngày hai mươi chín tháng bảy và cẩm nang chăm sóc bạn gái của Haru!'
+  },
+  {
+    step: 5,
     locationId: 'beach',
     title: 'BÃI BIỂN NHA TRANG',
     locationName: 'Bãi Biển & Tour 3 Đảo',
@@ -71,19 +84,6 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     characterRole: 'Khám Phá & Ẩm Thực',
     text: 'Khám phá Bãi Biển Nha Trang — xem lịch trình Tour 3 Đảo Hòn Mun, Mini Beach, Viện Hải Dương Học và những món hải sản ngon tuyệt!',
     speechLine: 'Khám phá Bãi Biển Nha Trang, xem lịch trình tour ba đảo Hòn Mun, Mini Beach và những món hải sản tuyệt ngon!'
-  },
-  {
-    step: 5,
-    locationId: 'journal',
-    title: 'THƯ VIỆN KÝ ỨC',
-    locationName: 'Thư Viện Ký Ức & Cảm Xúc',
-    x: 31.5,
-    y: 60.5,
-    character: 'usagi',
-    characterName: 'Mai Trang (Usagi)',
-    characterRole: 'Người Ghi Ký Ức',
-    text: 'Cuối cùng là Thư Viện Ký Ức — nơi Mai Trang lưu giữ những trang nhật ký cảm xúc, lời nhắn yêu thương ngọt ngào và những cột mốc đáng nhớ nhất!',
-    speechLine: 'Cuối cùng là Thư Viện Ký Ức, nơi lưu giữ những dòng nhật ký tình yêu và những khoảnh khắc đẹp nhất của hai bạn!'
   }
 ]
 
@@ -98,7 +98,7 @@ export function GameTutorialModal({ isOpen, onClose, onStepChange }: Props) {
 
   const step = TUTORIAL_STEPS[currentStepIdx]
 
-  // Notify parent to zoom in and focus camera on the building!
+  // Notify parent to smoothly zoom in and center the camera on the building!
   useEffect(() => {
     if (isOpen && onStepChange) {
       onStepChange(step)
@@ -152,22 +152,7 @@ export function GameTutorialModal({ isOpen, onClose, onStepChange }: Props) {
 
   return (
     <div className="game-tutorial-overlay animate-fade-in">
-      {/* ── 1. SPOTLIGHT HOLE (Dims entire screen, highlights only the current target location) ── */}
-      <div
-        className="tutorial-spotlight-hole"
-        style={{
-          left: `${step.x}%`,
-          top: `${step.y}%`
-        }}
-      >
-        {/* Step Number Badge directly above the building */}
-        <div className="spotlight-step-badge animate-bounce-gentle">
-          <span>{step.step}</span>
-        </div>
-        <div className="spotlight-pulse-ring" />
-      </div>
-
-      {/* ── 2. RUNNING COMPANION & DIALOGUE CARD ── */}
+      {/* ── RUNNING COMPANION & DIALOGUE CARD AT BOTTOM ── */}
       <div className="tutorial-dialog-container animate-slide-up">
         {/* Step Progress Pills */}
         <div className="tutorial-step-dots">

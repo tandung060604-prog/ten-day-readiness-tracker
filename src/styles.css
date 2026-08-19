@@ -5913,105 +5913,48 @@ html, body, #root, .app-shell {
   padding: 0;
   margin: 0;
   user-select: none;
+  touch-action: none;
   z-index: 10;
 }
 
-/* ── Volumetric Sunbeams & Sunlight God Rays ── */
-.sunlight-god-rays {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 15;
-  background: linear-gradient(
-    125deg,
-    rgba(255, 245, 200, 0.22) 0%,
-    rgba(255, 235, 170, 0.12) 30%,
-    transparent 65%
-  );
-  filter: blur(16px);
-  animation: sunlightBreath 8s ease-in-out infinite alternate;
-}
-
-@keyframes sunlightBreath {
-  0% { opacity: 0.5; transform: scale(1); }
-  100% { opacity: 0.9; transform: scale(1.05) translate(10px, 10px); }
-}
-
-/* ── Seamless Sky-Integrated Clouds ── */
-.sky-integrated-clouds {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 12;
-  overflow: hidden;
-}
-
-.soft-sky-cloud {
-  position: absolute;
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 70%);
-  border-radius: 50%;
-  filter: blur(12px);
-  mix-blend-mode: soft-light;
-}
-
-.cloud-soft-1 {
-  width: 480px;
-  height: 180px;
-  top: 5%;
-  left: -500px;
-  animation: driftSkyCloud1 65s linear infinite;
-}
-
-.cloud-soft-2 {
-  width: 380px;
-  height: 140px;
-  top: 22%;
-  left: -400px;
-  animation: driftSkyCloud2 50s linear infinite;
-  opacity: 0.7;
-}
-
-.cloud-soft-3 {
-  width: 520px;
-  height: 200px;
-  top: 40%;
-  left: -550px;
-  animation: driftSkyCloud1 80s linear infinite;
-  animation-delay: 20s;
-  opacity: 0.5;
-}
-
-@keyframes driftSkyCloud1 {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(calc(100vw + 700px)); }
-}
-
-@keyframes driftSkyCloud2 {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(calc(100vw + 600px)); }
-}
-
-/* ── Main Map Canvas (Zoom/Pan Stage - Fullscreen Full-Bleed) ── */
+/* ── Main Map Canvas (Firmly Locked 16:9 Island Stage) ── */
 .game-map-canvas {
-  position: absolute;
-  inset: 0;
+  position: relative;
   width: 100vw;
   height: 100vh;
-  min-width: 100vw;
-  min-height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  overflow: hidden;
   box-shadow: none;
   border-radius: 0;
-  overflow: hidden;
-  background: #62a356;
-  transform-origin: center center;
+  background: #1c6fa8;
+  display: block;
+}
+
+@media (max-aspect-ratio: 16/9) {
+  .game-map-canvas {
+    width: 100vw;
+    height: 56.25vw;
+  }
+}
+
+@media (min-aspect-ratio: 16/9) {
+  .game-map-canvas {
+    width: 177.78vh;
+    height: 100vh;
+  }
 }
 
 .map-terrain-background {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   display: block;
   pointer-events: none;
+  z-index: 1;
 }
 
 /* ── Custom Tailor-Made Road Network (Overlay Paths) ── */

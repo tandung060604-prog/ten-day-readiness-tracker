@@ -558,12 +558,6 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
     <div
       className="game-world-map-viewport"
       ref={containerRef}
-      onMouseDown={handleMouseDown}
-      onWheel={handleWheel}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      onTouchCancel={handleTouchEnd}
     >
       {/* ══════ SUNLIGHT GOD RAYS & VOLUMETRIC ATMOSPHERE ══════ */}
       <div className="sunlight-god-rays" />
@@ -575,18 +569,15 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
         <div className="soft-sky-cloud cloud-soft-3" />
       </div>
 
-      {/* ══════ MAIN INTERACTIVE MAP CANVAS (Zoom & Pan Layer) ══════ */}
-      <div
-        className="game-map-canvas"
-        style={{
-          transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-          transition: isDraggingRef.current ? 'none' : 'transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)'
-        }}
-      >
-        {/* 1. Base Terrain Background (Clean, High-Res, NO Baked UI) */}
+      {/* ══════ MAIN INTERACTIVE MAP CANVAS (Firmly Fixed Fullscreen) ══════ */}
+      <div className="game-map-canvas">
+        {/* 1. Base Terrain Background (Clean, High-Res, Guaranteed Load) */}
         <img
           src="./assets/game_terrain.jpg"
-          alt="Little Days Town Map"
+          onError={(e) => {
+            e.currentTarget.src = './assets/game_world_map.jpg'
+          }}
+          alt="Little Days Island Map"
           className="map-terrain-background"
           draggable={false}
         />

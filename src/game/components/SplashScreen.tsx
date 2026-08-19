@@ -4,9 +4,10 @@ import { GameIcon } from '../../components/common/GameIcons'
 import { audioSystem } from '../systems/GameAudioSystem'
 import { playChiikawaVoice } from '../../utils/chiikawaAudio'
 import type { ChiikawaCharacter } from '../../utils/chiikawaAudio'
+import type { LocationId } from '../types'
 
 type Props = {
-  onEnterGame: (character: 'chiikawa' | 'usagi') => void
+  onEnterGame: (character: 'chiikawa' | 'usagi', targetLocation?: LocationId | 'map') => void
 }
 
 interface CharacterCard {
@@ -115,24 +116,31 @@ const CHARACTERS: CharacterCard[] = [
   }
 ]
 
-const BANNER_OPTIONS = [
-  { id: 'v1', name: '1. Cổ Tích Pastel', img: './assets/banners/banner_v1_storybook.png' },
-  { id: 'v2', name: '2. Biển Nha Trang', img: './assets/banners/banner_v2_beach.png' },
-  { id: 'v3', name: '3. Hoa Anh Đào', img: './assets/banners/banner_v3_sakura.png' },
-  { id: 'v4', name: '4. Đêm Sao Lãng Mạn', img: './assets/banners/banner_v4_twilight.png' },
-  { id: 'v5', name: '5. Đấu Trường RPG', img: './assets/banners/banner_v5_rpg.png' }
-]
-
 export function SplashScreen({ onEnterGame }: Props) {
   const [screenStage, setScreenStage] = useState<'title' | 'select'>('title')
   const [selectedChar, setSelectedChar] = useState<'chiikawa' | 'usagi'>('chiikawa')
-  const [selectedBannerIdx, setSelectedBannerIdx] = useState(0)
+  const [targetLocation, setTargetLocation] = useState<LocationId | 'map'>('map')
+  const [targetTitle, setTargetTitle] = useState<string>('Bản Đồ Thế Giới')
   const [lockedNotice, setLockedNotice] = useState<string | null>(null)
+  const [mascotVoiceCheer, setMascotVoiceCheer] = useState<string | null>(null)
 
-  const handleStartTitle = () => {
+  // Handle clicking on any interactive hotspot in the opening art
+  const handleTriggerHotspot = (loc: LocationId | 'map', label: string) => {
+    audioSystem.initAudioContext()
+    audioSystem.playClick('pop')
+    setTargetLocation(loc)
+    setTargetTitle(label)
+    setScreenStage('select')
+  }
+
+  // Mascots interactive voice
+  const handleMascotsCheer = (e: React.MouseEvent) => {
+    e.stopPropagation()
     audioSystem.initAudioContext()
     audioSystem.playClick('enter')
-    setScreenStage('select')
+    playChiikawaVoice(selectedChar)
+    setMascotVoiceCheer('💖 Ya-haa! Dũng & Em Yêu chúc bạn một ngày tràn đầy niềm vui!')
+    setTimeout(() => setMascotVoiceCheer(null), 3000)
   }
 
   const handleSelectCharacter = (char: CharacterCard) => {
@@ -151,7 +159,7 @@ export function SplashScreen({ onEnterGame }: Props) {
 
   const handleConfirmStart = () => {
     audioSystem.playClick('enter')
-    onEnterGame(selectedChar)
+    onEnterGame(selectedChar, targetLocation)
   }
 
   return (
@@ -161,7 +169,7 @@ export function SplashScreen({ onEnterGame }: Props) {
       <div className="splash-cloud-layer cloud-layer-1" />
       <div className="splash-cloud-layer cloud-layer-2" />
 
-      {/* Volumetric Sunbeams */}
+      {/* Volumetric Sunbeams & Sunlight Breath */}
       <div className="sunlight-god-rays" />
 
       {/* Floating Cherry Blossom & Sparkle Particles */}
@@ -175,58 +183,166 @@ export function SplashScreen({ onEnterGame }: Props) {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════
-         STAGE 1: 16:9 LANDSCAPE MASTER OPENING BANNER (5 Options Switcher)
+         STAGE 1: 16:9 INTERACTIVE LIVING MASTER TITLE SCREEN
          ══════════════════════════════════════════════════════════════════ */}
       {screenStage === 'title' && (
         <div className="splash-landscape-banner-wrap animate-slide-up">
-          {/* Banner Selector Pill Tabs */}
-          <div className="banner-switch-selector-bar">
-            <span className="banner-switch-label">CHỌN PHIÊN BẢN BANNER:</span>
-            {BANNER_OPTIONS.map((opt, idx) => (
-              <button
-                key={opt.id}
-                className={`banner-tab-btn ${selectedBannerIdx === idx ? 'tab-btn-active' : ''}`}
-                onClick={() => {
-                  audioSystem.playClick('soft')
-                  setSelectedBannerIdx(idx)
-                }}
-              >
-                {opt.name}
-              </button>
-            ))}
-          </div>
+          {/* Active Voice Bubble Notification on Mascots */}
+          {mascotVoiceCheer && (
+            <div className="title-mascot-voice-toast animate-bounce-gentle">
+              <span>{mascotVoiceCheer}</span>
+            </div>
+          )}
 
-          {/* Banner Image Stage */}
-          <div className="splash-banner-artwork-card">
+          {/* Interactive Artwork Card Stage */}
+          <div className="splash-banner-artwork-card living-title-stage">
+            {/* Master Artwork Image */}
             <img
-              src={BANNER_OPTIONS[selectedBannerIdx].img}
-              alt={BANNER_OPTIONS[selectedBannerIdx].name}
+              src="./assets/opening_banner.png"
+              alt="Little Days: 10-Day Readiness Adventure"
               className="splash-banner-img"
               draggable={false}
             />
 
-            {/* Action Button over bottom of banner */}
-            <div className="banner-start-action-row">
-              <button className="title-start-btn animate-pop" onClick={handleStartTitle}>
-                <GameIcon name="star" size={18} />
-                <span>BẮT ĐẦU HÀNH TRÌNH (START GAME)</span>
-                <span className="arrow-sym">→</span>
+            {/* ── LIVING DYNAMIC ANIMATIONS OVERLAY ── */}
+            <div className="living-title-fx-layer">
+              {/* Floating Hot Air Balloon in Sky */}
+              <div className="fx-floating-balloon" title="Khinh khí cầu Little Days" />
+
+              {/* Shimmering River Water Ripples under Stone Bridge */}
+              <div className="fx-river-shimmer" />
+
+              {/* Sunlight Lens Flare & Rainbow Prism */}
+              <div className="fx-rainbow-glow" />
+
+              {/* Sparkling Cherry Blossom Rain */}
+              <div className="fx-sakura-rain">
+                <span className="sakura-leaf sl1">🌸</span>
+                <span className="sakura-leaf sl2">🌸</span>
+                <span className="sakura-leaf sl3">✨</span>
+                <span className="sakura-leaf sl4">🌸</span>
+                <span className="sakura-leaf sl5">🍃</span>
+              </div>
+            </div>
+
+            {/* ── INTERACTIVE CLICKABLE HOTSPOTS (Direct to Features via Character Select) ── */}
+            <div className="title-interactive-hotspots-grid">
+              {/* 1. Main Bottom Button: "Press A to Start Your Adventure!" */}
+              <button
+                className="title-hotspot-btn hotspot-start-adventure"
+                onClick={() => handleTriggerHotspot('map', 'Bản Đồ Thị Trấn')}
+                title="Bắt đầu chuyến phiêu lưu (Start Adventure)"
+              >
+                <span className="hotspot-pulse-ring" />
+                <span className="hotspot-click-tag">✦ BẮT ĐẦU HÀNH TRÌNH ✦</span>
               </button>
+
+              {/* 2. Signpost Board: "Plan" (Kế Hoạch & Quests) */}
+              <button
+                className="title-hotspot-btn hotspot-sign-plan"
+                onClick={() => handleTriggerHotspot('quests', 'Kế Hoạch & Bảng Nhiệm Vụ')}
+                title="Plan: Lập Kế Hoạch 10 Ngày & Checklist"
+              >
+                <span className="hotspot-pulse-ring" />
+                <span className="hotspot-click-tag">📋 PLAN</span>
+              </button>
+
+              {/* 3. Signpost Board: "Practice" (Luyện Tập Gym Dojo) */}
+              <button
+                className="title-hotspot-btn hotspot-sign-practice"
+                onClick={() => handleTriggerHotspot('gym', 'Luyện Tập Thể Lực & Gym')}
+                title="Practice: Rèn Luyện Thể Lực & Đẩy Tạ"
+              >
+                <span className="hotspot-pulse-ring" />
+                <span className="hotspot-click-tag">🏋️ PRACTICE</span>
+              </button>
+
+              {/* 4. Signpost Board: "Explore" (Khám Phá Biển Nha Trang) */}
+              <button
+                className="title-hotspot-btn hotspot-sign-explore"
+                onClick={() => handleTriggerHotspot('beach', 'Khám Phá Tour 3 Đảo Nha Trang')}
+                title="Explore: Khám Phá Bãi Biển Nha Trang"
+              >
+                <span className="hotspot-pulse-ring" />
+                <span className="hotspot-click-tag">🧭 EXPLORE</span>
+              </button>
+
+              {/* 5. Signpost Board: "Grow" (Dinh Dưỡng & Ăn Uống) */}
+              <button
+                className="title-hotspot-btn hotspot-sign-grow"
+                onClick={() => handleTriggerHotspot('market', 'Dinh Dưỡng Sạch & Bù Nước')}
+                title="Grow: Dinh Dưỡng & Macro Sạch"
+              >
+                <span className="hotspot-pulse-ring" />
+                <span className="hotspot-click-tag">🌱 GROW</span>
+              </button>
+
+              {/* 6. Bottom Right Button: "Settings" */}
+              <button
+                className="title-hotspot-btn hotspot-btn-settings"
+                onClick={() => handleTriggerHotspot('settings', 'Cài Đặt & Quản Trị Hệ Thống')}
+                title="Settings: Quản Trị Hệ Thống & Bảo Mật"
+              >
+                <span className="hotspot-pulse-ring" />
+                <span className="hotspot-click-tag">⚙️ CÀI ĐẶT</span>
+              </button>
+
+              {/* 7. Bottom Right Button: "Diary" */}
+              <button
+                className="title-hotspot-btn hotspot-btn-diary"
+                onClick={() => handleTriggerHotspot('journal', 'Thư Viện Nhật Ký Kỷ Niệm')}
+                title="Diary: Viết Nhật Ký & Cảm Xúc Đôi Ta"
+              >
+                <span className="hotspot-pulse-ring" />
+                <span className="hotspot-click-tag">📅 NHẬT KÝ</span>
+              </button>
+
+              {/* 8. Top Right: Airport "Chiikawa Air" */}
+              <button
+                className="title-hotspot-btn hotspot-airport"
+                onClick={() => handleTriggerHotspot('airport', 'Sân Bay Khởi Hành Nha Trang 27/08')}
+                title="Chiikawa Air: Đếm Ngược Chuyến Bay Nha Trang"
+              >
+                <span className="hotspot-pulse-ring" />
+                <span className="hotspot-click-tag">✈️ SÂN BAY</span>
+              </button>
+
+              {/* 9. Left Cottage: "Nha Trang Island" Tổ Ấm */}
+              <button
+                className="title-hotspot-btn hotspot-cottage"
+                onClick={() => handleTriggerHotspot('home', 'Tổ Ấm Yêu Thương Của Chúng Mình')}
+                title="Nha Trang Island: Tổ Ấm Dũng & Em Yêu"
+              >
+                <span className="hotspot-pulse-ring" />
+                <span className="hotspot-click-tag">🏡 TỔ ẤM</span>
+              </button>
+
+              {/* 10. Center Mascots (Chiikawa & Usagi) Interactive Cheer */}
+              <div
+                className="title-hotspot-mascots"
+                onClick={handleMascotsCheer}
+                title="Bấm vào Chiikawa & Usagi để tương tác!"
+              >
+                <span className="mascot-heart-float">💖</span>
+              </div>
             </div>
           </div>
         </div>
       )}
 
       {/* ══════════════════════════════════════════════════════════════════
-         STAGE 2: CHARACTER SELECTION & ROLE ACCESS SCREEN
+         STAGE 2: CHARACTER SELECTION & ROLE PERKS (Mandatory before entry)
          ══════════════════════════════════════════════════════════════════ */}
       {screenStage === 'select' && (
         <div className="character-select-scene animate-slide-up">
           <div className="select-header-box">
-            <span className="select-step-pill">BƯỚC 2 / 2 · CHỌN NHÂN VẬT ĐỒNG HÀNH</span>
-            <h2 className="select-heading">Bạn Muốn Trải Nghiệm Cùng Ai?</h2>
+            <div className="select-target-pill">
+              <span className="pill-dot">✦</span>
+              <span>ĐIỂM ĐẾN TIẾP THEO: <strong>{targetTitle}</strong></span>
+            </div>
+            <h2 className="select-heading">Chọn Nhân Vật Đồng Hành Cùng Bạn</h2>
             <p className="select-sub">
-              Mỗi nhân vật sẽ mang lại góc nhìn và theo dõi những tính năng chuyên biệt trong hành trình chuẩn bị Nha Trang!
+              Mỗi nhân vật sẽ mang lại góc nhìn và đặc quyền theo dõi những tính năng chuyên biệt trong hành trình!
             </p>
           </div>
 
@@ -257,57 +373,76 @@ export function SplashScreen({ onEnterGame }: Props) {
                       <small>Sắp ra mắt</small>
                     </div>
                   ) : isSelected ? (
-                    <div className="card-active-badge">
-                      <span>✓ ĐANG CHỌN</span>
+                    <div className="card-active-check-badge">
+                      <GameIcon name="star" size={12} />
+                      <span>ĐANG CHỌN</span>
                     </div>
                   ) : null}
 
-                  {/* Character Avatar Box */}
-                  <div className="card-avatar-stage">
-                    <ChiikawaSVG character={char.id} size={isSelected ? 84 : 72} className="animate-bounce-gentle" />
+                  {/* Character Avatar */}
+                  <div className="char-avatar-container">
+                    <ChiikawaSVG
+                      character={char.id}
+                      size={char.isLocked ? 68 : 88}
+                      className={isSelected ? 'animate-bounce-gentle' : ''}
+                    />
                   </div>
 
-                  {/* Character Metadata */}
-                  <div className="card-meta-content">
-                    <span className="card-gender-chip" style={{ backgroundColor: char.color }}>
-                      {char.genderTag}
-                    </span>
-                    <h3 className="card-char-name">{char.name}</h3>
-                    <small className="card-role-title">{char.roleTitle}</small>
-                    <p className="card-desc-text">{char.desc}</p>
-
-                    {/* Features List */}
-                    {!char.isLocked && (
-                      <ul className="card-features-list">
-                        {char.features.map((feat, idx) => (
-                          <li key={idx}>{feat}</li>
-                        ))}
-                      </ul>
-                    )}
+                  {/* Character Meta Header */}
+                  <div className="char-card-header">
+                    <span className="char-gender-tag">{char.genderTag}</span>
+                    <h3 className="char-card-name">
+                      {char.name} <small>({char.jpName})</small>
+                    </h3>
+                    <span className="char-card-role">{char.roleTitle}</span>
                   </div>
+
+                  {/* Character Description */}
+                  <p className="char-card-desc">{char.desc}</p>
+
+                  {/* Unique Role Features */}
+                  <div className="char-features-list">
+                    <span className="features-label">TÍNH NĂNG THEO DÕI:</span>
+                    <ul>
+                      {char.features.map((f, i) => (
+                        <li key={i}>{f}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Dialogue Quote */}
+                  <div className="char-quote-box">
+                    <small>"{char.quote}"</small>
+                  </div>
+
+                  {/* Select Button */}
+                  <button
+                    className={`char-pick-btn ${isSelected ? 'btn-picked' : ''}`}
+                    disabled={char.isLocked}
+                  >
+                    {char.isLocked
+                      ? '🔒 Đang phát triển'
+                      : isSelected
+                      ? '✓ Đã chọn nhân vật này'
+                      : 'Chọn nhân vật'}
+                  </button>
                 </div>
               )
             })}
           </div>
 
-          {/* Bottom Confirmation Footer */}
-          <div className="select-confirm-footer">
+          {/* Action Row */}
+          <div className="select-action-bar">
             <button className="select-back-btn" onClick={() => setScreenStage('title')}>
-              ← Quay Lại
+              ← Quay lại màn hình chính
             </button>
-            <button className="select-enter-btn animate-pop" onClick={handleConfirmStart}>
-              <GameIcon name="star" size={16} />
-              <span>BẮT ĐẦU VỚI {selectedChar.toUpperCase()}</span>
-              <span className="arrow-sym">→</span>
+            <button className="select-confirm-btn animate-pop" onClick={handleConfirmStart}>
+              <GameIcon name="star" size={18} />
+              <span>TIẾP TỤC ĐẾN {targetTitle.toUpperCase()} →</span>
             </button>
           </div>
         </div>
       )}
-
-      {/* Footer Helper */}
-      <footer className="splash-footer-note">
-        <small>Mẹo: Trải nghiệm tốt nhất khi xoay ngang màn hình điện thoại hoặc máy tính · Âm thanh tự động kích hoạt 🎵</small>
-      </footer>
     </div>
   )
 }

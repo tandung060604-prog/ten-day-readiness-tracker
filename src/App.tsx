@@ -109,6 +109,7 @@ export function App() {
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null)
   const [inventoryItems] = useState<InventoryItem[]>(INITIAL_INVENTORY)
   const [isHudHidden, setIsHudHidden] = useState(false)
+  const [activeRole, setActiveRole] = useState<'chiikawa' | 'usagi'>('chiikawa')
 
   // Security Lock State
   const [isLocked, setIsLocked] = useState<boolean>(() => {
@@ -262,12 +263,10 @@ export function App() {
     }, 450)
   }
 
-  const [activeRole, setActiveRole] = useState<'chiikawa' | 'usagi'>('chiikawa')
-
-  // Handle Splash Screen enter with selected character
-  const handleEnterFromSplash = (role: 'chiikawa' | 'usagi') => {
+  // Handle Splash Screen enter with selected character and target location
+  const handleEnterFromSplash = (role: 'chiikawa' | 'usagi', targetLoc: LocationId | 'map' = 'map') => {
     setActiveRole(role)
-    triggerTransition('cloud', 'map')
+    triggerTransition('cloud', targetLoc)
   }
 
   // Handle building clicked on World Map

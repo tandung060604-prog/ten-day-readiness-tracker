@@ -3201,5 +3201,282 @@ html, body, #root, .app-shell {
   }
 }
 
+/* ==========================================================================
+   SLEEP LAB PRO & HYPNOGRAM
+   ========================================================================== */
+.sleep-pro-card {
+  background: linear-gradient(135deg, var(--panel), rgba(30, 20, 50, 0.4));
+  border: 1px solid rgba(204, 143, 255, 0.25);
+}
+
+.sleep-metrics-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.sleep-summary-box {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+
+.sleep-summary-box small {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  display: block;
+}
+
+.sleep-hours-val, .sleep-score-val {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 4px 0 6px;
+}
+
+.sleep-hours-val span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.sleep-cycle-pill {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--purple);
+  background: rgba(204, 143, 255, 0.12);
+  padding: 3px 8px;
+  border-radius: 99px;
+}
+
+.sleep-status-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* Hypnogram Visual */
+.sleep-hypnogram-section {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.hypnogram-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.hypnogram-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--purple);
+}
+
+.hypnogram-visual-container {
+  width: 100%;
+  height: 90px;
+  background: rgba(10, 15, 25, 0.6);
+  border-radius: var(--radius-sm);
+  padding: 8px 4px;
+}
+
+.hypnogram-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.hypnogram-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.legend-dot.deep { background: var(--primary); }
+.legend-dot.rem { background: var(--purple); }
+
+/* Soundscapes Player */
+.soundscapes-player-box {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+
+.soundscape-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.soundscape-header strong {
+  display: block;
+  font-size: 13px;
+}
+
+.soundscape-header small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.sound-playing-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  background: rgba(78, 225, 170, 0.15);
+  padding: 3px 8px;
+  border-radius: 99px;
+}
+
+.soundscape-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.sound-btn {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+
+.sound-btn.active {
+  border-color: var(--primary);
+  background: rgba(78, 225, 170, 0.12);
+  box-shadow: 0 0 14px var(--primary-glow);
+}
+
+.sound-icon {
+  font-size: 20px;
+}
+
+.sound-btn strong {
+  display: block;
+  font-size: 12px;
+}
+
+.sound-btn small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* ==========================================================================
+   DRINK TYPE SELECTOR (WATER TRACKER)
+   ========================================================================== */
+.drink-type-selector-row {
+  margin-bottom: 16px;
+}
+
+.drink-selector-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--blue);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.drink-pills-list {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.drink-pill-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 99px;
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  min-height: 36px;
+}
+
+.drink-pill-btn.active {
+  background: rgba(103, 183, 255, 0.2);
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.drink-pill-btn small {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* Calendar & Notifications */
+.wide-calendar-sync-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.notif-settings-card {
+  border-left: 3px solid var(--warn);
+}
+
+.calendar-sync-card {
+  border-left: 3px solid var(--blue);
+}
+
+.sleep-cycle-preview-banner {
+  background: rgba(204, 143, 255, 0.1);
+  border: 1px solid rgba(204, 143, 255, 0.3);
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+}
+
+.sleep-cycle-preview-banner span {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--purple);
+}
+
+.sleep-cycle-preview-banner small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+@media (max-width: 680px) {
+  .sleep-metrics-summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .soundscape-buttons-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 
 

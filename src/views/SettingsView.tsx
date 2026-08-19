@@ -1,5 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SetPinModal } from '../components/security/SetPinModal'
+import { getNotificationPermission, requestNotificationPermission, testNotification } from '../utils/notifications'
+import { downloadCalendarICS } from '../utils/calendarSync'
+import { triggerHaptic } from '../utils/haptics'
 import type { AppSettings } from '../types'
 
 type Props = {
@@ -18,6 +21,33 @@ export function SettingsView({
   resetData
 }: Props) {
   const [showPinModal, setShowPinModal] = useState(false)
+  const [notifPermission, setNotifPermission] = useState<NotificationPermission>('default')
+
+  useEffect(() => {
+    setNotifPermission(getNotificationPermission())
+  }, [])
+
+  const handleRequestNotification = async () => {
+    triggerHaptic('medium')
+    const perm = await requestNotificationPermission()
+    setNotifPermission(perm)
+    if (perm === 'granted') {
+      testNotification()
+    }
+  }
+
+  const handleTestNotification = () => {
+    triggerHaptic('light')
+    const ok = testNotification()
+    if (!ok && notifPermission !== 'granted') {
+      alert('Vui lòng cấp quyền thông báo trước để nhận nhắc nhở.')
+    }
+  }
+
+  const handleDownloadCalendar = () => {
+    triggerHaptic('success')
+    downloadCalendarICS(settings)
+  }
 
   const field = (label: string, key: keyof AppSettings, type = 'text', hint?: string) => (
     <label className="settings-field">
@@ -115,6 +145,66 @@ export function SettingsView({
             </>
           )}
         </div>
+      </section>
+
+      {/* Web Push Notifications & Alarm Section */}
+      <section className="card notif-settings-card">
+        <div className="section-head">
+          <div>
+            <small>THÔNG BÁO ĐIỆN THOẠI & NHẮC NHỞ</small>
+            <h3>Kết nối thông báo hệ thống</h3>
+          </div>
+          <span className={`status-pill ${notifPermission === 'granted' ? 'completed' : 'planned'}`}>
+            {notifPermission === 'granted' ? '🔔 Đã bật' : '🔕 Chưa cấp quyền'}
+          </span>
+        </div>
+
+        <p className="settings-desc">
+          Nhận thông báo đẩy trên điện thoại nhắc nhở: Uống nước đúng giờ, Đứng dậy vận động sau mỗi 60 phút làm việc, và Chuẩn bị đi ngủ đúng giờ.
+        </p>
+
+        <div className="security-controls-grid">
+          <div className="security-box">
+            <div className="security-info">
+              <strong>Trạng thái quyền thông báo: {notifPermission.toUpperCase()}</strong>
+              <small>
+                {notifPermission === 'granted'
+                  ? 'Ứng dụng đã sẵn sàng gửi nhắc nhở đến thiết bị của bạn.'
+                  : 'Bấm nút bên cạnh để cấp quyền thông báo cho ứng dụng.'}
+              </small>
+            </div>
+            <div className="btn-group-row">
+              {notifPermission !== 'granted' ? (
+                <button className="primary compact" onClick={handleRequestNotification}>
+                  Bật thông báo
+                </button>
+              ) : (
+                <button className="secondary compact" onClick={handleTestNotification}>
+                  ⚡ Thử gửi thông báo
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Calendar Sync & Export Section */}
+      <section className="card calendar-sync-card">
+        <div className="section-head">
+          <div>
+            <small>ĐỒNG BỘ LỊCH TRÌNH (CALENDAR SYNC)</small>
+            <h3>Xuất lịch trình vào Apple / Google Calendar</h3>
+          </div>
+          <span className="soft-badge">.ICS Smart Sync</span>
+        </div>
+
+        <p className="settings-desc">
+          Tự động đồng bộ toàn bộ 10 ngày lộ trình vào ứng dụng Lịch (Apple Calendar trên iPhone, Google Calendar, Outlook) bao gồm giờ tập, mốc uống nước và ngày về đích Ready Day.
+        </p>
+
+        <button className="primary wide-calendar-sync-btn" onClick={handleDownloadCalendar}>
+          📅 Đồng bộ lịch trình 10 ngày vào Lịch iPhone / Google (.ICS)
+        </button>
       </section>
 
       {/* Routine & Schedule Preferences */}

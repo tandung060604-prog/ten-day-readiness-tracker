@@ -1,5 +1,7 @@
-import { trainingPlan } from '../data/plan'
+import { trainingPlan, defaultSettings } from '../data/plan'
 import { readiness } from '../utils/readiness'
+import { downloadCalendarICS } from '../utils/calendarSync'
+import { triggerHaptic } from '../utils/haptics'
 import type { DailyLog } from '../types'
 
 type Props = {
@@ -11,6 +13,11 @@ type Props = {
 }
 
 export function PlanView({ currentDay, logs, waterTarget, onSelectDay, onNavigateToTraining }: Props) {
+  const handleSyncCalendar = () => {
+    triggerHaptic('success')
+    downloadCalendarICS(defaultSettings)
+  }
+
   return (
     <div className="view-container animate-fade-in">
       <section className="card">
@@ -19,7 +26,9 @@ export function PlanView({ currentDay, logs, waterTarget, onSelectDay, onNavigat
             <small>LỘ TRÌNH 10 NGÀY (10-DAY ARC)</small>
             <h3>Tích lũy · Giảm tải (Taper) · Sẵn sàng</h3>
           </div>
-          <span className="soft-badge">3 Giai đoạn</span>
+          <button className="secondary compact" onClick={handleSyncCalendar} title="Tải file .ics để thêm vào Lịch">
+            📅 Đồng bộ vào Lịch (.ICS)
+          </button>
         </div>
 
         <div className="plan-phase-guide">

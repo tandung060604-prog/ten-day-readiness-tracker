@@ -1,13 +1,22 @@
 import { useState } from 'react'
 import { triggerHaptic } from '../../utils/haptics'
 
+const DRINK_TYPES = [
+  { id: 'water', label: 'Nước lọc', icon: '💧', factor: 1.0 },
+  { id: 'coconut', label: 'Nước dừa/Điện giải', icon: '🥥', factor: 1.0 },
+  { id: 'tea', label: 'Trà xanh/Thảo mộc', icon: '🍵', factor: 0.85 },
+  { id: 'protein', label: 'Sữa/Protein Shake', icon: '🥛', factor: 0.90 },
+  { id: 'juice', label: 'Nước ép/Detox', icon: '🍊', factor: 0.80 },
+  { id: 'coffee', label: 'Cà phê', icon: '☕', factor: 0.60 }
+]
+
 const WATER_SCHEDULE = [
-  { time: '08:00', label: 'Cốc khởi động buổi sáng (Nước ấm)', target: 350 },
-  { time: '10:00', label: 'Bổ sung năng lượng giữa buổi', target: 300 },
-  { time: '13:30', label: 'Sau bữa trưa 30 phút', target: 350 },
-  { time: '15:30', label: 'Chống buồn ngủ & Duy trì tuần hoàn', target: 300 },
-  { time: '17:30', label: 'Bù nước trước / trong tập luyện', target: 500 },
-  { time: '20:00', label: 'Cốc nhẹ buổi tối (ngụm nhỏ)', target: 200 }
+  { time: '08:00', label: 'Khởi động sáng (Nước ấm)', target: 350 },
+  { time: '10:00', label: 'Bổ sung giữa buổi', target: 300 },
+  { time: '13:30', label: 'Sau ăn trưa 30p', target: 350 },
+  { time: '15:30', label: 'Chống buồn ngủ & Tuần hoàn', target: 300 },
+  { time: '17:30', label: 'Bù nước trước/trong tập', target: 500 },
+  { time: '20:00', label: 'Ngụm nhỏ buổi tối', target: 200 }
 ]
 
 type Props = {
@@ -17,12 +26,15 @@ type Props = {
 }
 
 export function WaterTrackerCard({ currentMl, targetMl, onAddWater }: Props) {
-  const percent = Math.min(100, Math.round((currentMl / (targetMl || 2500)) * 100))
+  const [selectedDrink, setSelectedDrink] = useState(DRINK_TYPES[0])
   const [checkedMilestones, setCheckedMilestones] = useState<string[]>([])
 
-  const handleQuickAdd = (amount: number) => {
+  const percent = Math.min(100, Math.round((currentMl / (targetMl || 2500)) * 100))
+
+  const handleAddDrink = (baseAmount: number) => {
     triggerHaptic('light')
-    onAddWater(amount)
+    const effectiveAmount = Math.round(baseAmount * selectedDrink.factor)
+    onAddWater(effectiveAmount)
   }
 
   const toggleMilestone = (time: string, suggestedAmount: number) => {
@@ -31,7 +43,7 @@ export function WaterTrackerCard({ currentMl, targetMl, onAddWater }: Props) {
       setCheckedMilestones(prev => prev.filter(t => t !== time))
     } else {
       setCheckedMilestones(prev => [...prev, time])
-      onAddWater(suggestedAmount)
+      handleAddDrink(suggestedAmount)
     }
   }
 
@@ -39,10 +51,32 @@ export function WaterTrackerCard({ currentMl, targetMl, onAddWater }: Props) {
     <section className="card water-pro-card">
       <div className="section-head">
         <div>
-          <small>HYDRATION PRO · QUẢN LÝ NƯỚC UỐNG</small>
-          <h3>Theo dõi nước uống thông minh</h3>
+          <small>HYDRATION LAB PRO · ĐA DẠNG ĐỒ UỐNG</small>
+          <h3>Quản lý nước uống thông minh</h3>
         </div>
         <span className="water-percent-badge">{percent}% Mục tiêu</span>
+      </div>
+
+      {/* Drink Type Selector */}
+      <div className="drink-type-selector-row">
+        <span className="drink-selector-label">Chọn loại đồ uống:</span>
+        <div className="drink-pills-list">
+          {DRINK_TYPES.map(drink => (
+            <button
+              key={drink.id}
+              type="button"
+              className={`drink-pill-btn ${selectedDrink.id === drink.id ? 'active' : ''}`}
+              onClick={() => {
+                triggerHaptic('light')
+                setSelectedDrink(drink)
+              }}
+            >
+              <span>{drink.icon}</span>
+              <span>{drink.label}</span>
+              <small>({Math.round(drink.factor * 100)}%)</small>
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="water-glass-layout">
@@ -66,31 +100,34 @@ export function WaterTrackerCard({ currentMl, targetMl, onAddWater }: Props) {
         {/* Quick Add Buttons */}
         <div className="water-quick-actions">
           <div className="water-buttons-grid">
-            <button className="water-btn" onClick={() => handleQuickAdd(150)}>
-              <span className="btn-icon">☕</span> +150ml <small>(Cốc nhỏ)</small>
+            <button className="water-btn" onClick={() => handleAddDrink(150)}>
+              <span className="btn-icon">{selectedDrink.icon}</span> +150ml <small>(Cốc nhỏ)</small>
             </button>
-            <button className="water-btn" onClick={() => handleQuickAdd(250)}>
-              <span className="btn-icon">🥛</span> +250ml <small>(Ly chuẩn)</small>
+            <button className="water-btn" onClick={() => handleAddDrink(250)}>
+              <span className="btn-icon">{selectedDrink.icon}</span> +250ml <small>(Ly chuẩn)</small>
             </button>
-            <button className="water-btn" onClick={() => handleQuickAdd(350)}>
-              <span className="btn-icon">🥤</span> +350ml <small>(Cốc to)</small>
+            <button className="water-btn" onClick={() => handleAddDrink(350)}>
+              <span className="btn-icon">{selectedDrink.icon}</span> +350ml <small>(Cốc to)</small>
             </button>
-            <button className="water-btn" onClick={() => handleQuickAdd(500)}>
-              <span className="btn-icon">🍶</span> +500ml <small>(Bình lớn)</small>
+            <button className="water-btn" onClick={() => handleAddDrink(500)}>
+              <span className="btn-icon">{selectedDrink.icon}</span> +500ml <small>(Bình lớn)</small>
             </button>
           </div>
 
           <div className="water-undo-row">
             <button
               className="secondary compact"
-              onClick={() => handleQuickAdd(-250)}
+              onClick={() => {
+                triggerHaptic('light')
+                onAddWater(-250)
+              }}
               title="Trừ bớt 250ml nếu bấm nhầm"
             >
               ⌫ Trừ 250ml
             </button>
             <span className="water-remaining-txt">
               {currentMl >= targetMl
-                ? '🎉 Đã đạt chuẩn nước trong ngày!'
+                ? '🎉 Đã đạt 100% chuẩn nước hôm nay!'
                 : `Còn thiếu ${(targetMl - currentMl).toLocaleString()} ml`}
             </span>
           </div>

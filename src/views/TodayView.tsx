@@ -5,6 +5,7 @@ import { ChibiMascot } from '../components/common/ChibiMascot'
 import { BreathingTimer } from '../components/BreathingTimer'
 import { DeskBreakTracker } from '../components/features/DeskBreakTracker'
 import { WaterTrackerCard } from '../components/features/WaterTrackerCard'
+import { SleepTrackerPro } from '../components/features/SleepTrackerPro'
 import { SleepModal } from '../components/modals/SleepModal'
 import { triggerConfetti } from '../utils/confetti'
 import { triggerHaptic } from '../utils/haptics'
@@ -152,59 +153,38 @@ export function TodayView({
         </section>
       </div>
 
-      {/* Water Tracker Pro with Wave Animation */}
+      {/* Water Tracker Pro with Wave Animation & Drink Selector */}
       <WaterTrackerCard
         currentMl={log.hydrationMl}
         targetMl={settings.waterTargetMl}
         onAddWater={handleAddWater}
       />
 
-      {/* 2 Core Metric Cards: Sleep & Training */}
-      <div className="grid-2">
-        {/* Sleep */}
-        <section className="metric-card sleep-card">
-          <div className="metric-header">
-            <small>SLEEP · GIẤC NGỦ</small>
-            <button className="quick-edit-btn" onClick={() => setShowSleepModal(true)}>
-              ✎ {log.sleep ? 'Sửa' : 'Nhập'}
-            </button>
-          </div>
-          <h3>
-            {log.sleep ? log.sleep.nightHours : '—'} <span>giờ</span>
-          </h3>
-          <p>
-            {log.sleep
-              ? `Ngủ trưa: ${log.sleep.napMinutes || 0}m · Chất lượng ${log.sleep.quality}/5 ★`
-              : 'Chưa ghi nhận giấc ngủ tối qua'}
-          </p>
-          <div className="sleep-dots">
-            {[1, 2, 3, 4, 5].map((x) => (
-              <i key={x} className={(log.sleep?.quality || 0) >= x ? 'on' : ''} />
-            ))}
-          </div>
-          <button className="secondary wide mt-2" onClick={() => setShowSleepModal(true)}>
-            {log.sleep ? 'Cập nhật giấc ngủ' : '＋ Ghi nhận giấc ngủ'}
-          </button>
-        </section>
+      {/* Sleep Tracker Pro with 90-min Cycle Hypnogram & Wind-down Soundscapes */}
+      <SleepTrackerPro
+        sleep={log.sleep}
+        targetBedtime={settings.bedtimeTarget}
+        targetWaketime={settings.wakeTime}
+        onOpenSleepModal={() => setShowSleepModal(true)}
+      />
 
-        {/* Training */}
-        <section className="metric-card training-card">
-          <div className="metric-header">
-            <small>TRAINING · TẬP LUYỆN</small>
-            <span className={`status-tag ${log.workout?.completed ? 'done' : 'pending'}`}>
-              {log.workout?.completed ? 'Hoàn thành' : 'Chưa tập'}
-            </span>
-          </div>
-          <h3 className="workout-title">{plan.title}</h3>
-          <p>{plan.subtitle}</p>
-          <button
-            className={log.workout?.completed ? 'success wide' : 'primary wide'}
-            onClick={handleToggleWorkout}
-          >
-            {log.workout?.completed ? '✓ Đã hoàn thành bài tập' : 'Đánh dấu đã tập'}
-          </button>
-        </section>
-      </div>
+      {/* Training Card */}
+      <section className="metric-card training-card">
+        <div className="metric-header">
+          <small>TRAINING · TẬP LUYỆN</small>
+          <span className={`status-tag ${log.workout?.completed ? 'done' : 'pending'}`}>
+            {log.workout?.completed ? 'Hoàn thành' : 'Chưa tập'}
+          </span>
+        </div>
+        <h3 className="workout-title">{plan.title}</h3>
+        <p>{plan.subtitle}</p>
+        <button
+          className={log.workout?.completed ? 'success wide' : 'primary wide'}
+          onClick={handleToggleWorkout}
+        >
+          {log.workout?.completed ? '✓ Đã hoàn thành bài tập' : 'Đánh dấu đã tập'}
+        </button>
+      </section>
 
       {/* Next Up Exercises */}
       <section className="card">

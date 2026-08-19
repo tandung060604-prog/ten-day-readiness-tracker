@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Modal } from '../common/Modal'
+import { triggerHaptic } from '../../utils/haptics'
 import type { SleepEntry } from '../../types'
 
 type Props = {
@@ -14,6 +15,9 @@ export function SleepModal({ initialSleep, onClose, onSave }: Props) {
   const [nightHours, setNightHours] = useState(initialSleep?.nightHours ?? 7.5)
   const [napMinutes, setNapMinutes] = useState(initialSleep?.napMinutes ?? 0)
   const [quality, setQuality] = useState(initialSleep?.quality ?? 4)
+
+  const cycles = (Number(nightHours) / 1.5).toFixed(1)
+  const isOptimal = Number(nightHours) >= 7.5 && Number(nightHours) <= 8.5
 
   // Auto calculate night hours if bedtime and waketime change
   const handleAutoCalc = (bed: string, wake: string) => {
@@ -45,6 +49,7 @@ export function SleepModal({ initialSleep, onClose, onSave }: Props) {
   }
 
   const handleSave = () => {
+    triggerHaptic('success')
     onSave({
       bedtime,
       wakeTime,
@@ -56,7 +61,7 @@ export function SleepModal({ initialSleep, onClose, onSave }: Props) {
   }
 
   return (
-    <Modal title="Ghi nhận Giấc ngủ (Sleep Log)" subtitle="Theo dõi chất lượng hồi phục ban đêm & ngủ trưa" onClose={onClose}>
+    <Modal title="Ghi nhận Giấc ngủ (Sleep Lab)" subtitle="Phân tích chu kỳ 90 phút & Đánh giá hồi phục" onClose={onClose}>
       <div className="form-grid">
         <label>
           Giờ đi ngủ tối qua
@@ -68,7 +73,7 @@ export function SleepModal({ initialSleep, onClose, onSave }: Props) {
         </label>
 
         <label>
-          Tổng số giờ ngủ ban đêm (Hours)
+          Tổng số giờ ngủ ban đêm
           <input
             type="number"
             step="0.1"
@@ -80,7 +85,7 @@ export function SleepModal({ initialSleep, onClose, onSave }: Props) {
         </label>
 
         <label>
-          Ngủ trưa / Nap (Phút)
+          Ngủ trưa phục hồi (Phút)
           <input
             type="number"
             step="5"
@@ -91,6 +96,18 @@ export function SleepModal({ initialSleep, onClose, onSave }: Props) {
           />
         </label>
 
+        {/* 90-min Cycle Live Preview */}
+        <div className="full sleep-cycle-preview-banner">
+          <div className="cycle-preview-left">
+            <span>⚡ Tương đương <strong>{cycles} chu kỳ 90 phút</strong></span>
+            <small>
+              {isOptimal
+                ? '🌟 Đạt chuẩn vàng 5 chu kỳ hồi phục não bộ & thể lực!'
+                : '💡 Khuyến nghị duy trì từ 7.5h (5 chu kỳ) đến 9h (6 chu kỳ).'}
+            </small>
+          </div>
+        </div>
+
         <div className="full form-rating-group">
           <span>Chất lượng giấc ngủ ({quality}/5 sao)</span>
           <div className="star-selector">
@@ -99,7 +116,10 @@ export function SleepModal({ initialSleep, onClose, onSave }: Props) {
                 key={star}
                 type="button"
                 className={`star-btn ${quality >= star ? 'selected' : ''}`}
-                onClick={() => setQuality(star)}
+                onClick={() => {
+                  triggerHaptic('light')
+                  setQuality(star)
+                }}
               >
                 ★
               </button>

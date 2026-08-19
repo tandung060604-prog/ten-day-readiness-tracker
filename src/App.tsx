@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { AppLogo } from './components/common/AppLogo'
+import { BackgroundMusicPlayer } from './components/common/BackgroundMusicPlayer'
 import { DaySelector } from './components/common/DaySelector'
 import { MealModal } from './components/modals/MealModal'
 import { ExerciseModal } from './components/modals/ExerciseModal'
@@ -273,6 +274,8 @@ export function App() {
           </div>
 
           <div className="top-actions">
+            <BackgroundMusicPlayer defaultVolume={0.18} />
+
             <button
               className="icon-btn"
               onClick={() => setShowLanding(true)}

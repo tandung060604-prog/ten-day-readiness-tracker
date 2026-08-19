@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { AppLogo } from '../components/common/AppLogo'
+import { BackgroundMusicPlayer } from '../components/common/BackgroundMusicPlayer'
 import { ChibiMascot, type MascotRole } from '../components/common/ChibiMascot'
 import { triggerHaptic } from '../utils/haptics'
 
@@ -20,9 +21,12 @@ export function LandingPage({ onEnterApp }: Props) {
       {/* Top Navbar */}
       <header className="landing-navbar">
         <AppLogo size={42} showText subtitle="Personal Wellness Protocol" />
-        <button className="primary compact landing-nav-btn" onClick={handleStart}>
-          Vào ứng dụng →
-        </button>
+        <div className="landing-navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <BackgroundMusicPlayer defaultVolume={0.18} />
+          <button className="primary compact landing-nav-btn" onClick={handleStart}>
+            Vào ứng dụng →
+          </button>
+        </div>
       </header>
 
       {/* Hero Section with Interactive Chibi Companion */}

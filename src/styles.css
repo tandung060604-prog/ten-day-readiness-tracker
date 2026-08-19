@@ -3477,6 +3477,134 @@ html, body, #root, .app-shell {
   }
 }
 
+/* ==========================================================================
+   BACKGROUND MUSIC PLAYER (SECRET - SAY HI BGM)
+   ========================================================================== */
+.bgm-player-widget {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.bgm-toggle-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line);
+  padding: 6px 12px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.bgm-toggle-btn:hover {
+  border-color: var(--primary);
+  background: rgba(78, 225, 170, 0.1);
+}
+
+.bgm-toggle-btn.playing {
+  border-color: var(--primary);
+  background: rgba(78, 225, 170, 0.15);
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.bgm-icon {
+  font-size: 15px;
+}
+
+.bgm-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  line-height: 1.15;
+}
+
+.bgm-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.bgm-status {
+  font-size: 9px;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Equalizer Bars Animation */
+.bgm-visualizer {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+  padding-left: 4px;
+}
+
+.bgm-visualizer .bar {
+  width: 2.5px;
+  height: 4px;
+  background: var(--muted);
+  border-radius: 1px;
+  transition: height 0.2s ease;
+}
+
+.bgm-visualizer.active .bar {
+  background: var(--primary);
+  animation: eqBounce 1.2s ease-in-out infinite alternate;
+}
+
+.bgm-visualizer.active .bar-1 {
+  animation-delay: 0s;
+}
+
+.bgm-visualizer.active .bar-2 {
+  animation-delay: 0.3s;
+}
+
+.bgm-visualizer.active .bar-3 {
+  animation-delay: 0.6s;
+}
+
+@keyframes eqBounce {
+  0% { height: 3px; }
+  50% { height: 14px; }
+  100% { height: 6px; }
+}
+
+.bgm-mini-slider {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.bgm-mini-slider .vol-icon {
+  font-size: 12px;
+}
+
+.bgm-mini-slider input[type="range"] {
+  width: 50px;
+  height: 4px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+@media (max-width: 680px) {
+  .bgm-info {
+    display: none;
+  }
+  .bgm-toggle-btn {
+    padding: 6px 10px;
+  }
+}
+
+
 
 
 

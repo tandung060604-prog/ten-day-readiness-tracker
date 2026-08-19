@@ -33,7 +33,7 @@ export function TopHUD({ stats, activeRole = 'chiikawa', onOpenSettings, onOpenH
         </div>
         <div className="hud-profile__info">
           <strong>
-            {activeRole === 'chiikawa' ? 'Dũng (Chiikawa)' : 'Em Yêu (Usagi)'} <GameIcon name="heart" size={13} style={{ marginLeft: 3 }} />
+            {activeRole === 'chiikawa' ? 'Haru (Chiikawa)' : 'Mai Trang (Usagi)'} <GameIcon name="heart" size={13} style={{ marginLeft: 3 }} />
           </strong>
           <div className="hud-level-row">
             <span className="hud-level-tag">Level {stats.level}</span>

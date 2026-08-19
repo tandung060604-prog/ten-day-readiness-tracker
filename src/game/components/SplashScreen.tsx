@@ -27,32 +27,32 @@ interface CharacterCard {
 const CHARACTERS: CharacterCard[] = [
   {
     id: 'chiikawa',
-    name: 'Chiikawa',
+    name: 'Haru (Chiikawa)',
     jpName: 'ちいかわ',
-    roleTitle: 'Chiến Binh Trắng · Dũng',
-    genderTag: 'BẠN NAM (DŨNG)',
+    roleTitle: 'Chiến Binh Trắng · Haru',
+    genderTag: 'BẠN NAM · HARU',
     color: '#ff8da1',
     glow: 'rgba(255, 141, 161, 0.4)',
     isLocked: false,
-    desc: 'Đại diện cho Bạn Nam (Dũng). Tập trung rèn luyện thể lực cao độ, kỷ luật 10 ngày sẵn sàng và quản lý quỹ du lịch chuẩn bị cho kỳ nghỉ Nha Trang.',
+    desc: 'Đại diện cho Bạn Nam (Haru). Tập trung rèn luyện thể lực cao độ, kỷ luật 10 ngày sẵn sàng và quản lý quỹ du lịch chuẩn bị cho kỳ nghỉ Nha Trang.',
     features: [
       '🏋️ Rèn luyện thể lực Gym / Dojo & Tạ mỗi ngày',
       '💧 Theo dõi lượng nước 2,500ml & Điện giải',
-      '💰 Quản lý Quỹ MOMO du lịch 8 Triệu (Dũng góp 5tr)',
+      '💰 Quản lý Quỹ MOMO du lịch 8 Triệu (Haru góp 5tr)',
       '🎯 Checklist 10 Ngày Sẵn Sàng đi Nha Trang'
     ],
-    quote: 'Waaah! Hãy cùng Dũng rèn luyện thật chăm chỉ và kiên định mỗi ngày nhé!'
+    quote: 'Waaah! Hãy cùng Haru rèn luyện thật chăm chỉ và kiên định mỗi ngày nhé!'
   },
   {
     id: 'usagi',
-    name: 'Usagi',
+    name: 'Mai Trang (Usagi)',
     jpName: 'うさぎ',
-    roleTitle: 'Năng Lượng Siêu Cấp · Em Yêu',
-    genderTag: 'BẠN NỮ (EM YÊU)',
+    roleTitle: 'Năng Lượng Siêu Cấp · Mai Trang',
+    genderTag: 'BẠN NỮ · MAI TRANG',
     color: '#ffd166',
     glow: 'rgba(255, 209, 102, 0.4)',
     isLocked: false,
-    desc: 'Đại diện cho Bạn Nữ (Em Yêu). Tập trung lưu giữ khoảnh khắc ngọt ngào, cảm xúc nhật ký, khám phá ẩm thực và lên kế hoạch hẹn hò lãng mạn.',
+    desc: 'Đại diện cho Bạn Nữ (Mai Trang). Tập trung lưu giữ khoảnh khắc ngọt ngào, cảm xúc nhật ký, khám phá ẩm thực và lên kế hoạch hẹn hò lãng mạn.',
     features: [
       '📸 Bộ sưu tập Album Ảnh Hẹn Hò & Dấu Mốc Kỷ Niệm',
       '📖 Thư viện Nhật Ký Cảm Xúc & Lời Nhắn Yêu Thương',
@@ -60,7 +60,7 @@ const CHARACTERS: CharacterCard[] = [
       '🏖️ Khám phá Tour 3 Đảo Mini Beach, Hòn Mun & Viện Hải Dương Học',
       '🌙 Theo dõi Giấc Ngủ 90 Phút & Âm thanh thư giãn'
     ],
-    quote: 'Ya-haaa! Uraaaa! Chuẩn bị tinh thần và trang phục đẹp để đi biển Nha Trang nào!'
+    quote: 'Ya-haaa! Uraaaa! Chuẩn bị tinh thần và trang phục đẹp cùng Mai Trang để đi biển Nha Trang nào!'
   },
   {
     id: 'hachiware',

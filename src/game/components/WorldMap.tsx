@@ -52,8 +52,8 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
       actionEmoji: '🌷🍵',
       voiceChar: 'chiikawa',
       storyNarrative:
-        'Căn nhà cổ tích ấm cúng nằm trên ngọn đồi thoai thoải nhìn ra dòng suối trong vắt. Nơi đây là trung tâm kết nối mọi ký ức ngọt ngào của Dũng & Em Yêu, lưu giữ từng ngày yêu nhau từ 11/06/2026 và theo dõi lộ trình chuẩn bị chu đáo cho chuyến đi Nha Trang.',
-      quote: 'Chào mừng Dũng & Em Yêu về nhà! Hôm nay hai bạn đã cùng nhau làm được rất nhiều điều tuyệt vời rồi đó~',
+        'Căn nhà cổ tích ấm cúng nằm trên ngọn đồi thoai thoải nhìn ra dòng suối trong vắt. Nơi đây là trung tâm kết nối mọi ký ức ngọt ngào của Haru & Mai Trang, lưu giữ từng ngày yêu nhau từ 11/06/2026 và theo dõi lộ trình chuẩn bị chu đáo cho chuyến đi Nha Trang.',
+      quote: 'Chào mừng Haru & Mai Trang về nhà! Hôm nay hai bạn đã cùng nhau làm được rất nhiều điều tuyệt vời rồi đó~',
       objective: 'Theo dõi chỉ số ngày yêu & Cập nhật trạng thái sẵn sàng',
       reward: '+100 ❤️ Trái Tim Tình Yêu'
     }
@@ -380,7 +380,7 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
 ]
 
 const DIALOG_LINES = [
-  'Chào mừng Dũng & Em Yêu đến với thị trấn Little Days! ✨',
+  'Chào mừng Haru & Mai Trang đến với thị trấn Little Days! ✨',
   'Hôm nay cùng hoàn thành mục tiêu để sẵn sàng cho Nha Trang 27/08 nhé! 🌴',
   'Chiikawa & Usagi luôn bên cạnh cổ vũ tình yêu của 2 đứa mình! 💖',
   'Nhấn vào bất kỳ địa điểm nào trên bản đồ để mở cốt truyện nha! 🚀'

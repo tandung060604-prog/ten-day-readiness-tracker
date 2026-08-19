@@ -8,134 +8,112 @@ type Props = {
   loveDays: number
 }
 
-/*  ─── building positions match the reference image layout ──────────── */
 export const MAP_BUILDINGS: MapBuilding[] = [
-  // ── row 1 (top) ──
-  { id: 'home',       name: 'Nhà Của\nChúng Mình',    icon: '🏡', transition: 'heart',  color: '#ff8da1', glow: 'rgba(255,141,161,.35)', x: 12, y: 18 },
-  { id: 'gym',        name: 'Nhà Tập',                 icon: '🏋️', transition: 'cloud',  color: '#ffd166', glow: 'rgba(255,209,102,.35)', x: 30, y: 12 },
-  { id: 'water',      name: 'Đài Uống\nNước',          icon: '⛲', transition: 'water',  color: '#67b7ff', glow: 'rgba(103,183,255,.35)', x: 48, y:  8 },
-  { id: 'journal',    name: 'Thư Viện\nNhật Ký',       icon: '📖', transition: 'book',   color: '#cdb4db', glow: 'rgba(205,180,219,.35)', x: 72, y: 10 },
-
-  // ── row 2 (middle) ──
-  { id: 'quests',     name: 'Quảng Trường\nQuest',     icon: '🎪', transition: 'cloud',  color: '#e0aa4d', glow: 'rgba(224,170,77,.35)',  x: 42, y: 38 },
-  { id: 'album',      name: 'Album\nKỷ Niệm',         icon: '📸', transition: 'camera', color: '#ff8da1', glow: 'rgba(255,141,161,.35)', x: 78, y: 28 },
-  { id: 'market',     name: 'Chợ Nhỏ',                 icon: '🛒', transition: 'cloud',  color: '#38b283', glow: 'rgba(56,178,131,.35)',  x: 88, y: 18 },
-
-  // ── row 3 (bottom-left inland) ──
-  { id: 'sleep',      name: 'Trung Tâm\nGiấc Ngủ',    icon: '🌙', transition: 'moon',   color: '#7b68ee', glow: 'rgba(123,104,238,.35)', x:  6, y: 58 },
-  { id: 'restaurant', name: 'Nhà Hàng\nHẹn Hò',       icon: '🍷', transition: 'heart',  color: '#e57385', glow: 'rgba(229,115,133,.35)', x: 18, y: 68 },
-  { id: 'settings',   name: 'Tòa Thị Chính\n/ Cài Đặt', icon: '🏛️', transition: 'gear', color: '#a8dadc', glow: 'rgba(168,218,220,.35)', x: 42, y: 72 },
-  { id: 'airport',    name: 'Sân Bay',                  icon: '✈️', transition: 'plane',  color: '#67b7ff', glow: 'rgba(103,183,255,.35)', x: 68, y: 55 },
-
-  // ── far-right beach ──
-  { id: 'beach',      name: 'Bãi Biển\nNha Trang',     icon: '🏖️', transition: 'water',  color: '#4ee1aa', glow: 'rgba(78,225,170,.35)',  x: 86, y: 68 },
+  { id: 'home',       name: 'Nhà Của\nChúng Mình',    icon: '🏡', transition: 'heart',  color: '#ff8da1', glow: 'rgba(255,141,161,.45)', x: 13.8, y: 26.5 },
+  { id: 'gym',        name: 'Nhà Tập',                 icon: '🏋️', transition: 'cloud',  color: '#ffd166', glow: 'rgba(255,209,102,.45)', x: 34.5, y: 21.0 },
+  { id: 'water',      name: 'Đài Uống\nNước',          icon: '⛲', transition: 'water',  color: '#67b7ff', glow: 'rgba(103,183,255,.45)', x: 50.8, y: 19.5 },
+  { id: 'journal',    name: 'Thư Viện\nNhật Ký',       icon: '📖', transition: 'book',   color: '#cdb4db', glow: 'rgba(205,180,219,.45)', x: 69.8, y: 21.0 },
+  { id: 'album',      name: 'Album\nKỷ Niệm',         icon: '📸', transition: 'camera', color: '#ff8da1', glow: 'rgba(255,141,161,.45)', x: 85.5, y: 31.0 },
+  { id: 'sleep',      name: 'Trung Tâm\nGiấc Ngủ',    icon: '🌙', transition: 'moon',   color: '#7b68ee', glow: 'rgba(123,104,238,.45)', x: 12.0, y: 56.5 },
+  { id: 'quests',     name: 'Quảng Trường\nQuest',     icon: '🎪', transition: 'cloud',  color: '#e0aa4d', glow: 'rgba(224,170,77,.45)',  x: 50.0, y: 41.5 },
+  { id: 'market',     name: 'Chợ Nhỏ',                 icon: '🛒', transition: 'cloud',  color: '#38b283', glow: 'rgba(56,178,131,.45)',  x: 82.0, y: 46.5 },
+  { id: 'airport',    name: 'Sân Bay',                  icon: '✈️', transition: 'plane',  color: '#67b7ff', glow: 'rgba(103,183,255,.45)', x: 73.0, y: 64.5 },
+  { id: 'restaurant', name: 'Nhà Hàng\nHẹn Hò',       icon: '🍷', transition: 'heart',  color: '#e57385', glow: 'rgba(229,115,133,.45)', x: 25.5, y: 75.5 },
+  { id: 'settings',   name: 'Tòa Thị Chính\n/ Cài Đặt', icon: '🏛️', transition: 'gear', color: '#a8dadc', glow: 'rgba(168,218,220,.45)', x: 50.0, y: 77.5 },
+  { id: 'beach',      name: 'Bãi Biển\nNha Trang',     icon: '🏖️', transition: 'water',  color: '#4ee1aa', glow: 'rgba(78,225,170,.45)',  x: 90.5, y: 75.5 },
 ]
 
-/* ─── decorative trees, flowers, clouds ─────────────────────────────── */
-const DECO_TREES = [
-  { x: 3, y: 8, e: '🌳', s: 28 }, { x: 22, y: 6, e: '🌸', s: 22 },
-  { x: 60, y: 4, e: '🌳', s: 26 }, { x: 92, y: 6, e: '🌴', s: 26 },
-  { x: 96, y: 40, e: '🌴', s: 30 }, { x: 2, y: 42, e: '🌲', s: 26 },
-  { x: 34, y: 60, e: '🌸', s: 20 }, { x: 56, y: 18, e: '🌷', s: 18 },
-  { x: 80, y: 46, e: '🌺', s: 18 }, { x: 14, y: 38, e: '🌼', s: 16 },
-  { x: 64, y: 30, e: '🌿', s: 18 }, { x: 50, y: 60, e: '🌳', s: 24 },
+const COUPLE_QUOTES = [
+  'Cùng nhau hôm nay\ncòn tuyệt hơn hôm qua! 💕',
+  'Đếm từng ngày để cùng bay\ntới Nha Trang 27/08! 🌴✈️',
+  'Yêu em nhất trên đời, cùng\nnhau rèn luyện mỗi ngày nhé! ✨',
+  'Bé Chiikawa & Usagi luôn cổ vũ\ncho tình yêu của 2 đứa mình! 🐹🐰',
+  'Hôm nay hoàn thành đủ mục tiêu\nđể tích thêm tim nha! ❤️'
 ]
 
 export function WorldMap({ onSelectBuilding, loveDays }: Props) {
   const [selectedId, setSelectedId] = useState<LocationId | null>(null)
-  const [speech, setSpeech] = useState('Cùng nhau hôm nay\ncòn tuyệt hơn hôm qua! ✨')
+  const [quoteIdx, setQuoteIdx] = useState(0)
+  const [mascotSparkle, setMascotSparkle] = useState(false)
 
   const handleClick = (b: MapBuilding) => {
     setSelectedId(b.id)
     audioSystem.playClick('pop')
-    setSpeech(`Đang tới ${b.name.replace('\n', ' ')}...`)
-
     setTimeout(() => {
       onSelectBuilding(b.id, b.transition)
       setSelectedId(null)
-    }, 420)
+    }, 380)
+  }
+
+  const handleMascotClick = () => {
+    audioSystem.playClick('enter')
+    setMascotSparkle(true)
+    setQuoteIdx((prev) => (prev + 1) % COUPLE_QUOTES.length)
+    setTimeout(() => setMascotSparkle(false), 1200)
   }
 
   return (
-    <div className="gm-viewport">
-      {/* ══════ sky + landscape bg ══════ */}
-      <div className="gm-sky" />
-      <div className="gm-rainbow" />
+    <div className="art-world-viewport">
+      {/* ══════ 1. High-Res Artwork Illustration Canvas ══════ */}
+      <div className="art-map-stage">
+        <img
+          src="./assets/game_world_map.jpg"
+          alt="Little Days Town Map"
+          className="art-map-image"
+          draggable={false}
+        />
 
-      {/* animated clouds */}
-      <div className="gm-cloud c1" />
-      <div className="gm-cloud c2" />
-      <div className="gm-cloud c3" />
+        {/* ══════ 2. Clickable Building Hotspots ══════ */}
+        {MAP_BUILDINGS.map((b) => (
+          <button
+            key={b.id}
+            className={`art-building-hotspot ${selectedId === b.id ? 'art-building-hotspot--active' : ''}`}
+            style={{
+              left: `${b.x}%`,
+              top: `${b.y}%`,
+              '--hotspot-glow': b.glow,
+              '--hotspot-color': b.color
+            } as React.CSSProperties}
+            onClick={() => handleClick(b)}
+            title={`Bước vào ${b.name.replace('\n', ' ')}`}
+          >
+            <span className="hotspot-pulse-ring" />
+            <span className="hotspot-tap-badge">
+              <span className="hotspot-icon">{b.icon}</span>
+              <span className="hotspot-title">{b.name}</span>
+            </span>
+          </button>
+        ))}
 
-      {/* ocean area (right side) */}
-      <div className="gm-ocean">
-        <div className="gm-ocean-label">NHA TRANG</div>
-      </div>
-
-      {/* grass + path pattern */}
-      <div className="gm-land" />
-      <svg className="gm-paths" viewBox="0 0 1000 600" preserveAspectRatio="none">
-        {/* winding town paths */}
-        <path d="M120 130 C200 180, 280 100, 420 250 S560 350, 680 340 S800 400, 860 420"
-          fill="none" stroke="#f5e6d3" strokeWidth="28" strokeLinecap="round" opacity=".65" />
-        <path d="M420 250 C400 350, 380 440, 420 460"
-          fill="none" stroke="#f5e6d3" strokeWidth="24" strokeLinecap="round" opacity=".55" />
-        <path d="M120 130 C100 250, 80 370, 180 420 S320 470, 420 460"
-          fill="none" stroke="#f5e6d3" strokeWidth="22" strokeLinecap="round" opacity=".5" />
-      </svg>
-
-      {/* decorative trees & flowers */}
-      {DECO_TREES.map((t, i) => (
-        <span key={i} className="gm-deco" style={{ left: `${t.x}%`, top: `${t.y}%`, fontSize: t.s }}>
-          {t.e}
-        </span>
-      ))}
-
-      {/* floating sparkle particles */}
-      <div className="gm-sparkles">
-        <span className="gm-sp s1">✨</span>
-        <span className="gm-sp s2">🌸</span>
-        <span className="gm-sp s3">💫</span>
-        <span className="gm-sp s4">🌸</span>
-        <span className="gm-sp s5">✨</span>
-      </div>
-
-      {/* ══════ 12 interactive buildings ══════ */}
-      {MAP_BUILDINGS.map((b) => (
-        <button
-          key={b.id}
-          className={`gm-building ${selectedId === b.id ? 'gm-building--active' : ''}`}
-          style={{
-            left: `${b.x}%`,
-            top: `${b.y}%`,
-            '--bldg-color': b.color,
-            '--bldg-glow': b.glow,
-          } as React.CSSProperties}
-          onClick={() => handleClick(b)}
+        {/* ══════ 3. Interactive Central Mascots (Chiikawa & Usagi) ══════ */}
+        <div
+          className={`art-mascots-center ${mascotSparkle ? 'mascot-sparkle-active' : ''}`}
+          onClick={handleMascotClick}
+          title="Nhấn để tương tác với Chiikawa & Usagi"
         >
-          <span className="gm-building__icon">{b.icon}</span>
-          <span className="gm-building__name">{b.name}</span>
-        </button>
-      ))}
-
-      {/* ══════ central mascot duo ══════ */}
-      <div className="gm-mascots" onClick={() => audioSystem.playClick('pop')}>
-        <ChiikawaSVG character="chiikawa" size={68} className="gm-mascot-sprite" />
-        <ChiikawaSVG character="usagi"    size={68} className="gm-mascot-sprite" />
-      </div>
-
-      {/* ══════ bottom-left love counter ══════ */}
-      <div className="gm-love-counter">
-        <span className="gm-love-heart">❤️</span>
-        <div>
-          <small>Đếm Ngày Yêu Nhau</small>
-          <strong>{loveDays.toLocaleString()} ngày</strong>
+          <div className="mascot-item mascot-left">
+            <ChiikawaSVG character="chiikawa" size={72} className="animate-bounce-gentle" />
+          </div>
+          <span className="mascot-heart-pulse">💖</span>
+          <div className="mascot-item mascot-right">
+            <ChiikawaSVG character="usagi" size={72} className="animate-bounce-gentle" />
+          </div>
         </div>
-      </div>
 
-      {/* ══════ bottom-right speech bubble ══════ */}
-      <div className="gm-speech">
-        <p>{speech}</p>
+        {/* ══════ 4. Live Love Days Counter Overlay (Bottom Left) ══════ */}
+        <div className="art-love-card animate-slide-up">
+          <span className="love-card-heart">💖</span>
+          <div>
+            <small>Đếm Ngày Yêu Nhau</small>
+            <strong>{loveDays.toLocaleString()} <span>ngày</span></strong>
+          </div>
+        </div>
+
+        {/* ══════ 5. Dynamic Couple Sticky Note (Bottom Right) ══════ */}
+        <div className="art-sticky-note animate-slide-up" onClick={() => setQuoteIdx((prev) => (prev + 1) % COUPLE_QUOTES.length)}>
+          <span className="sticky-pin">📌</span>
+          <p>{COUPLE_QUOTES[quoteIdx]}</p>
+        </div>
       </div>
     </div>
   )

@@ -5326,323 +5326,246 @@ html, body, #root, .app-shell {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   4. GAME WORLD MAP  –  Full-viewport landscape
+   4. ARTWORK WORLD MAP  –  Storybook Game Town Illustration
    ═══════════════════════════════════════════════════════════════════════ */
-.gm-viewport {
+.art-world-viewport {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  background: #fdf5f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  padding: 56px 0 70px;
+}
+
+.art-map-stage {
   position: relative;
   width: 100%;
-  height: 100vh;
+  max-width: 1540px;
+  aspect-ratio: 16 / 9;
+  box-shadow: 0 12px 48px rgba(180, 140, 150, 0.25);
+  border-radius: 12px;
   overflow: hidden;
-  /* Prevent scrolling inside the map */
-  touch-action: pan-x pan-y;
+  user-select: none;
+  background: #fcefe9;
 }
 
-/* ── Sky gradient ── */
-.gm-sky {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg,
-    #aee2ff 0%,
-    #d4f0ff 30%,
-    #fff5e8 60%,
-    #ffe8d4 75%,
-    #ffe0cc 100%);
-  z-index: 0;
-}
-
-/* ── Rainbow ── */
-.gm-rainbow {
-  position: absolute;
-  top: -60px;
-  right: 15%;
-  width: 320px;
-  height: 160px;
-  border-radius: 50% 50% 0 0;
-  background: conic-gradient(from 180deg at 50% 100%,
-    #ff6b6b 0deg, #ff9a5c 30deg, #ffd166 60deg,
-    #38b283 120deg, #67b7ff 180deg, #9b87f5 240deg,
-    #ff6b8a 300deg, transparent 360deg);
-  opacity: .35;
-  z-index: 1;
-  mask: radial-gradient(ellipse at 50% 100%, transparent 50%, white 51%, white 60%, transparent 61%);
-  -webkit-mask: radial-gradient(ellipse at 50% 100%, transparent 50%, white 51%, white 60%, transparent 61%);
-}
-
-/* ── Clouds ── */
-.gm-cloud {
-  position: absolute;
-  background: rgba(255,255,255,.65);
-  border-radius: 999px;
-  z-index: 2;
-  will-change: transform;
-}
-.gm-cloud.c1 {
-  width: 200px;
-  height: 60px;
-  top: 6%;
-  left: -200px;
-  animation: cloudDrift1 28s linear infinite;
-}
-.gm-cloud.c2 {
-  width: 140px;
-  height: 44px;
-  top: 12%;
-  left: -140px;
-  animation: cloudDrift2 36s linear infinite;
-  opacity: .5;
-}
-.gm-cloud.c3 {
-  width: 180px;
-  height: 52px;
-  top: 3%;
-  left: -180px;
-  animation: cloudDrift3 44s linear infinite;
-  opacity: .4;
-}
-@keyframes cloudDrift1 { to { transform: translateX(calc(100vw + 400px)); } }
-@keyframes cloudDrift2 { to { transform: translateX(calc(100vw + 280px)); } }
-@keyframes cloudDrift3 { to { transform: translateX(calc(100vw + 360px)); } }
-
-/* ── Ocean (right-side beach) ── */
-.gm-ocean {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 25%;
-  height: 50%;
-  background: linear-gradient(180deg,
-    rgba(103,200,255,.3) 0%,
-    rgba(60,170,230,.45) 40%,
-    rgba(30,140,210,.55) 100%);
-  z-index: 1;
-  clip-path: polygon(30% 0%, 100% 0%, 100% 100%, 0% 100%, 15% 60%);
-  /* gentle wave animation */
-  animation: oceanSway 6s ease-in-out infinite alternate;
-}
-.gm-ocean-label {
-  position: absolute;
-  bottom: 18%;
-  left: 50%;
-  transform: translateX(-50%) rotate(-12deg);
-  font-size: 22px;
-  font-weight: 900;
-  color: rgba(255,255,255,.55);
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-@keyframes oceanSway {
-  0% { clip-path: polygon(30% 0%, 100% 0%, 100% 100%, 0% 100%, 15% 60%); }
-  100% { clip-path: polygon(28% 2%, 100% 0%, 100% 100%, 0% 100%, 18% 55%); }
-}
-
-/* ── Land / grass area ── */
-.gm-land {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(180deg,
-    transparent 25%,
-    rgba(144,210,140,.2) 50%,
-    rgba(120,190,120,.25) 70%,
-    rgba(100,170,100,.3) 100%);
-}
-
-/* ── SVG paths ── */
-.gm-paths {
-  position: absolute;
-  inset: 0;
+.art-map-image {
   width: 100%;
   height: 100%;
-  z-index: 2;
+  object-fit: cover;
+  display: block;
   pointer-events: none;
 }
 
-/* ── Decorative trees / flowers ── */
-.gm-deco {
+/* ── Interactive Building Hotspots ── */
+.art-building-hotspot {
   position: absolute;
-  z-index: 3;
-  pointer-events: none;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,.12));
-  animation: gentleSway 4s ease-in-out infinite alternate;
-}
-.gm-deco:nth-child(even) { animation-delay: -2s; animation-duration: 5s; }
-
-@keyframes gentleSway {
-  0% { transform: rotate(-2deg) translateY(0); }
-  100% { transform: rotate(2deg) translateY(-3px); }
-}
-
-/* ── Sparkle particles ── */
-.gm-sparkles {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-}
-.gm-sp {
-  position: absolute;
-  font-size: 14px;
-  opacity: 0;
-  animation: sparkleFloat 6s ease-in-out infinite;
-}
-.gm-sp.s1 { left: 20%; top: 30%; animation-delay: 0s; }
-.gm-sp.s2 { left: 50%; top: 20%; animation-delay: 1.2s; }
-.gm-sp.s3 { left: 70%; top: 45%; animation-delay: 2.4s; }
-.gm-sp.s4 { left: 35%; top: 55%; animation-delay: 3.6s; }
-.gm-sp.s5 { left: 85%; top: 35%; animation-delay: 4.8s; }
-@keyframes sparkleFloat {
-  0%   { opacity: 0; transform: translateY(0) scale(.5); }
-  15%  { opacity: 1; transform: translateY(-10px) scale(1); }
-  30%  { opacity: 0; transform: translateY(-25px) scale(.6); }
-  100% { opacity: 0; }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   BUILDINGS  –  Absolutely positioned on the map
-   ═══════════════════════════════════════════════════════════════════════ */
-.gm-building {
-  position: absolute;
+  transform: translate(-50%, -50%);
   z-index: 10;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  background: rgba(255,255,255,.72);
-  border: 2px solid rgba(255,255,255,.7);
-  border-radius: 18px;
-  padding: 10px 14px 8px;
-  cursor: pointer;
-  transition: all .28s cubic-bezier(.34,1.56,.64,1);
-  box-shadow:
-    0 4px 14px rgba(0,0,0,.1),
-    0 0 0 0 var(--bldg-glow);
-  /* offset by half the expected size so x,y = center */
-  transform: translate(-50%, -50%);
-  min-width: 72px;
-  backdrop-filter: blur(8px);
-}
-.gm-building:hover {
-  transform: translate(-50%, -50%) translateY(-6px) scale(1.08);
-  box-shadow:
-    0 10px 28px rgba(0,0,0,.15),
-    0 0 20px 4px var(--bldg-glow);
-  border-color: var(--bldg-color);
-  background: rgba(255,255,255,.88);
-}
-.gm-building--active {
-  animation: buildingPop .4s ease;
-}
-@keyframes buildingPop {
-  0%   { transform: translate(-50%,-50%) scale(1); }
-  35%  { transform: translate(-50%,-50%) scale(.92); }
-  70%  { transform: translate(-50%,-50%) scale(1.1); }
-  100% { transform: translate(-50%,-50%) scale(1); }
+  justify-content: center;
+  transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-width: 60px;
+  min-height: 60px;
 }
 
-.gm-building__icon {
-  font-size: 28px;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,.15));
+.art-building-hotspot:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+  z-index: 25;
 }
-.gm-building__name {
+
+.art-building-hotspot--active {
+  animation: hotspotPop 0.38s ease;
+}
+
+@keyframes hotspotPop {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  40% { transform: translate(-50%, -50%) scale(0.9); }
+  75% { transform: translate(-50%, -50%) scale(1.22); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+.hotspot-pulse-ring {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--hotspot-glow, rgba(255, 141, 161, 0.4));
+  box-shadow: 0 0 16px 4px var(--hotspot-glow, rgba(255, 141, 161, 0.4));
+  animation: pulseGlow 2.4s ease-in-out infinite alternate;
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+@keyframes pulseGlow {
+  0% { transform: scale(0.85); opacity: 0.35; }
+  100% { transform: scale(1.3); opacity: 0.75; }
+}
+
+.hotspot-tap-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
+  border: 1.5px solid var(--hotspot-color, #ff8da1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12), 0 0 10px var(--hotspot-glow, transparent);
+  padding: 4px 10px;
+  border-radius: 999px;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.art-building-hotspot:hover .hotspot-tap-badge {
+  opacity: 1;
+  background: #ffffff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18), 0 0 16px var(--hotspot-glow, transparent);
+}
+
+.hotspot-icon {
+  font-size: 14px;
+}
+
+.hotspot-title {
   font-size: 10px;
   font-weight: 800;
   color: #3a2328;
-  text-align: center;
-  line-height: 1.25;
-  white-space: pre-line;
+  white-space: nowrap;
+  line-height: 1.2;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   MASCOTS  –  Central characters
-   ═══════════════════════════════════════════════════════════════════════ */
-.gm-mascots {
+/* ── Central Mascots (Chiikawa & Usagi) ── */
+.art-mascots-center {
   position: absolute;
   left: 50%;
-  top: 52%;
+  top: 54%;
   transform: translate(-50%, -50%);
+  z-index: 15;
   display: flex;
   align-items: flex-end;
   gap: 8px;
-  z-index: 8;
   cursor: pointer;
-}
-.gm-mascot-sprite {
-  filter: drop-shadow(0 6px 12px rgba(0,0,0,.15));
-  animation: mascotBounce 2.5s ease-in-out infinite alternate;
-}
-.gm-mascot-sprite:nth-child(2) { animation-delay: -.8s; }
-@keyframes mascotBounce {
-  0%   { transform: translateY(0); }
-  100% { transform: translateY(-6px); }
+  padding: 10px 16px;
+  border-radius: 999px;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   BOTTOM-LEFT LOVE COUNTER
-   ═══════════════════════════════════════════════════════════════════════ */
-.gm-love-counter {
+.art-mascots-center:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.mascot-item {
+  transition: transform 0.2s ease;
+}
+
+.mascot-heart-pulse {
+  font-size: 22px;
+  animation: heartBeat 1.2s ease-in-out infinite;
+  margin-bottom: 20px;
+}
+
+.mascot-sparkle-active {
+  animation: mascotPopSparkle 0.6s ease;
+}
+
+@keyframes mascotPopSparkle {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.2) rotate(4deg); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ── Live Love Days Counter (Bottom Left) ── */
+.art-love-card {
   position: absolute;
-  bottom: 70px;
-  left: 14px;
-  z-index: 20;
+  bottom: 24px;
+  left: 20px;
+  z-index: 30;
   display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, rgba(255,228,236,.82), rgba(255,245,240,.85));
+  background: linear-gradient(135deg, rgba(255, 240, 245, 0.92), rgba(255, 230, 238, 0.95));
   backdrop-filter: blur(14px);
-  border: 1.5px solid rgba(255,180,200,.35);
-  padding: 8px 14px;
+  border: 2px solid #ffccd5;
+  padding: 8px 16px;
   border-radius: 999px;
-  box-shadow: 0 4px 16px rgba(180,140,160,.2);
+  box-shadow: 0 8px 24px rgba(220, 120, 140, 0.25);
+  pointer-events: auto;
 }
-.gm-love-heart {
-  font-size: 20px;
-  animation: heartBeat 1.2s ease-in-out infinite;
+
+.love-card-heart {
+  font-size: 24px;
+  animation: heartBeat 1.3s ease-in-out infinite;
 }
-.gm-love-counter small {
+
+.art-love-card small {
   display: block;
   font-size: 9px;
-  font-weight: 700;
-  color: #9a5a6a;
+  font-weight: 800;
+  color: #a34860;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
-.gm-love-counter strong {
+
+.art-love-card strong {
   display: block;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 900;
-  color: #d4446a;
+  color: #d6336c;
+  line-height: 1.1;
 }
 
-@keyframes heartBeat {
-  0%, 100% { transform: scale(1); }
-  14% { transform: scale(1.15); }
-  28% { transform: scale(1); }
-  42% { transform: scale(1.15); }
-  56% { transform: scale(1); }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   BOTTOM-RIGHT SPEECH BUBBLE
-   ═══════════════════════════════════════════════════════════════════════ */
-.gm-speech {
-  position: absolute;
-  bottom: 70px;
-  right: 14px;
-  z-index: 20;
-  background: rgba(255,255,255,.82);
-  backdrop-filter: blur(12px);
-  border: 1.5px solid rgba(255,255,255,.6);
-  padding: 10px 16px;
-  border-radius: 16px;
-  border-bottom-right-radius: 4px;
-  box-shadow: 0 4px 16px rgba(0,0,0,.08);
-  max-width: 220px;
-}
-.gm-speech p {
-  margin: 0;
-  font-size: 11.5px;
+.art-love-card strong span {
+  font-size: 11px;
   font-weight: 700;
-  color: #3a2328;
-  line-height: 1.4;
+  color: #a34860;
+  margin-left: 2px;
+}
+
+/* ── Couple Sticky Memo Note (Bottom Right) ── */
+.art-sticky-note {
+  position: absolute;
+  bottom: 24px;
+  right: 20px;
+  z-index: 30;
+  background: #fff8eb;
+  border: 1.5px solid #f3d9b1;
+  border-radius: 12px;
+  padding: 10px 14px;
+  box-shadow: 0 8px 20px rgba(120, 90, 60, 0.15);
+  max-width: 240px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  pointer-events: auto;
+}
+
+.art-sticky-note:hover {
+  transform: translateY(-3px) rotate(1deg);
+  box-shadow: 0 12px 28px rgba(120, 90, 60, 0.22);
+}
+
+.sticky-pin {
+  position: absolute;
+  top: -8px;
+  right: 12px;
+  font-size: 14px;
+}
+
+.art-sticky-note p {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4a382c;
+  line-height: 1.35;
   white-space: pre-line;
 }
 

@@ -166,64 +166,26 @@ export function SplashScreen({ onEnterGame }: Props) {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════
-         STAGE 1: 16:9 LANDSCAPE TITLE SCREEN (Chiikawa Family Gathering)
+         STAGE 1: 16:9 LANDSCAPE MASTER OPENING BANNER
          ══════════════════════════════════════════════════════════════════ */}
       {screenStage === 'title' && (
-        <div className="splash-landscape-title-card animate-slide-up">
-          <div className="title-top-badge">
-            <GameIcon name="star" size={14} />
-            <span>A COZY ANIME STORYBOOK ADVENTURE FOR OUR LOVE JOURNEY</span>
-            <GameIcon name="star" size={14} />
-          </div>
+        <div className="splash-landscape-banner-wrap animate-slide-up">
+          <div className="splash-banner-artwork-card">
+            <img
+              src="./assets/opening_banner.png"
+              alt="Little Days: Thị Trấn Tình Yêu & 10 Ngày Sẵn Sàng"
+              className="splash-banner-img"
+              draggable={false}
+            />
 
-          <h1 className="title-game-brand">
-            Little Days
-          </h1>
-          <h2 className="title-game-sub">
-            THỊ TRẤN TÌNH YÊU & HÀNH TRÌNH NHA TRANG 27/08
-          </h2>
-          <p className="title-jp-banner">
-            ちいかわの日々 · Dũng & Em Yêu Forever (Từ 11/06/2026)
-          </p>
-
-          {/* Entire Chiikawa Family Gathering Hero Illustration */}
-          <div className="title-family-lineup">
-            <div className="family-char-slot char-rakko" title="Sư Phụ Rakko">
-              <ChiikawaSVG character="rakko" size={62} />
-              <small>Rakko</small>
+            {/* Action Button over bottom of banner */}
+            <div className="banner-start-action-row">
+              <button className="title-start-btn animate-pop" onClick={handleStartTitle}>
+                <GameIcon name="star" size={18} />
+                <span>BẮT ĐẦU HÀNH TRÌNH (START GAME)</span>
+                <span className="arrow-sym">→</span>
+              </button>
             </div>
-            <div className="family-char-slot char-hachiware" title="Hachiware">
-              <ChiikawaSVG character="hachiware" size={74} />
-              <small>Hachiware</small>
-            </div>
-            <div className="family-char-slot char-chiikawa main-hero" title="Chiikawa (Dũng)">
-              <ChiikawaSVG character="chiikawa" size={96} className="animate-bounce-gentle" />
-              <span className="hero-crown-tag">👑 Dũng</span>
-            </div>
-            <div className="family-heart-connector">
-              <GameIcon name="heart" size={28} />
-            </div>
-            <div className="family-char-slot char-usagi main-hero" title="Usagi (Em Yêu)">
-              <ChiikawaSVG character="usagi" size={96} className="animate-bounce-gentle" />
-              <span className="hero-crown-tag">👑 Em Yêu</span>
-            </div>
-            <div className="family-char-slot char-momonga" title="Momonga">
-              <ChiikawaSVG character="momonga" size={74} />
-              <small>Momonga</small>
-            </div>
-            <div className="family-char-slot char-kurimanju" title="Kurimanju">
-              <ChiikawaSVG character="kurimanju" size={62} />
-              <small>Kurimanju</small>
-            </div>
-          </div>
-
-          {/* Action Button: Start Game */}
-          <div className="title-action-box">
-            <button className="title-start-btn animate-pop" onClick={handleStartTitle}>
-              <GameIcon name="star" size={16} />
-              <span>BẮT ĐẦU HÀNH TRÌNH (START GAME)</span>
-              <span className="arrow-sym">→</span>
-            </button>
           </div>
         </div>
       )}

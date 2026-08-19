@@ -3,7 +3,9 @@ import { ChiikawaSVG } from '../../components/common/ChiikawaSVG'
 import { GameIcon } from '../../components/common/GameIcons'
 import { audioSystem } from '../systems/GameAudioSystem'
 import { playChiikawaVoice } from '../../utils/chiikawaAudio'
+import { speakVietnamese, BUILDING_VIETNAMESE_VOICES } from '../../utils/vietnameseAudio'
 import { MapAnimationCanvas } from './MapAnimationCanvas'
+import { GameTutorialModal } from './GameTutorialModal'
 import type { LocationId, MapBuilding, TransitionType } from '../types'
 import type { ChiikawaCharacter } from '../../utils/chiikawaAudio'
 
@@ -391,6 +393,7 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
   const [dialogIdx, setDialogIdx] = useState(0)
   const [mascotBounce, setMascotBounce] = useState(false)
   const [activeVoicePhrase, setActiveVoicePhrase] = useState<string | null>(null)
+  const [showTutorial, setShowTutorial] = useState(false)
 
   // Zoom & Clamped Pan Engine (Farm Game Style - cannot drag out of bounds)
   const [zoom, setZoom] = useState(1.0)
@@ -549,7 +552,7 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
     }
   }, [handleMouseMove, handleMouseUp])
 
-  // Click on Building -> Play SFX & Open Story Modal (WITHOUT moving or displacing the map)
+  // Click on Building -> Play SFX, Vietnamese Voice Speech & Open Story Modal
   const handleBuildingClick = (b: (typeof MAP_BUILDINGS)[0]) => {
     recordMapActivity()
     audioSystem.playBuildingInspectSFX(b.id)
@@ -557,12 +560,17 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
     setActiveVoicePhrase(`${b.story.charName}: "${phrase}"`)
     setActiveStoryBuilding(b)
 
+    // Play Vietnamese speech audio for the clicked location!
+    const viText = BUILDING_VIETNAMESE_VOICES[b.id] || `${b.name}. ${b.subtitle}`
+    speakVietnamese(viText, { charVoice: b.story.voiceChar })
+
     setTimeout(() => setActiveVoicePhrase(null), 3200)
   }
 
   const handleReplayVoice = (charKey: ChiikawaCharacter, charName: string) => {
-    const phrase = playChiikawaVoice(charKey)
-    setActiveVoicePhrase(`${charName}: "${phrase}"`)
+    const viText = BUILDING_VIETNAMESE_VOICES[activeStoryBuilding?.id || ''] || activeStoryBuilding?.story.quote || ''
+    speakVietnamese(viText, { charVoice: charKey })
+    setActiveVoicePhrase(`${charName}: "Đang phát lời thoại..."`)
     setTimeout(() => setActiveVoicePhrase(null), 2500)
   }
 
@@ -576,10 +584,10 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
 
   const handleMascotClick = () => {
     recordMapActivity()
-    const phrase = playChiikawaVoice('usagi')
+    speakVietnamese('Chào mừng Haru và Mai Trang đến với thị trấn Little Days!', { charVoice: 'usagi' })
     setMascotBounce(true)
     setDialogIdx((prev) => (prev + 1) % DIALOG_LINES.length)
-    setActiveVoicePhrase(`Usagi & Chiikawa: "${phrase}"`)
+    setActiveVoicePhrase(`Usagi & Chiikawa: "Chào mừng hai bạn!"`)
     setTimeout(() => {
       setMascotBounce(false)
       setActiveVoicePhrase(null)
@@ -703,8 +711,20 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
 
       {/* ══════ MAP OVERLAY HUD (Fixed UI Controls) ══════ */}
 
-      {/* 1. Zoom Controls (Top Right) */}
+      {/* 1. Zoom Controls & Tutorial Button (Top Right) */}
       <div className="map-zoom-hud interactive-control">
+        <button
+          className="map-tutorial-pill-btn"
+          onClick={() => {
+            recordMapActivity()
+            setShowTutorial(true)
+          }}
+          title="Xem Hướng Dẫn Chơi Game (Tutorial)"
+        >
+          <span className="tut-icon">❓</span>
+          <span className="tut-label">Hướng Dẫn</span>
+        </button>
+        <span className="hud-divider-pipe">|</span>
         <button className="zoom-btn" onClick={() => handleZoom(0.25)} title="Phóng to">+</button>
         <span className="zoom-level-text">{Math.round(zoom * 100)}%</span>
         <button className="zoom-btn" onClick={() => handleZoom(-0.25)} title="Thu nhỏ">-</button>
@@ -712,6 +732,9 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
           <GameIcon name="target" size={16} color="#d6336c" />
         </button>
       </div>
+
+      {/* ── INTERACTIVE ONBOARDING TUTORIAL MODAL WITH SPOTLIGHT MASK ── */}
+      <GameTutorialModal isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
 
       {/* 2. Floating Voice Bubble Notification */}
       {activeVoicePhrase && (

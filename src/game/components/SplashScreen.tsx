@@ -115,9 +115,18 @@ const CHARACTERS: CharacterCard[] = [
   }
 ]
 
+const BANNER_OPTIONS = [
+  { id: 'v1', name: '1. Cổ Tích Pastel', img: './assets/banners/banner_v1_storybook.png' },
+  { id: 'v2', name: '2. Biển Nha Trang', img: './assets/banners/banner_v2_beach.png' },
+  { id: 'v3', name: '3. Hoa Anh Đào', img: './assets/banners/banner_v3_sakura.png' },
+  { id: 'v4', name: '4. Đêm Sao Lãng Mạn', img: './assets/banners/banner_v4_twilight.png' },
+  { id: 'v5', name: '5. Đấu Trường RPG', img: './assets/banners/banner_v5_rpg.png' }
+]
+
 export function SplashScreen({ onEnterGame }: Props) {
   const [screenStage, setScreenStage] = useState<'title' | 'select'>('title')
   const [selectedChar, setSelectedChar] = useState<'chiikawa' | 'usagi'>('chiikawa')
+  const [selectedBannerIdx, setSelectedBannerIdx] = useState(0)
   const [lockedNotice, setLockedNotice] = useState<string | null>(null)
 
   const handleStartTitle = () => {
@@ -166,14 +175,32 @@ export function SplashScreen({ onEnterGame }: Props) {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════
-         STAGE 1: 16:9 LANDSCAPE MASTER OPENING BANNER
+         STAGE 1: 16:9 LANDSCAPE MASTER OPENING BANNER (5 Options Switcher)
          ══════════════════════════════════════════════════════════════════ */}
       {screenStage === 'title' && (
         <div className="splash-landscape-banner-wrap animate-slide-up">
+          {/* Banner Selector Pill Tabs */}
+          <div className="banner-switch-selector-bar">
+            <span className="banner-switch-label">CHỌN PHIÊN BẢN BANNER:</span>
+            {BANNER_OPTIONS.map((opt, idx) => (
+              <button
+                key={opt.id}
+                className={`banner-tab-btn ${selectedBannerIdx === idx ? 'tab-btn-active' : ''}`}
+                onClick={() => {
+                  audioSystem.playClick('soft')
+                  setSelectedBannerIdx(idx)
+                }}
+              >
+                {opt.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Banner Image Stage */}
           <div className="splash-banner-artwork-card">
             <img
-              src="./assets/opening_banner.png"
-              alt="Little Days: Thị Trấn Tình Yêu & 10 Ngày Sẵn Sàng"
+              src={BANNER_OPTIONS[selectedBannerIdx].img}
+              alt={BANNER_OPTIONS[selectedBannerIdx].name}
               className="splash-banner-img"
               draggable={false}
             />

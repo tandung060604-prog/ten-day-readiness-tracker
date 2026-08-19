@@ -519,18 +519,12 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
     }
   }, [handleMouseMove, handleMouseUp])
 
-  // Click on Building -> Play SFX & Focus Camera & Open Story Modal
+  // Click on Building -> Play SFX & Open Story Modal (WITHOUT moving or displacing the map)
   const handleBuildingClick = (b: (typeof MAP_BUILDINGS)[0]) => {
     audioSystem.playBuildingInspectSFX(b.id)
     const phrase = playChiikawaVoice(b.story.voiceChar)
     setActiveVoicePhrase(`${b.story.charName}: "${phrase}"`)
     setActiveStoryBuilding(b)
-
-    // Camera glide to building
-    const targetX = (50 - b.x) * 8.5
-    const targetY = (50 - b.y) * 6.5
-    setPan({ x: targetX, y: targetY })
-    setZoom(1.35)
 
     setTimeout(() => setActiveVoicePhrase(null), 3200)
   }

@@ -5782,21 +5782,15 @@ html, body, #root, .app-shell {
   inset: 0;
   width: 100vw;
   height: 100vh;
-  background: #62a356;
+  background: #1c6fa8;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   padding: 0;
   margin: 0;
-  cursor: grab;
   user-select: none;
-  touch-action: none;
   z-index: 10;
-}
-
-.game-world-map-viewport:active {
-  cursor: grabbing;
 }
 
 /* ── Volumetric Sunbeams & Sunlight God Rays ── */

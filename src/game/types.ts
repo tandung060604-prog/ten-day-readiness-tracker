@@ -10,6 +10,7 @@ export type LocationId =
   | 'restaurant'
   | 'airport'
   | 'beach'
+  | 'hospital'
   | 'settings'
 
 export type TransitionType =

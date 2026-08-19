@@ -11,6 +11,7 @@ import { TrainingView } from './views/TrainingView'
 import { JournalView } from './views/JournalView'
 import { InsightsView } from './views/InsightsView'
 import { SettingsView } from './views/SettingsView'
+import { LoveHospitalView } from './views/LoveHospitalView'
 import { SplashScreen } from './game/components/SplashScreen'
 import { OrientationPrompt } from './game/components/OrientationPrompt'
 import { WorldMap } from './game/components/WorldMap'
@@ -515,6 +516,11 @@ export function App() {
                     importData={importData}
                     resetData={resetData}
                   />
+                )}
+
+                {/* 13. Love Hospital (Flo Menstrual Cycle & Health) Module */}
+                {currentLocation === 'hospital' && (
+                  <LoveHospitalView />
                 )}
               </BuildingModuleModal>
             )}

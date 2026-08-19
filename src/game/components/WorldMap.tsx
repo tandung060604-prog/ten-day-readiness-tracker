@@ -236,6 +236,35 @@ export const MAP_BUILDINGS: (MapBuilding & { story: BuildingStoryData })[] = [
     }
   },
   {
+    id: 'hospital',
+    name: 'Bệnh Viện Tình Yêu',
+    subtitle: 'Theo Dõi Chu Kỳ Flo & Sức Khỏe Mai Trang',
+    icon: '🏥',
+    img: './assets/buildings/hospital.png',
+    transition: 'heart',
+    color: '#ff477e',
+    glow: 'rgba(255, 71, 126, 0.75)',
+    tag: 'Chu Kỳ Flo',
+    size: 126,
+    x: 47.0,
+    y: 64.0,
+    story: {
+      chapter: 'CHƯƠNG XIII: BỆNH VIỆN TÌNH YÊU & SỨC KHỎE PHÁI ĐẸP',
+      jpTag: '愛のクリニック · LOVE CLINIC',
+      character: 'usagi',
+      charName: 'Usagi & Bác Sĩ Chiikawa',
+      charRole: 'Bác Sĩ Chu Kỳ & Chăm Sóc Sức Khỏe',
+      actionLabel: 'Đang theo dõi chu kỳ 29/07 & chuẩn bị trà ấm',
+      actionEmoji: '🌸🩺🍵',
+      voiceChar: 'usagi',
+      storyNarrative:
+        'Phòng khám tình yêu dịu dàng với sắc hồng pastel ngọt ngào. Nơi đây áp dụng thuật toán theo dõi chu kỳ kinh nguyệt chuẩn Flo App từ kỳ gần nhất 29/07/2026, dự đoán chính xác ngày rụng trứng, cảnh báo lịch trình đi Nha Trang 27/08 và cung cấp cẩm nang ân cần giúp Haru chăm sóc bạn gái Mai Trang hoàn hảo nhất.',
+      quote: 'Phụ nữ là để yêu thương! Hãy để Bác Sĩ Chiikawa & Haru chăm sóc từng ngày nhạy cảm cho Mai Trang nhé~',
+      objective: 'Ghi nhận triệu chứng chu kỳ & Theo dõi ngày rụng trứng',
+      reward: '+120 💖 Tình Yêu & +50 🩺 Điểm Sức Khỏe'
+    }
+  },
+  {
     id: 'market',
     name: 'Chợ Nhỏ Dinh Dưỡng',
     subtitle: 'Thực Đơn Lành Mạnh & Macro Sạch',

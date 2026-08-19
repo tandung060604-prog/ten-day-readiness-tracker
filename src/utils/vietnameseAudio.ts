@@ -69,5 +69,6 @@ export const BUILDING_VIETNAMESE_VOICES: Record<string, string> = {
   gym: 'Nhà tập gym thể lực. Rèn luyện sức khỏe, hít đất và nâng tạ mỗi ngày cùng Haru.',
   water: 'Đài nước sinh mệnh. Nhắc nhở uống đủ hai nghìn năm trăm mi-li-lít nước mỗi ngày.',
   airport: 'Sân bay quốc tế. Đếm ngược tới chuyến bay khởi hành đi Nha Trang ngày hai mươi bảy tháng tám.',
-  beach: 'Bãi biển Nha Trang. Khám phá tour ba đảo Hòn Mun, Mini Beach và lặn ngắm san hô.'
+  beach: 'Bãi biển Nha Trang. Khám phá tour ba đảo Hòn Mun, Mini Beach và lặn ngắm san hô.',
+  hospital: 'Bệnh viện tình yêu. Theo dõi chu kỳ kinh nguyệt chuẩn ứng dụng Flo, dự đoán ngày rụng trứng và cẩm nang chăm sóc bạn gái Mai Trang của Haru.'
 }

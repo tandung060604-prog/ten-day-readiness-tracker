@@ -7907,3 +7907,832 @@ html, body, #root, .app-shell {
   0% { transform: scale(0.9); opacity: 0.7; }
   100% { transform: scale(1.25); opacity: 1; filter: blur(4px) drop-shadow(0 0 20px #ffccd5); }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   BỆNH VIỆN TÌNH YÊU & FLO MENSTRUAL CYCLE TRACKER STYLES
+   ═══════════════════════════════════════════════════════════════════════ */
+.love-hospital-view-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 40px;
+}
+
+/* Hero Banner */
+.hospital-hero-card {
+  background: linear-gradient(135deg, #fff0f5 0%, #ffe3ec 100%);
+  border: 2px solid #ffccd5;
+  border-radius: 24px;
+  padding: 22px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 10px 30px rgba(214, 51, 108, 0.12);
+  gap: 20px;
+}
+
+.hospital-badge-chip {
+  display: inline-block;
+  background: #ffffff;
+  color: #d6336c;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid #ffccd5;
+  margin-bottom: 6px;
+}
+
+.hospital-hero-title {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 900;
+  color: #1a1c29;
+}
+
+.hospital-hero-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #495057;
+  line-height: 1.45;
+}
+
+.hospital-hero-subtitle strong {
+  color: #d6336c;
+}
+
+.hospital-hero-mascots {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.mascot-doctor-box, .mascot-patient-box {
+  position: relative;
+}
+
+.doctor-hat {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  font-size: 20px;
+}
+
+.flower-pin {
+  position: absolute;
+  top: -6px;
+  left: -4px;
+  font-size: 18px;
+}
+
+.doctor-heart {
+  font-size: 22px;
+  animation: heartBeat 1.2s infinite;
+}
+
+/* Tabs */
+.hospital-nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.hospital-tab-btn {
+  background: #ffffff;
+  border: 1.5px solid #e9ecef;
+  color: #495057;
+  font-size: 12.5px;
+  font-weight: 800;
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.hospital-tab-btn:hover {
+  background: #fff0f5;
+  border-color: #ffccd5;
+  color: #d6336c;
+}
+
+.hospital-tab-btn.tab-active {
+  background: linear-gradient(135deg, #ff8da1, #d6336c);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(214, 51, 108, 0.35);
+}
+
+.hospital-toast-pill {
+  background: #ebfbee;
+  border: 1.5px solid #b2f2bb;
+  color: #2b8a3e;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 8px 16px;
+  border-radius: 999px;
+  align-self: center;
+}
+
+/* Tracker Grid */
+.hospital-tracker-tab-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+/* Flo Radial Dial */
+.flo-cycle-dial-card {
+  background: #ffffff;
+  border: 2.5px solid #ff8da1;
+  border-radius: 24px;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+.cycle-dial-container {
+  position: relative;
+  width: 190px;
+  height: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cycle-dial-ring {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 25px rgba(255, 141, 161, 0.35);
+}
+
+.cycle-dial-inner-circle {
+  width: 154px;
+  height: 154px;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
+  gap: 2px;
+}
+
+.cycle-phase-icon {
+  font-size: 26px;
+}
+
+.cycle-day-number {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  color: #1a1c29;
+}
+
+.cycle-day-number span {
+  font-size: 11px;
+  font-weight: 700;
+  color: #868e96;
+}
+
+.cycle-day-number strong {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.cycle-day-number small {
+  font-size: 13px;
+  color: #868e96;
+  font-weight: 800;
+}
+
+.cycle-phase-tag {
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 999px;
+  margin-top: 2px;
+}
+
+.cycle-dial-meta-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.cycle-phase-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.cycle-phase-desc {
+  margin: 0;
+  font-size: 12px;
+  color: #495057;
+  font-weight: 600;
+}
+
+.cycle-stat-pills-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.cycle-pill-item {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pill-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  color: #868e96;
+}
+
+.pill-val {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #212529;
+}
+
+.pill-val.alert-pink {
+  color: #d6336c;
+}
+
+.pill-note {
+  font-size: 9.5px;
+  color: #adb5bd;
+}
+
+.nhatrang-period-alert-box {
+  background: #fff5f5;
+  border: 1.5px solid #ffc9c9;
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  text-align: left;
+  margin-top: 6px;
+}
+
+.alert-bell-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.nhatrang-period-alert-box strong {
+  display: block;
+  font-size: 11.5px;
+  color: #c92a2a;
+  margin-bottom: 2px;
+}
+
+.nhatrang-period-alert-box p {
+  margin: 0;
+  font-size: 11px;
+  color: #495057;
+  line-height: 1.35;
+}
+
+/* Symptoms Card */
+.symptoms-logging-card {
+  background: #ffffff;
+  border: 2px solid #f1e1d0;
+  border-radius: 24px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+.card-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1.5px solid #f1f3f5;
+  padding-bottom: 8px;
+}
+
+.card-section-header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a1c29;
+}
+
+.symptoms-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.group-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: #495057;
+}
+
+.symptoms-chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.symptom-chip-btn {
+  background: #f8f9fa;
+  border: 1.5px solid #dee2e6;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #495057;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.symptom-chip-btn:hover {
+  background: #fff0f5;
+  border-color: #ffccd5;
+  color: #d6336c;
+}
+
+.symptom-chip-btn.chip-active {
+  background: #fff0f5;
+  border-color: #ff8da1;
+  color: #d6336c;
+  font-weight: 800;
+  box-shadow: 0 2px 8px rgba(255, 141, 161, 0.35);
+  transform: scale(1.03);
+}
+
+.mood-chip.chip-active {
+  background: #eef2ff;
+  border-color: #91a7ff;
+  color: #3b5bdb;
+}
+
+.drink-counter-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 6px;
+  border-top: 1px solid #f1f3f5;
+  padding-top: 12px;
+}
+
+.drink-box {
+  background: #fdfaf6;
+  border: 1.5px solid #f1e1d0;
+  border-radius: 16px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.drink-icon {
+  font-size: 24px;
+}
+
+.drink-info strong {
+  display: block;
+  font-size: 12px;
+  color: #1a1c29;
+}
+
+.drink-info small {
+  display: block;
+  font-size: 10.5px;
+  color: #868e96;
+}
+
+.drink-btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.drink-btns button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  font-size: 14px;
+  font-weight: 900;
+  color: #d6336c;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.18s ease;
+  min-height: auto;
+  min-width: auto;
+  padding: 0;
+}
+
+.drink-btns button:hover {
+  background: #ffccd5;
+}
+
+.drink-btns span {
+  font-size: 14px;
+  font-weight: 900;
+  color: #1a1c29;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* Haru Guide Tab */
+.hospital-haru-guide-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.haru-guide-hero-banner {
+  background: linear-gradient(135deg, #fff9db 0%, #fff3bf 100%);
+  border: 2px solid #ffe066;
+  border-radius: 20px;
+  padding: 20px 24px;
+}
+
+.guide-hero-badge span {
+  background: #ffffff;
+  color: #f59f00;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.haru-guide-hero-banner h2 {
+  margin: 6px 0 4px;
+  font-size: 18px;
+  font-weight: 900;
+  color: #1a1c29;
+}
+
+.haru-guide-hero-banner p {
+  margin: 0;
+  font-size: 12.5px;
+  color: #495057;
+  line-height: 1.45;
+}
+
+.care-guide-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.care-card {
+  background: #ffffff;
+  border: 1.5px solid #e9ecef;
+  border-radius: 18px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+}
+
+.care-card-icon {
+  font-size: 28px;
+}
+
+.care-card h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 800;
+  color: #1a1c29;
+}
+
+.care-card p {
+  margin: 0;
+  font-size: 12px;
+  color: #495057;
+  line-height: 1.45;
+}
+
+.haru-packing-checklist-card {
+  background: #fdfaf6;
+  border: 2px solid #f1e1d0;
+  border-radius: 20px;
+  padding: 18px 22px;
+}
+
+.card-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.card-header-row h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a1c29;
+}
+
+.haru-checklist-ul {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.haru-checklist-ul li {
+  font-size: 12.5px;
+  color: #3a251b;
+  line-height: 1.45;
+}
+
+/* Calendar Tab */
+.calendar-controls-card {
+  background: #ffffff;
+  border: 2px solid #ffccd5;
+  border-radius: 24px;
+  padding: 22px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+.month-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1.5px solid #f1f3f5;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+}
+
+.month-nav-btn {
+  background: #f8f9fa;
+  border: 1.5px solid #dee2e6;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.month-nav-btn:hover {
+  background: #ffccd5;
+  color: #d6336c;
+}
+
+.current-month-heading {
+  text-align: center;
+}
+
+.current-month-heading h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+  color: #1a1c29;
+}
+
+.current-month-heading small {
+  font-size: 11px;
+  color: #868e96;
+}
+
+.calendar-legend-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.leg-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #495057;
+}
+
+.leg-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.leg-period-actual { background: #e03131; }
+.leg-period-predict { background: #ff8da1; border: 1.5px dashed #d6336c; }
+.leg-ovulation { background: #d6336c; }
+.leg-flight { background: #f59f00; }
+
+.calendar-week-headers {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #868e96;
+  margin-bottom: 6px;
+}
+
+.calendar-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.cal-day-cell {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  min-height: 52px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+  transition: all 0.18s ease;
+}
+
+.cal-day-cell.day-other-month {
+  opacity: 0.35;
+}
+
+.cal-day-cell.day-today {
+  border: 2px solid #d6336c;
+  box-shadow: 0 0 10px rgba(214, 51, 108, 0.25);
+}
+
+.cal-day-cell.day-period-actual {
+  background: #ffe3e3;
+  border-color: #ffa8a8;
+}
+
+.cal-day-cell.day-period-predict {
+  background: #fff0f5;
+  border: 1.5px dashed #ff8da1;
+}
+
+.cal-day-cell.day-ovulation {
+  background: #f3f0ff;
+  border-color: #d0bfff;
+}
+
+.cal-day-cell.day-nhatrang-flight {
+  background: #fff9db;
+  border: 2px solid #ffd43b;
+}
+
+.cal-day-num {
+  font-size: 12px;
+  font-weight: 800;
+  color: #212529;
+}
+
+.cal-cell-badge {
+  font-size: 8.5px;
+  font-weight: 800;
+  color: #c92a2a;
+  line-height: 1;
+  text-align: center;
+}
+
+.cal-cell-badge.predict { color: #d6336c; }
+.cal-cell-badge.ovu { color: #7048e8; }
+.cal-cell-badge.flight { color: #f59f00; font-weight: 900; }
+
+/* Settings Form */
+.cycle-settings-form-card {
+  background: #ffffff;
+  border: 2px solid #dee2e6;
+  border-radius: 24px;
+  padding: 24px;
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1.5px solid #f1f3f5;
+  padding-bottom: 12px;
+}
+
+.form-icon { font-size: 28px; }
+.form-header h2 { margin: 0; font-size: 17px; font-weight: 900; color: #1a1c29; }
+.form-header p { margin: 2px 0 0; font-size: 12px; color: #868e96; }
+
+.form-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-field-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-field-item label {
+  font-size: 12px;
+  font-weight: 800;
+  color: #495057;
+}
+
+.form-field-item input {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1.5px solid #ced4da;
+  font-size: 13px;
+  font-weight: 700;
+  outline: none;
+}
+
+.form-field-item input:focus {
+  border-color: #ff8da1;
+  box-shadow: 0 0 0 3px rgba(255, 141, 161, 0.25);
+}
+
+.form-field-item small {
+  font-size: 10.5px;
+  color: #868e96;
+}
+
+.save-cycle-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #ff8da1, #d6336c);
+  color: #ffffff;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(214, 51, 108, 0.35);
+  transition: all 0.2s ease;
+}
+
+.save-cycle-btn:hover {
+  transform: scale(1.02);
+}
+
+@media (max-width: 768px) {
+  .hospital-hero-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  .hospital-tracker-tab-grid {
+    grid-template-columns: 1fr;
+  }
+  .care-guide-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-fields-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

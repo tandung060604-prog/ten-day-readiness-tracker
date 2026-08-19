@@ -57,6 +57,7 @@ export type DailyLog = {
   soreness?: number
   journal?: string
   checklist: ChecklistItem[]
+  deskBreaksCompleted?: string[]
 }
 
 export type AppSettings = {
@@ -72,6 +73,10 @@ export type AppSettings = {
   workoutStart: string
   waterTargetMl: number
   currentDay: number
+  pinHash?: string
+  isLockEnabled?: boolean
+  autoLockMinutes?: number
+  enableBiometrics?: boolean
 }
 
 export type Exercise = {

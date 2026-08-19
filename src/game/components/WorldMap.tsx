@@ -6,6 +6,7 @@ import { playChiikawaVoice } from '../../utils/chiikawaAudio'
 import { speakVietnamese, BUILDING_VIETNAMESE_VOICES } from '../../utils/vietnameseAudio'
 import { MapAnimationCanvas } from './MapAnimationCanvas'
 import { GameTutorialModal } from './GameTutorialModal'
+import type { TutorialStep } from './GameTutorialModal'
 import type { LocationId, MapBuilding, TransitionType } from '../types'
 import type { ChiikawaCharacter } from '../../utils/chiikawaAudio'
 
@@ -393,7 +394,8 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
   const [dialogIdx, setDialogIdx] = useState(0)
   const [mascotBounce, setMascotBounce] = useState(false)
   const [activeVoicePhrase, setActiveVoicePhrase] = useState<string | null>(null)
-  const [showTutorial, setShowTutorial] = useState(false)
+  const [showTutorial, setShowTutorial] = useState(true)
+  const [tutorialActiveBuildingId, setTutorialActiveBuildingId] = useState<LocationId | null>('home')
 
   // Zoom & Clamped Pan Engine (Farm Game Style - cannot drag out of bounds)
   const [zoom, setZoom] = useState(1.0)
@@ -417,6 +419,26 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
       x: Math.max(-maxPanX, Math.min(maxPanX, x)),
       y: Math.max(-maxPanY, Math.min(maxPanY, y))
     }
+  }, [])
+
+  // Tutorial Step Change -> Smooth Zoom In & Center Building
+  const handleTutorialStepChange = useCallback((step: TutorialStep) => {
+    setTutorialActiveBuildingId(step.locationId)
+    const targetZoom = 1.7
+    setZoom(targetZoom)
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+    const deltaX = ((50 - step.x) / 100) * vw * (targetZoom - 1)
+    const deltaY = ((50 - step.y) / 100) * vh * (targetZoom - 1)
+    const clamped = clampCoords(deltaX, deltaY, targetZoom)
+    setPan(clamped)
+  }, [clampCoords])
+
+  const handleCloseTutorial = useCallback(() => {
+    setShowTutorial(false)
+    setTutorialActiveBuildingId(null)
+    setZoom(1.0)
+    setPan({ x: 0, y: 0 })
   }, [])
 
   // 5-Second Idle Inactivity Timer for Top & Bottom HUD Auto-Hide
@@ -644,11 +666,12 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
         {/* 3. Farming-Game Style 3D Isometric Buildings (Natural Idle Bobbing, Zero Permanent Text) */}
         {MAP_BUILDINGS.map((b) => {
           const isSelected = activeStoryBuilding?.id === b.id
+          const isTutorialTarget = showTutorial && tutorialActiveBuildingId === b.id
 
           return (
             <div
               key={b.id}
-              className={`map-building-entity farming-building-idle ${isSelected ? 'entity-selected' : ''}`}
+              className={`map-building-entity farming-building-idle ${isSelected ? 'entity-selected' : ''} ${isTutorialTarget ? 'entity-tutorial-highlighted' : ''}`}
               style={{
                 left: `${b.x}%`,
                 top: `${b.y}%`,
@@ -661,6 +684,14 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
               }}
               title={`${b.name} (Nhấn để mở cốt truyện)`}
             >
+              {/* Divine Sunbeam Light Pillar & Holy Halo for Tutorial Step */}
+              {isTutorialTarget && (
+                <div className="tutorial-building-illumination animate-fade-in">
+                  <div className="building-heaven-beam" />
+                  <div className="building-divine-aura-ring" />
+                </div>
+              )}
+
               {/* Chimney Smoke Animation */}
               {(b.id === 'home' || b.id === 'gym' || b.id === 'restaurant' || b.id === 'journal') && (
                 <div className="chimney-smoke-puff">
@@ -689,7 +720,7 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
 
         {/* 4. Central Plaza Mascots (Chiikawa & Usagi) */}
         <div
-          className={`central-mascots-group ${mascotBounce ? 'mascots-excited' : ''}`}
+          className={`central-mascots-group interactive-control ${mascotBounce ? 'mascots-excited' : ''}`}
           onClick={(e) => {
             e.stopPropagation()
             handleMascotClick()
@@ -733,8 +764,12 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
         </button>
       </div>
 
-      {/* ── INTERACTIVE ONBOARDING TUTORIAL MODAL WITH SPOTLIGHT MASK ── */}
-      <GameTutorialModal isOpen={showTutorial} onClose={() => setShowTutorial(false)} />
+      {/* ── INTERACTIVE ONBOARDING TUTORIAL MODAL WITH SPOTLIGHT MASK & CAMERA ZOOM ── */}
+      <GameTutorialModal
+        isOpen={showTutorial}
+        onClose={handleCloseTutorial}
+        onStepChange={handleTutorialStepChange}
+      />
 
       {/* 2. Floating Voice Bubble Notification */}
       {activeVoicePhrase && (

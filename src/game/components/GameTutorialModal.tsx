@@ -3,9 +3,11 @@ import { ChiikawaSVG } from '../../components/common/ChiikawaSVG'
 import { audioSystem } from '../systems/GameAudioSystem'
 import { speakVietnamese } from '../../utils/vietnameseAudio'
 import { GameIcon } from '../../components/common/GameIcons'
+import type { LocationId } from '../types'
 
-interface TutorialStep {
+export interface TutorialStep {
   step: number
+  locationId: LocationId
   title: string
   locationName: string
   x: number
@@ -17,9 +19,10 @@ interface TutorialStep {
   speechLine: string
 }
 
-const TUTORIAL_STEPS: TutorialStep[] = [
+export const TUTORIAL_STEPS: TutorialStep[] = [
   {
     step: 1,
+    locationId: 'home',
     title: 'TỔ ẤM CỦA CHÚNG MÌNH',
     locationName: 'Nhà Của Chúng Mình',
     x: 35.5,
@@ -32,6 +35,7 @@ const TUTORIAL_STEPS: TutorialStep[] = [
   },
   {
     step: 2,
+    locationId: 'quests',
     title: 'BẢNG NHIỆM VỤ 10 NGÀY',
     locationName: 'Bảng Nhiệm Vụ Quests',
     x: 62.5,
@@ -44,6 +48,7 @@ const TUTORIAL_STEPS: TutorialStep[] = [
   },
   {
     step: 3,
+    locationId: 'gym',
     title: 'NHÀ TẬP GYM THỂ LỰC',
     locationName: 'Nhà Tập Gym Thể Lực',
     x: 82.0,
@@ -56,6 +61,7 @@ const TUTORIAL_STEPS: TutorialStep[] = [
   },
   {
     step: 4,
+    locationId: 'beach',
     title: 'BÃI BIỂN NHA TRANG',
     locationName: 'Bãi Biển & Tour 3 Đảo',
     x: 67.0,
@@ -68,6 +74,7 @@ const TUTORIAL_STEPS: TutorialStep[] = [
   },
   {
     step: 5,
+    locationId: 'journal',
     title: 'THƯ VIỆN KÝ ỨC',
     locationName: 'Thư Viện Ký Ức & Cảm Xúc',
     x: 31.5,
@@ -83,12 +90,20 @@ const TUTORIAL_STEPS: TutorialStep[] = [
 type Props = {
   isOpen: boolean
   onClose: () => void
+  onStepChange?: (step: TutorialStep) => void
 }
 
-export function GameTutorialModal({ isOpen, onClose }: Props) {
+export function GameTutorialModal({ isOpen, onClose, onStepChange }: Props) {
   const [currentStepIdx, setCurrentStepIdx] = useState(0)
 
   const step = TUTORIAL_STEPS[currentStepIdx]
+
+  // Notify parent to zoom in and focus camera on the building!
+  useEffect(() => {
+    if (isOpen && onStepChange) {
+      onStepChange(step)
+    }
+  }, [isOpen, currentStepIdx, step, onStepChange])
 
   // Speak Vietnamese whenever step changes
   useEffect(() => {

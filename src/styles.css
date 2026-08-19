@@ -7850,3 +7850,60 @@ html, body, #root, .app-shell {
     font-size: 11px;
   }
 }
+
+/* ── Divine Sunbeam Light Pillar & Holy Aura for Tutorial Highlighted Building ── */
+.entity-tutorial-highlighted {
+  z-index: 50 !important;
+  animation: buildingTutorialBounce 2s ease-in-out infinite alternate !important;
+}
+
+@keyframes buildingTutorialBounce {
+  0% { transform: translateY(0) scale(1.04); }
+  100% { transform: translateY(-8px) scale(1.1); }
+}
+
+.tutorial-building-illumination {
+  position: absolute;
+  inset: -30px;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Heavenly Light Beam from the sky onto the building */
+.building-heaven-beam {
+  position: absolute;
+  top: -260px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 320px;
+  background: linear-gradient(180deg, rgba(255, 240, 180, 0.95) 0%, rgba(255, 214, 102, 0.65) 60%, rgba(255, 255, 255, 0.1) 100%);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
+  filter: blur(8px);
+  animation: beamGlowBreathe 2s ease-in-out infinite alternate;
+}
+
+@keyframes beamGlowBreathe {
+  0% { opacity: 0.65; transform: translateX(-50%) scaleX(0.85); }
+  100% { opacity: 1; transform: translateX(-50%) scaleX(1.15); filter: blur(6px) drop-shadow(0 0 25px #ffd166); }
+}
+
+/* Glowing Divine Aura Ring around the base */
+.building-divine-aura-ring {
+  position: absolute;
+  bottom: 0;
+  width: 120%;
+  height: 48px;
+  background: radial-gradient(ellipse, rgba(255, 214, 102, 0.95) 0%, rgba(255, 141, 161, 0.5) 45%, transparent 75%);
+  border-radius: 50%;
+  filter: blur(6px);
+  animation: auraPulseLoop 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes auraPulseLoop {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  100% { transform: scale(1.25); opacity: 1; filter: blur(4px) drop-shadow(0 0 20px #ffccd5); }
+}

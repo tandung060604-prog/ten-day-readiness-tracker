@@ -3,6 +3,7 @@ import { ProgressRing } from '../components/common/ProgressRing'
 import { AdviceCard } from '../components/common/AdviceCard'
 import { BreathingTimer } from '../components/BreathingTimer'
 import { DeskBreakTracker } from '../components/features/DeskBreakTracker'
+import { WaterTrackerCard } from '../components/features/WaterTrackerCard'
 import { SleepModal } from '../components/modals/SleepModal'
 import { triggerConfetti } from '../utils/confetti'
 import { triggerHaptic } from '../utils/haptics'
@@ -145,40 +146,15 @@ export function TodayView({
         </section>
       </div>
 
-      {/* 3 Core Metric Cards: Hydration, Sleep, Training */}
-      <div className="grid-3">
-        {/* Hydration */}
-        <section className="metric-card water-card">
-          <div className="metric-header">
-            <small>HYDRATION · NƯỚC UỐNG</small>
-            <span className="metric-percent">
-              {Math.round((log.hydrationMl / settings.waterTargetMl) * 100)}%
-            </span>
-          </div>
-          <h3>
-            {log.hydrationMl.toLocaleString()} <span>ml</span>
-          </h3>
-          <div className="progress">
-            <div
-              style={{
-                width: `${Math.min(100, (log.hydrationMl / settings.waterTargetMl) * 100)}%`
-              }}
-            />
-          </div>
-          <p>Mục tiêu: {settings.waterTargetMl.toLocaleString()} ml</p>
-          <div className="actions">
-            <button className="water-btn" onClick={() => handleAddWater(250)}>
-              +250ml
-            </button>
-            <button className="water-btn" onClick={() => handleAddWater(500)}>
-              +500ml
-            </button>
-            <button className="water-btn secondary" onClick={() => handleAddWater(-250)} title="Trừ bớt">
-              -250
-            </button>
-          </div>
-        </section>
+      {/* Water Tracker Pro with Wave Animation */}
+      <WaterTrackerCard
+        currentMl={log.hydrationMl}
+        targetMl={settings.waterTargetMl}
+        onAddWater={handleAddWater}
+      />
 
+      {/* 2 Core Metric Cards: Sleep & Training */}
+      <div className="grid-2">
         {/* Sleep */}
         <section className="metric-card sleep-card">
           <div className="metric-header">

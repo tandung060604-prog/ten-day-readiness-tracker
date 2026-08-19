@@ -3,6 +3,7 @@ import { DaySelector } from './components/common/DaySelector'
 import { MealModal } from './components/modals/MealModal'
 import { ExerciseModal } from './components/modals/ExerciseModal'
 import { LockScreen } from './components/security/LockScreen'
+import { LandingPage } from './views/LandingPage'
 import { TodayView } from './views/TodayView'
 import { PlanView } from './views/PlanView'
 import { MealsView } from './views/MealsView'
@@ -17,6 +18,7 @@ import type { AppSettings, DailyLog, Exercise, MealEntry } from './types'
 
 const STORAGE_KEY = 'ten-day-readiness-v1'
 const SETTINGS_KEY = 'ten-day-readiness-settings-v1'
+const LANDING_SEEN_KEY = 'ten-day-readiness-landing-v1'
 
 export const TABS = [
   { id: 'Today', label: 'Hôm nay', icon: '◉' },
@@ -52,6 +54,9 @@ function loadSettings(): AppSettings {
 }
 
 export function App() {
+  const [showLanding, setShowLanding] = useState<boolean>(() => {
+    return !localStorage.getItem(LANDING_SEEN_KEY)
+  })
   const [tab, setTab] = useState<TabId>('Today')
   const [logs, setLogs] = useState<DailyLog[]>(loadLogs)
   const [settings, setSettings] = useState<AppSettings>(loadSettings)
@@ -210,11 +215,23 @@ export function App() {
     )
   }
 
+  // If viewing Landing Page
+  if (showLanding) {
+    return (
+      <LandingPage
+        onEnterApp={() => {
+          localStorage.setItem(LANDING_SEEN_KEY, 'true')
+          setShowLanding(false)
+        }}
+      />
+    )
+  }
+
   return (
     <div className="app-shell">
       {/* Sidebar for Desktop */}
       <aside className="sidebar">
-        <div className="brand">
+        <div className="brand" onClick={() => setShowLanding(true)} style={{ cursor: 'pointer' }} title="Xem trang giới thiệu Landing Page">
           <div className="logo">10</div>
           <div>
             <strong>{appTitle}</strong>
@@ -233,6 +250,14 @@ export function App() {
               <span className="sidebar-label">{t.label}</span>
             </button>
           ))}
+          <button
+            className="sidebar-nav-btn"
+            onClick={() => setShowLanding(true)}
+            style={{ marginTop: '10px', color: 'var(--primary)' }}
+          >
+            <span className="sidebar-icon">✦</span>
+            <span className="sidebar-label">Trang giới thiệu</span>
+          </button>
         </nav>
 
         <div className="sidebar-bottom">
@@ -251,6 +276,14 @@ export function App() {
           </div>
 
           <div className="top-actions">
+            <button
+              className="icon-btn"
+              onClick={() => setShowLanding(true)}
+              title="Xem Trang Giới Thiệu (Landing Page)"
+            >
+              ✦
+            </button>
+
             {settings.isLockEnabled && settings.pinHash && (
               <button
                 className="lock-now-btn"

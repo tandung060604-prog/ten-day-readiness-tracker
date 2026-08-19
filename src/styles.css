@@ -7,36 +7,36 @@
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color-scheme: dark;
   
-  /* Color Palette - Dark Mode Default */
-  --bg: #071018;
-  --bg-gradient: radial-gradient(circle at 80% -20%, rgba(78, 225, 170, 0.12), transparent 45%), radial-gradient(circle at 10% 30%, rgba(100, 165, 255, 0.05), transparent 40%), #071018;
-  --panel: #0e1823;
-  --panel2: #132230;
-  --panel3: #182a3c;
-  --text: #f4f7f8;
-  --text-dim: #d1dde5;
-  --muted: #a5b8c9; /* Boosted for WCAG 2.1 AA 4.5:1 contrast */
-  --line: #203244;
-  --line-light: rgba(255, 255, 255, 0.08);
+  /* Color Palette - Refined Cozy Dark Mode (Anti AI-slop) */
+  --bg: #080d12;
+  --bg-gradient: radial-gradient(circle at 85% -15%, rgba(56, 178, 131, 0.09), transparent 45%), radial-gradient(circle at 10% 25%, rgba(229, 115, 133, 0.05), transparent 40%), #080d12;
+  --panel: #0d151f;
+  --panel2: #121c27;
+  --panel3: #182534;
+  --text: #f1f5f9;
+  --text-dim: #cbd5e1;
+  --muted: #94a3b8;
+  --line: #1e293b;
+  --line-light: rgba(255, 255, 255, 0.06);
   
-  /* Brand Accents */
-  --primary: #4ee1aa;
-  --primary-hover: #3dd29b;
-  --primary-glow: rgba(78, 225, 170, 0.25);
-  --primary-dark: #052116;
-  --warn: #f6c96a;
-  --danger: #ff6d79;
-  --blue: #67b7ff;
-  --purple: #cc8fff;
+  /* Brand Accents - Natural & Warm */
+  --primary: #38b283;
+  --primary-hover: #2f9970;
+  --primary-glow: rgba(56, 178, 131, 0.2);
+  --primary-dark: #041a12;
+  --warn: #e0aa4d;
+  --danger: #e57385;
+  --blue: #4a90e2;
+  --purple: #b388ff;
   
   /* Shadows & Radius */
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 20px;
   --radius-xl: 26px;
-  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.25);
-  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.45);
 }
 
 :root[data-theme="light"] {
@@ -4129,6 +4129,116 @@ html, body, #root, .app-shell {
     width: 100%;
   }
 }
+
+/* ==========================================================================
+   NHA TRANG REAL PHOTOS & EXERCISE VIDEO BUTTONS
+   ========================================================================== */
+.nha-trang-real-gallery {
+  margin-bottom: 20px;
+}
+
+.gallery-section-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--blue);
+  margin-bottom: 10px;
+}
+
+.real-photos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.real-photo-card {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.real-photo-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--blue);
+}
+
+.real-photo-thumb {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  display: block;
+}
+
+.real-photo-info {
+  padding: 10px 12px;
+}
+
+.real-photo-info strong {
+  display: block;
+  font-size: 12px;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.real-photo-info small {
+  display: block;
+  font-size: 10.5px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+/* Real Video Button in Exercise Modal */
+.real-video-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(229, 115, 133, 0.1);
+  border: 1px solid rgba(229, 115, 133, 0.3);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.2s ease;
+}
+
+.real-video-btn:hover {
+  background: rgba(229, 115, 133, 0.18);
+  border-color: var(--danger);
+  transform: translateY(-1px);
+}
+
+.real-video-btn strong {
+  display: block;
+  font-size: 13px;
+  color: #ff94a4;
+}
+
+.real-video-btn small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.real-video-btn .arrow-icon {
+  margin-left: auto;
+  font-size: 16px;
+  color: var(--muted);
+}
+
+@media (max-width: 680px) {
+  .real-photos-grid {
+    grid-template-columns: 1fr;
+  }
+  .real-photo-thumb {
+    height: 140px;
+  }
+}
+
 
 
 

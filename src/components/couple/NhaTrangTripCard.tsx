@@ -4,6 +4,24 @@ const NHA_TRANG_FLIGHT_DATE = new Date('2026-08-27T08:00:00')
 const TOTAL_FUND = 8000000
 const DUNG_FUND = 5000000
 
+const NHA_TRANG_GALLERY = [
+  {
+    title: 'Bãi Biển Nha Trang & Nắng Vàng',
+    desc: 'Bãi cát dài thoai thoải, nước biển trong vắt màu ngọc bích.',
+    img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    title: 'VinWonders & Cáp Treo Vượt Biển',
+    desc: 'Lâu đài cổ tích trên đảo Hòn Tre ngắm trọn hoàng hôn.',
+    img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    title: 'Lặn Ngắm San Hô Hòn Mun',
+    desc: 'Trải nghiệm lặn biển khám phá rạn san hô kỳ ảo cùng em.',
+    img: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80'
+  }
+]
+
 export function NhaTrangTripCard() {
   const [now, setNow] = useState(new Date())
 
@@ -75,9 +93,25 @@ export function NhaTrangTripCard() {
 
         <p className="flight-countdown-hint">
           {isDeparted
-            ? '🎉 Đã tới ngày bay Nha Trang! Chúc 2 đứa mình có chuyến đi ngập tràn kỷ niệm!'
-            : `Còn ${days} ngày để Dũng hoàn thành trọn vẹn 10 ngày Readiness chuẩn bị thể lực tốt nhất để đưa em đi chơi!`}
+            ? '🎉 Đã tới ngày bay Nha Trang! Chúc hai đứa mình có chuyến đi ngập tràn tiếng cười và kỷ niệm đẹp!'
+            : `Còn ${days} ngày nữa thôi! Dũng đang nỗ lực hoàn thành 10 ngày thể lực để đưa em đi chơi thật trọn vẹn.`}
         </p>
+      </div>
+
+      {/* Real Nha Trang Travel Photos */}
+      <div className="nha-trang-real-gallery">
+        <span className="gallery-section-label">📸 Những địa điểm hai đứa mình sẽ cùng đi:</span>
+        <div className="real-photos-grid">
+          {NHA_TRANG_GALLERY.map((item, idx) => (
+            <div key={idx} className="real-photo-card">
+              <img src={item.img} alt={item.title} className="real-photo-thumb" loading="lazy" />
+              <div className="real-photo-info">
+                <strong>{item.title}</strong>
+                <small>{item.desc}</small>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* MoMo Couple Travel Fund */}

@@ -41,11 +41,11 @@ export function CoupleHeroCard() {
 
       <div className="couple-header-greeting">
         <div className="couple-badge">
-          <span>💖 Không Gian Yêu Thương Riêng Tư</span>
+          <span>💖 Góc Nhỏ Riêng Tư Của Dũng & Em Yêu</span>
         </div>
-        <h2>Xin chào, tôi là Dũng! 👋</h2>
+        <h2>Gửi em yêu của anh! ❤️</h2>
         <p className="couple-mission-story">
-          Tôi lập ra website này như một món quà đặc biệt dành riêng cho <strong>2 chúng tôi</strong>: Vừa là nơi tôi rèn luyện kỷ luật thể lực đỉnh cao trong 10 ngày để sẵn sàng nhất, vừa là nhật ký đếm từng khoảnh khắc ngọt ngào bên em và chuẩn bị cho chuyến bay Nha Trang sắp tới.
+          Góc nhỏ này anh tự tay làm dành riêng cho hai đứa mình. Ở đây, anh rèn luyện kỷ luật ăn uống, giấc ngủ và thể lực trong 10 ngày để có năng lượng tốt nhất khi ở cạnh em. Từng khoảnh khắc chúng mình bên nhau từ ngày <strong>11/06/2026</strong> đều được đếm từng giây, và anh đang rất háo hức chờ đến ngày <strong>27/08</strong> để cùng em bay tới Nha Trang ngắm biển. Mong mỗi lần mở web lên, em đều mỉm cười thật tươi nhé!
         </p>
       </div>
 

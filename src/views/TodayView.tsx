@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { ProgressRing } from '../components/common/ProgressRing'
 import { AdviceCard } from '../components/common/AdviceCard'
 import { ChibiMascot } from '../components/common/ChibiMascot'
+import { CoupleHeroCard } from '../components/couple/CoupleHeroCard'
+import { NhaTrangTripCard } from '../components/couple/NhaTrangTripCard'
 import { BreathingTimer } from '../components/BreathingTimer'
 import { DeskBreakTracker } from '../components/features/DeskBreakTracker'
 import { WaterTrackerCard } from '../components/features/WaterTrackerCard'
@@ -84,6 +86,12 @@ export function TodayView({
 
   return (
     <div className="view-container animate-fade-in">
+      {/* Couple Hero Section: Love Days & Dũng Greeting */}
+      <CoupleHeroCard />
+
+      {/* Flight to Nha Trang 27/08 & MoMo Couple Fund */}
+      <NhaTrangTripCard />
+
       {/* Hero Banner */}
       <section className="hero-card">
         <div className="hero-content">

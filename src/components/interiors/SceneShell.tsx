@@ -1,13 +1,15 @@
+import { useState } from 'react'
 import type { ReactNode } from 'react'
-import { ChiikawaSVG } from '../common/ChiikawaSVG'
-import { audioSystem } from '../../game/systems/GameAudioSystem'
+import { LiveCompanionWidget } from '../character/LiveCompanionWidget'
+import { DuoInteractionModal } from '../character/DuoInteractionModal'
+import type { MascotCharacter } from '../../domain/couple/types'
 
 export interface SceneShellProps {
   sceneId: string
   title: string
   subtitle?: string
   icon: string
-  companionRole?: 'chiikawa' | 'usagi'
+  companionRole?: MascotCharacter
   companionMessage?: string
   onCompanionClick?: () => void
   children: ReactNode
@@ -19,16 +21,11 @@ export function SceneShell({
   subtitle,
   icon,
   companionRole = 'chiikawa',
-  companionMessage,
-  onCompanionClick,
+  companionMessage: _companionMessage,
+  onCompanionClick: _onCompanionClick,
   children
 }: SceneShellProps) {
-  const handleCompanionInteract = () => {
-    audioSystem.playClick('soft')
-    if (onCompanionClick) {
-      onCompanionClick()
-    }
-  }
+  const [showDuoModal, setShowDuoModal] = useState(false)
 
   return (
     <div className={`scene-shell scene-shell-${sceneId} animate-fade-in`}>
@@ -42,29 +39,25 @@ export function SceneShell({
           </div>
         </div>
 
-        {/* Interactive Companion Mascot Widget */}
-        <div 
-          className="scene-shell-companion"
-          onClick={handleCompanionInteract}
-          title="Bấm để trò chuyện với bé"
-          role="button"
-          tabIndex={0}
-        >
-          {companionMessage && (
-            <div className="scene-companion-bubble animate-bounce-gentle">
-              <span>{companionMessage}</span>
-            </div>
-          )}
-          <div className="scene-companion-avatar">
-            <ChiikawaSVG character={companionRole} size={48} />
-          </div>
-        </div>
+        {/* Live Interactive Companion Mascot Widget */}
+        <LiveCompanionWidget
+          character={companionRole}
+          onOpenDuoModal={() => setShowDuoModal(true)}
+        />
       </div>
 
       {/* Main Scene Body */}
       <div className="scene-shell-content">
         {children}
       </div>
+
+      {/* Duo Interaction & Miracle Modal */}
+      {showDuoModal && (
+        <DuoInteractionModal
+          isOpen={showDuoModal}
+          onClose={() => setShowDuoModal(false)}
+        />
+      )}
     </div>
   )
 }

@@ -9789,4 +9789,328 @@ html, body, #root, .app-shell {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   PHASE 05 — CHARACTER SYSTEM (CHIIKAWA & USAGI) STYLES
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Live Companion Widget ── */
+.live-companion-widget {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.companion-speech-bubble {
+  background: #ffffff;
+  border: 2px solid #ffccd5;
+  color: #1a1c29;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  max-width: 260px;
+  line-height: 1.4;
+  position: relative;
+  cursor: pointer;
+}
+
+.companion-speech-bubble::after {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px 0 6px 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent #ffffff;
+}
+
+.bubble-close-hint {
+  margin-left: 6px;
+  font-size: 9px;
+  color: #868e96;
+}
+
+.companion-avatar-wrap {
+  position: relative;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 4px;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.companion-avatar-wrap:hover {
+  transform: scale(1.12);
+}
+
+.companion-avatar-wrap.state-sleeping {
+  opacity: 0.85;
+  filter: brightness(0.9);
+}
+
+.zzz-particle {
+  position: absolute;
+  top: -12px;
+  right: -4px;
+  font-size: 16px;
+  animation: floatZzz 2s infinite;
+}
+
+.sparkle-particle {
+  position: absolute;
+  top: -8px;
+  left: -4px;
+  font-size: 16px;
+  animation: pulse 1s infinite alternate;
+}
+
+.confetti-particle {
+  position: absolute;
+  top: -10px;
+  right: -8px;
+  font-size: 18px;
+  animation: bounceGentle 1.2s infinite;
+}
+
+@keyframes floatZzz {
+  0% { transform: translateY(0) scale(0.8); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(-16px) scale(1.2); opacity: 0; }
+}
+
+.duo-open-btn {
+  background: linear-gradient(135deg, #ff8da1, #d6336c);
+  color: #ffffff;
+  border: none;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(214, 51, 108, 0.3);
+  transition: transform 0.18s ease;
+  white-space: nowrap;
+}
+
+.duo-open-btn:hover {
+  transform: scale(1.06);
+}
+
+/* ── 2. Duo Interaction Modal ── */
+.duo-modal-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.duo-stage-backdrop {
+  background: radial-gradient(circle at center, rgba(255, 209, 102, 0.25), rgba(255, 141, 161, 0.15));
+  border: 2px solid #ffccd5;
+  border-radius: 24px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.duo-mascots-stage-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.stage-mascot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.stage-name-pill {
+  font-size: 11px;
+  font-weight: 800;
+  background: #ffffff;
+  color: #1a1c29;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.stage-heart-bond {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.stage-heart-icon {
+  font-size: 32px;
+  animation: heartBreathe 1.4s infinite;
+}
+
+.stage-bond-level {
+  font-size: 11px;
+  font-weight: 900;
+  color: #d6336c;
+  background: #fff0f5;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #ffccd5;
+}
+
+.duo-feedback-banner {
+  background: #ffffff;
+  border: 1.5px solid #ffccd5;
+  color: #2b1e17;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+/* Love Link Gauge */
+.love-link-gauge-card {
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gauge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gauge-title {
+  font-size: 11.5px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.gauge-val {
+  font-size: 12px;
+  font-weight: 900;
+  color: #ff8da1;
+}
+
+.love-link-bar {
+  height: 12px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.love-link-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd166, #ff8da1, #d6336c);
+  border-radius: 999px;
+  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gauge-actions-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.charge-test-btn {
+  flex: 1;
+  background: var(--panel2);
+  border: 1.5px solid var(--line);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 8px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.charge-test-btn:hover:not(:disabled) {
+  border-color: #ff8da1;
+  background: rgba(255, 141, 161, 0.15);
+}
+
+.miracle-trigger-btn {
+  flex: 1.4;
+  background: #ced4da;
+  color: #868e96;
+  border: none;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 8px 12px;
+  border-radius: 12px;
+  cursor: not-allowed;
+  transition: all 0.2s ease;
+}
+
+.miracle-trigger-btn.ready {
+  background: linear-gradient(135deg, #ffd166, #ff8da1, #d6336c);
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(214, 51, 108, 0.45);
+}
+
+/* Bond Perks List */
+.bond-perks-section h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.bond-perks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.perk-card {
+  background: var(--panel2);
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.perk-card.unlocked:hover {
+  transform: translateY(-2px);
+  border-color: #ff8da1;
+}
+
+.perk-card.active {
+  border-color: #d6336c;
+  background: rgba(255, 141, 161, 0.18);
+}
+
+.perk-card.locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.perk-icon { font-size: 24px; }
+.perk-info h4 { margin: 0 0 2px; font-size: 12px; }
+.perk-info p { margin: 0; font-size: 10.5px; color: var(--muted); line-height: 1.35; }
+.perk-status { margin-left: auto; font-size: 11px; font-weight: 800; }
+
+
 

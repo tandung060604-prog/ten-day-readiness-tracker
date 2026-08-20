@@ -4,12 +4,9 @@ import { MealModal } from './components/modals/MealModal'
 import { ExerciseModal } from './components/modals/ExerciseModal'
 import { LockScreen } from './components/security/LockScreen'
 import { LandingPage } from './views/LandingPage'
-import { TodayView } from './views/TodayView'
-import { PlanView } from './views/PlanView'
 import { MealsView } from './views/MealsView'
 import { TrainingView } from './views/TrainingView'
 import { JournalView } from './views/JournalView'
-import { InsightsView } from './views/InsightsView'
 import { SettingsView } from './views/SettingsView'
 import { LoveHospitalView } from './views/LoveHospitalView'
 import { SplashScreen } from './game/components/SplashScreen'
@@ -21,6 +18,14 @@ import { InventoryModal } from './game/components/InventoryModal'
 import { BuildingModuleModal } from './game/components/BuildingModuleModal'
 import { TransitionSystem } from './game/systems/TransitionSystem'
 import { audioSystem } from './game/systems/GameAudioSystem'
+import { HomeInterior } from './components/interiors/HomeInterior'
+import { WaterFountainInterior } from './components/interiors/WaterFountainInterior'
+import { SleepHavenInterior } from './components/interiors/SleepHavenInterior'
+import { RestaurantInterior } from './components/interiors/RestaurantInterior'
+import { AirportInterior } from './components/interiors/AirportInterior'
+import { BeachAdventureInterior } from './components/interiors/BeachAdventureInterior'
+import { PhotoStudioInterior } from './components/interiors/PhotoStudioInterior'
+import { QuestSquareInterior } from './components/interiors/QuestSquareInterior'
 import { defaultSettings, seededLogs, trainingPlan } from './data/plan'
 import { readiness } from './utils/readiness'
 import { CoupleSetupModal } from './components/onboarding/CoupleSetupModal'
@@ -363,28 +368,23 @@ export function App() {
                 locationId={currentLocation}
                 onBackToMap={() => triggerTransition('cloud', 'map')}
               >
-                {/* 1. Home Module (TodayView & Couple Hero) */}
+                {/* 1. Home Cottage Module */}
                 {currentLocation === 'home' && (
-                  <TodayView
+                  <HomeInterior
                     log={log}
-                    plan={plan}
                     day={day}
                     score={currentScore}
                     settings={settings}
                     profile={profile}
-                    toggleChecklist={toggleChecklist}
-                    addWater={addWater}
-                    toggleWorkout={toggleWorkout}
                     updateLog={updateLog}
                     setMetric={setMetric}
-                    onExercise={(e) => setSelectedExercise(e)}
-                    onOpenAddMeal={() => setShowAddMealModal(true)}
+                    onNavigateToBuilding={(bId) => triggerTransition('cloud', bId as LocationId)}
                   />
                 )}
 
-                {/* 2. Quests Module */}
+                {/* 2. Quest Square Module */}
                 {currentLocation === 'quests' && (
-                  <PlanView
+                  <QuestSquareInterior
                     currentDay={day}
                     logs={logs}
                     waterTarget={settings.waterTargetMl}
@@ -393,7 +393,7 @@ export function App() {
                   />
                 )}
 
-                {/* 3. Gym / Workout Module */}
+                {/* 3. Training Gym / Dojo Module */}
                 {currentLocation === 'gym' && (
                   <TrainingView
                     day={day}
@@ -405,43 +405,26 @@ export function App() {
                   />
                 )}
 
-                {/* 4. Hydration Water Module */}
+                {/* 4. Magic Water Fountain Module */}
                 {currentLocation === 'water' && (
-                  <TodayView
+                  <WaterFountainInterior
                     log={log}
-                    plan={plan}
-                    day={day}
-                    score={currentScore}
-                    settings={settings}
-                    toggleChecklist={toggleChecklist}
+                    waterTargetMl={settings.waterTargetMl}
                     addWater={addWater}
-                    toggleWorkout={toggleWorkout}
                     updateLog={updateLog}
-                    setMetric={setMetric}
-                    onExercise={(e) => setSelectedExercise(e)}
-                    onOpenAddMeal={() => setShowAddMealModal(true)}
                   />
                 )}
 
-                {/* 5. Sleep Center Module */}
+                {/* 5. Sleep Haven Sanctuary Module */}
                 {currentLocation === 'sleep' && (
-                  <TodayView
+                  <SleepHavenInterior
                     log={log}
-                    plan={plan}
-                    day={day}
-                    score={currentScore}
-                    settings={settings}
-                    toggleChecklist={toggleChecklist}
-                    addWater={addWater}
-                    toggleWorkout={toggleWorkout}
                     updateLog={updateLog}
                     setMetric={setMetric}
-                    onExercise={(e) => setSelectedExercise(e)}
-                    onOpenAddMeal={() => setShowAddMealModal(true)}
                   />
                 )}
 
-                {/* 6. Journal Library Module */}
+                {/* 6. Memory Library Module */}
                 {currentLocation === 'journal' && (
                   <JournalView
                     logs={logs}
@@ -451,15 +434,15 @@ export function App() {
                   />
                 )}
 
-                {/* 7. Album Memories Module */}
+                {/* 7. Photo Scrapbook Studio Module */}
                 {currentLocation === 'album' && (
-                  <InsightsView
+                  <PhotoStudioInterior
                     logs={logs}
                     settings={settings}
                   />
                 )}
 
-                {/* 8. Market & Nutrition Module */}
+                {/* 8. Little Market & Meals Module */}
                 {currentLocation === 'market' && (
                   <MealsView
                     logs={logs}
@@ -469,61 +452,31 @@ export function App() {
                   />
                 )}
 
-                {/* 9. Restaurant Date Module */}
+                {/* 9. Candlelit Date Restaurant Module */}
                 {currentLocation === 'restaurant' && (
-                  <TodayView
-                    log={log}
-                    plan={plan}
-                    day={day}
-                    score={currentScore}
-                    settings={settings}
-                    toggleChecklist={toggleChecklist}
-                    addWater={addWater}
-                    toggleWorkout={toggleWorkout}
-                    updateLog={updateLog}
-                    setMetric={setMetric}
-                    onExercise={(e) => setSelectedExercise(e)}
-                    onOpenAddMeal={() => setShowAddMealModal(true)}
+                  <RestaurantInterior
+                    profile={profile}
                   />
                 )}
 
-                {/* 10. Airport Module */}
+                {/* 10. Airport Terminal Module */}
                 {currentLocation === 'airport' && (
-                  <TodayView
-                    log={log}
-                    plan={plan}
-                    day={day}
-                    score={currentScore}
-                    settings={settings}
-                    toggleChecklist={toggleChecklist}
-                    addWater={addWater}
-                    toggleWorkout={toggleWorkout}
-                    updateLog={updateLog}
-                    setMetric={setMetric}
-                    onExercise={(e) => setSelectedExercise(e)}
-                    onOpenAddMeal={() => setShowAddMealModal(true)}
+                  <AirportInterior
+                    profile={profile}
                   />
                 )}
 
-                {/* 11. Beach Adventure Module */}
+                {/* 11. Beach & Adventure Island Module */}
                 {currentLocation === 'beach' && (
-                  <TodayView
+                  <BeachAdventureInterior
                     log={log}
-                    plan={plan}
                     day={day}
-                    score={currentScore}
-                    settings={settings}
+                    profile={profile}
                     toggleChecklist={toggleChecklist}
-                    addWater={addWater}
-                    toggleWorkout={toggleWorkout}
-                    updateLog={updateLog}
-                    setMetric={setMetric}
-                    onExercise={(e) => setSelectedExercise(e)}
-                    onOpenAddMeal={() => setShowAddMealModal(true)}
                   />
                 )}
 
-                {/* 12. Town Hall Settings Module */}
+                {/* 12. Town Hall Settings & Vault Module */}
                 {currentLocation === 'settings' && (
                   <SettingsView
                     settings={settings}
@@ -539,7 +492,7 @@ export function App() {
                   />
                 )}
 
-                {/* 13. Love Hospital (Flo Menstrual Cycle & Health) Module */}
+                {/* 13. Love Clinic (Wellness Cottage) Module */}
                 {currentLocation === 'hospital' && (
                   <LoveHospitalView profile={profile} />
                 )}

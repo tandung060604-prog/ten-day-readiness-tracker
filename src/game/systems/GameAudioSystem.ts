@@ -58,7 +58,7 @@ class GameAudioSystem {
   }
 
   // Play synthesized UI click
-  public playClick(type: 'soft' | 'pop' | 'enter' = 'soft') {
+  public playClick(type: 'soft' | 'pop' | 'enter' | 'wood' = 'soft') {
     if (this.settings.isMuted) return
     triggerHaptic('light')
     this.initAudioContext()
@@ -81,6 +81,14 @@ class GameAudioSystem {
       gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45)
       osc.start(now)
       osc.stop(now + 0.45)
+    } else if (type === 'wood') {
+      osc.type = 'triangle'
+      osc.frequency.setValueAtTime(280, now)
+      osc.frequency.exponentialRampToValueAtTime(140, now + 0.05)
+      gain.gain.setValueAtTime(0.3 * masterGain, now)
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.07)
+      osc.start(now)
+      osc.stop(now + 0.07)
     } else if (type === 'pop') {
       osc.type = 'sine'
       osc.frequency.setValueAtTime(520, now)
@@ -98,6 +106,35 @@ class GameAudioSystem {
       osc.start(now)
       osc.stop(now + 0.08)
     }
+  }
+
+  // Play splash sound
+  public playSplash() {
+    this.playBuildingInspectSFX('water')
+  }
+
+  // Play achievement fanfare
+  public playAchievement(_type: 'quest' | 'level' = 'quest') {
+    if (this.settings.isMuted) return
+    triggerHaptic('success')
+    this.initAudioContext()
+    if (!this.ctx) return
+
+    const now = this.ctx.currentTime
+    const masterGain = this.settings.sfxVolume
+    ;[523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((freq, i) => {
+      if (!this.ctx) return
+      const osc = this.ctx.createOscillator()
+      const gain = this.ctx.createGain()
+      osc.type = 'triangle'
+      osc.frequency.setValueAtTime(freq, now + i * 0.07)
+      gain.gain.setValueAtTime(0.22 * masterGain, now + i * 0.07)
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.45)
+      osc.connect(gain)
+      gain.connect(this.ctx.destination)
+      osc.start(now + i * 0.07)
+      osc.stop(now + i * 0.07 + 0.45)
+    })
   }
 
   // Play building transition SFX

@@ -8805,3 +8805,988 @@ html, body, #root, .app-shell {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   PHASE 04 — BUILDING INTERIORS & GAME SCENE STYLES
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Shared SceneShell & Primitives ── */
+.scene-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 8px 12px 60px;
+}
+
+.scene-shell-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+  padding: 14px 20px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.scene-shell-title-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.scene-shell-icon {
+  font-size: 32px;
+  display: grid;
+  place-items: center;
+}
+
+.scene-shell-title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.scene-shell-subtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.scene-shell-companion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+.scene-companion-bubble {
+  background: #ffffff;
+  border: 2px solid #ffccd5;
+  color: #1a1c29;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 220px;
+  line-height: 1.35;
+}
+
+.scene-companion-avatar {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  padding: 4px;
+  transition: transform 0.2s ease;
+}
+
+.scene-shell-companion:hover .scene-companion-avatar {
+  transform: scale(1.1);
+}
+
+/* ── 2. Home Cottage Interior ── */
+.home-room-tabs,
+.sleep-tabs-row,
+.studio-tabs-row,
+.quest-tabs-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.home-tab-btn,
+.sleep-tab-btn,
+.studio-tab-btn,
+.quest-tab-btn {
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.home-tab-btn.active,
+.sleep-tab-btn.active,
+.studio-tab-btn.active,
+.quest-tab-btn.active {
+  background: linear-gradient(135deg, #ff8da1, #d6336c);
+  color: #ffffff;
+  border-color: #ffccd5;
+  box-shadow: 0 4px 12px rgba(214, 51, 108, 0.3);
+}
+
+.cottage-focal-objects {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.cottage-object-card {
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cottage-object-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cottage-object-icon {
+  font-size: 26px;
+}
+
+.cottage-object-header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.cottage-object-header p {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.cottage-mood-selectors {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mood-chip-group label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.mood-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.metric-pill {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.metric-pill.selected {
+  background: rgba(56, 178, 131, 0.2);
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 900;
+}
+
+.cottage-checkin-btn {
+  background: linear-gradient(135deg, #ff8da1, #d6336c);
+  color: #ffffff;
+  border: none;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(214, 51, 108, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.cottage-checkin-btn.done {
+  background: #20bf6b;
+  box-shadow: none;
+  cursor: default;
+}
+
+.milestone-bar-container {
+  height: 12px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.milestone-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd166, #ff8da1);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.milestone-footer-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.cottage-quick-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.cottage-link-chip {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 5px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* Mailbox & Bookshelf */
+.mailbox-card,
+.bookshelf-card {
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mailbox-form textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1.5px solid var(--line);
+  background: var(--panel2);
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.send-letter-btn {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #ff8da1, #d6336c);
+  color: #ffffff;
+  border: none;
+  font-size: 12.5px;
+  font-weight: 800;
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.letter-item {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+.letter-item p {
+  margin: 0 0 4px;
+  font-style: italic;
+  font-size: 12.5px;
+}
+
+.letter-item small {
+  font-size: 10.5px;
+  color: var(--muted);
+}
+
+.timeline-spine-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.timeline-chapter {
+  background: var(--panel2);
+  border-left: 4px solid #ff8da1;
+  padding: 12px 16px;
+  border-radius: 0 12px 12px 0;
+}
+
+.chapter-badge {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #d6336c;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.timeline-chapter h4 {
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.timeline-chapter p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ── 3. Magic Water Fountain ── */
+.water-interior-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.magic-fountain-stage {
+  background: radial-gradient(circle at center, rgba(103, 183, 255, 0.15), var(--panel));
+  border: 2px solid var(--line);
+  border-radius: 28px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.fountain-jet-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fountain-water-spout {
+  width: 14px;
+  background: linear-gradient(to top, rgba(103, 183, 255, 0.8), rgba(255, 255, 255, 0.9));
+  border-radius: 8px;
+  animation: spoutOscillate 1.2s infinite ease-in-out alternate;
+}
+
+@keyframes spoutOscillate {
+  0% { transform: scaleY(0.9); opacity: 0.7; }
+  100% { transform: scaleY(1.1); opacity: 1; }
+}
+
+.fountain-rainbow-arc {
+  position: absolute;
+  top: -24px;
+  width: 120px;
+  height: 60px;
+  border: 4px solid transparent;
+  border-top-color: #ff8da1;
+  border-right-color: #ffd166;
+  border-left-color: #06d6a0;
+  border-radius: 60px 60px 0 0;
+}
+
+.fountain-basin-outer {
+  width: 180px;
+  height: 120px;
+  background: var(--panel2);
+  border: 4px solid #ced4da;
+  border-radius: 0 0 90px 90px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.fountain-basin-water {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, #3a86ff, #67b7ff);
+  transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.fountain-metric-overlay {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.fountain-percentage {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.fountain-ml-reading {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.fountain-stage-text {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+}
+
+.water-quick-actions {
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+  padding: 16px 20px;
+  text-align: center;
+}
+
+.water-quick-actions h3 {
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+.pour-buttons-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pour-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: var(--panel2);
+  border: 1.5px solid var(--line);
+  padding: 10px 18px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pour-btn:hover {
+  transform: translateY(-3px);
+  border-color: #67b7ff;
+  background: rgba(103, 183, 255, 0.15);
+}
+
+.pour-icon { font-size: 22px; }
+.pour-label { font-size: 13px; font-weight: 900; color: var(--text); }
+.pour-btn small { font-size: 10.5px; color: var(--muted); }
+
+.toggle-water-journal-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  margin: 0 auto;
+  display: block;
+}
+
+.water-journal-tablet {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  margin-top: 10px;
+}
+
+.water-journal-tablet h4 { margin: 0 0 6px; font-size: 13px; }
+.water-journal-tablet p { margin: 2px 0; font-size: 12px; color: var(--muted); }
+.water-journal-tablet small { display: block; margin-top: 6px; font-size: 11px; font-style: italic; color: #d6336c; }
+
+/* ── 4. Sleep Haven ── */
+.sleep-atmosphere-card {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #ffffff;
+  border-radius: 24px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.moon-window-visual {
+  position: relative;
+  font-size: 48px;
+}
+
+.star-twinkle {
+  position: absolute;
+  font-size: 16px;
+  animation: starTwinkle 1.8s infinite alternate;
+}
+.star-twinkle.s1 { top: -10px; right: -12px; }
+.star-twinkle.s2 { bottom: -6px; left: -14px; animation-delay: 0.6s; }
+.star-twinkle.s3 { top: 20px; right: -24px; animation-delay: 1.2s; }
+
+@keyframes starTwinkle {
+  0% { opacity: 0.3; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
+
+.sleep-summary-block h3 { margin: 0 0 8px; font-size: 17px; }
+.sleep-logged-stats p { margin: 4px 0; font-size: 13px; color: #cbd5e1; }
+.no-sleep-note { font-size: 12px; color: #94a3b8; }
+
+.open-sleep-modal-btn {
+  background: linear-gradient(135deg, #7048e8, #5f3dc4);
+  color: #ffffff;
+  border: none;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.breathing-card-container,
+.night-routine-card {
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.routine-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.routine-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.check-badge {
+  font-size: 10px;
+  font-weight: 800;
+  background: rgba(56, 178, 131, 0.15);
+  color: var(--primary);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+/* ── 5. Date Restaurant ── */
+.restaurant-interior-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.date-generator-card,
+.date-wishlist-card {
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.date-idea-spotlight {
+  background: var(--panel2);
+  border: 2px solid #ffccd5;
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.date-idea-spotlight.spinning {
+  filter: blur(1px);
+  transform: scale(0.98);
+}
+
+.idea-icon { font-size: 36px; display: block; margin-bottom: 6px; }
+.idea-content h4 { margin: 0 0 6px; font-size: 16px; color: var(--text); }
+.idea-desc { margin: 0 0 10px; font-size: 12px; color: var(--muted); }
+.idea-meta { display: flex; justify-content: center; gap: 8px; font-size: 11px; font-weight: 800; }
+
+.spin-idea-btn {
+  background: linear-gradient(135deg, #ff8da1, #d6336c);
+  color: #ffffff;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(214, 51, 108, 0.35);
+}
+
+.add-wish-form {
+  display: flex;
+  gap: 8px;
+}
+
+.add-wish-form input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel2);
+  color: var(--text);
+  font-size: 12.5px;
+}
+
+.add-wish-btn {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-weight: 800;
+  padding: 0 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.wishlist-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wish-item {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 12.5px;
+}
+
+/* ── 6. Airport Terminal ── */
+.airport-interior-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.airport-departure-board {
+  background: #0f172a;
+  color: #ffffff;
+  border: 2px solid #334155;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.board-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.board-blinking-dot {
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border-radius: 50%;
+  animation: pulse 1s infinite alternate;
+}
+
+.board-header h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+}
+
+.flight-ticket-row {
+  background: #1e293b;
+  border: 1px solid #475569;
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flight-code { font-weight: 900; color: #ffd166; font-size: 14px; }
+.flight-route { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 12px; }
+.flight-status { font-size: 10px; font-weight: 800; background: rgba(34, 197, 94, 0.2); color: #22c55e; padding: 2px 8px; border-radius: 4px; }
+
+.flight-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  background: #1e293b;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.meta-box { display: flex; flex-direction: column; gap: 2px; text-align: center; }
+.meta-label { font-size: 9.5px; color: #94a3b8; }
+.meta-box strong { font-size: 11px; }
+
+.luggage-checklist-card {
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.packing-progress-bar {
+  height: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.packing-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #67b7ff, #38b283);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.packing-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.packing-item-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 12.5px;
+  transition: all 0.15s ease;
+}
+
+.packing-item-row.packed {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+/* ── 7. Beach Adventure ── */
+.beach-interior-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.beach-activities-card {
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.activities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.beach-activity-item {
+  background: var(--panel2);
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.beach-activity-item:hover {
+  transform: translateY(-2px);
+  border-color: #ffd166;
+}
+
+.beach-activity-item.checked {
+  border-color: #38b283;
+  background: rgba(56, 178, 131, 0.1);
+}
+
+.act-icon-box { font-size: 24px; }
+.act-info h4 { margin: 0 0 2px; font-size: 13px; }
+.act-badge { font-size: 10px; color: var(--muted); font-weight: 700; }
+.act-status-check { margin-left: auto; font-size: 16px; }
+
+/* ── 8. Photo Studio & Corkboard ── */
+.corkboard-board {
+  background: #c89666;
+  border: 8px solid #8d5b32;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.corkboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.polaroid-card {
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 10px 10px 14px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  transform: rotate(-1deg);
+  transition: transform 0.2s ease;
+}
+
+.polaroid-card:nth-child(even) { transform: rotate(1.5deg); }
+.polaroid-card:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
+
+.polaroid-pin { position: absolute; top: -8px; font-size: 18px; }
+.polaroid-image-frame {
+  width: 100%;
+  height: 120px;
+  background: #f1f3f5;
+  display: grid;
+  place-items: center;
+  margin-bottom: 8px;
+}
+.photo-emoji-large { font-size: 48px; }
+
+.polaroid-caption-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+}
+.polaroid-caption-area strong { font-size: 12px; color: #1a1c29; }
+.polaroid-caption-area small { font-size: 10px; color: #868e96; }
+.fav-star-btn { background: none; border: none; font-size: 14px; cursor: pointer; margin-top: 2px; }
+
+.photo-spotlight-drawer {
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 18px;
+  margin-top: 14px;
+}
+
+/* ── 9. Quest Square ── */
+.quest-notice-board {
+  background: #5c3d2e;
+  border: 6px solid #3d2314;
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.board-roof {
+  text-align: center;
+  color: #ffd166;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.quests-paper-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.quest-paper-card {
+  background: #fef8eb;
+  border: 1px solid #d4c5a9;
+  border-radius: 10px;
+  padding: 14px;
+  position: relative;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.quest-paper-pin { position: absolute; top: -6px; left: 50%; transform: translateX(-50%); font-size: 14px; }
+.quest-icon-badge { font-size: 26px; }
+.quest-details { flex: 1; }
+.quest-details h4 { margin: 0 0 4px; font-size: 12.5px; color: #2b1e17; }
+.quest-rewards-line { display: flex; gap: 8px; font-size: 10.5px; font-weight: 800; color: #8d5b32; }
+
+.claim-reward-btn {
+  background: linear-gradient(135deg, #ffd166, #f59f00);
+  color: #1a1c29;
+  border: none;
+  font-size: 11.5px;
+  font-weight: 900;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(245, 159, 0, 0.4);
+}
+
+.badge-claimed { font-size: 10.5px; font-weight: 800; color: #20bf6b; }
+.badge-pending { font-size: 10.5px; color: #868e96; font-style: italic; }
+
+@media (max-width: 768px) {
+  .cottage-focal-objects,
+  .restaurant-interior-grid,
+  .airport-interior-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+

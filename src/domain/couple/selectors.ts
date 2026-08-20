@@ -106,3 +106,49 @@ export function getMilestoneCelebration(days: number): { milestone: number; titl
 
   return null
 }
+
+/**
+ * Returns the name of the partner opposite to the given character.
+ */
+export function getPartnerName(
+  profile?: CoupleProfile | null,
+  character: MascotCharacter = 'chiikawa'
+): string {
+  const partnerRole = character === 'chiikawa' ? 'usagi' : 'chiikawa'
+  const partner = getPlayerByCharacter(profile, partnerRole)
+  return partner.nickname || partner.displayName || 'Người Yêu'
+}
+
+/**
+ * Calculates progress towards the next major relationship milestone.
+ */
+export function getMilestoneProgress(
+  profile?: CoupleProfile | null,
+  now = new Date()
+): { targetDays: number; daysRemaining: number; progressPercentage: number } {
+  const days = getRelationshipDays(profile, now)
+  const milestoneGoals = [50, 100, 200, 365, 500, 730, 1000, 1500, 2000]
+  
+  let targetDays = 100
+  let prevGoal = 0
+
+  for (const goal of milestoneGoals) {
+    if (days < goal) {
+      targetDays = goal
+      break
+    }
+    prevGoal = goal
+    targetDays = goal + 365
+  }
+
+  const daysRemaining = Math.max(0, targetDays - days)
+  const range = targetDays - prevGoal
+  const progressInRange = Math.max(0, days - prevGoal)
+  const progressPercentage = Math.min(100, Math.round((progressInRange / Math.max(1, range)) * 100))
+
+  return {
+    targetDays,
+    daysRemaining,
+    progressPercentage
+  }
+}

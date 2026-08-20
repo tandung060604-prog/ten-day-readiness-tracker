@@ -13,6 +13,8 @@ type Props = {
   onOpenSettings: () => void
   onOpenHome: () => void
   onOpenQuests: () => void
+  onOpenLevelGuide?: () => void
+  onOpenCurrenciesGuide?: () => void
 }
 
 export function TopHUD({
@@ -21,7 +23,9 @@ export function TopHUD({
   profile,
   onOpenSettings,
   onOpenHome,
-  onOpenQuests
+  onOpenQuests,
+  onOpenLevelGuide,
+  onOpenCurrenciesGuide
 }: Props) {
   const [timeStr, setTimeStr] = useState('')
 
@@ -49,49 +53,74 @@ export function TopHUD({
           <strong>
             {activePlayer.nickname} ({charLabel}) <GameIcon name="heart" size={13} style={{ marginLeft: 3 }} />
           </strong>
-          <div className="hud-level-row">
-            <span className="hud-level-tag">Level {stats.level}</span>
+          <div
+            className="hud-level-row"
+            onClick={(e) => {
+              e.stopPropagation()
+              audioSystem.playClick('pop')
+              onOpenLevelGuide?.()
+            }}
+            title="Bấm để xem hướng dẫn Cấp Độ & Cách Tích Lũy XP"
+          >
+            <span className="hud-level-tag">Level {stats.level} ℹ️</span>
             <div className="hud-level-bar"><div className="hud-level-fill" style={{ width: `${stats.levelProgress}%` }} /></div>
             <span className="hud-level-pct">{stats.levelProgress}%</span>
           </div>
         </div>
-        <button className="hud-quest-bell" onClick={(e) => { e.stopPropagation(); audioSystem.playClick('soft'); onOpenQuests() }}>
-          <GameIcon name="bell" size={16} color="#fd7e14" />
-          <small>Nhiệm vụ</small>
-        </button>
       </button>
 
-      {/* ── center: currencies ── */}
-      <div className="hud-currencies">
-        <div className="hud-cur hud-cur--heart">
+      {/* ── center: currencies (clickable to see currency explanation & starter roadmap) ── */}
+      <div
+        className="hud-currencies"
+        onClick={() => {
+          audioSystem.playClick('soft')
+          onOpenCurrenciesGuide?.()
+        }}
+        title="Bấm để xem hướng dẫn sử dụng Tim, Sao, Xu & Lộ trình bắt đầu"
+      >
+        <div className="hud-cur hud-cur--heart" title="Tim Yêu Thương">
           <span className="hud-cur__icon">
             <GameIcon name="heart" size={16} />
           </span>
           <span className="hud-cur__val">{stats.hearts.toLocaleString()}</span>
-          <button className="hud-cur__plus" onClick={() => audioSystem.playClick('soft')}>＋</button>
         </div>
-        <div className="hud-cur hud-cur--star">
+        <div className="hud-cur hud-cur--star" title="Sao Thành Tích">
           <span className="hud-cur__icon">
             <GameIcon name="star" size={16} color="#ffd43b" />
           </span>
           <span className="hud-cur__val">{stats.stars.toLocaleString()}</span>
-          <button className="hud-cur__plus" onClick={() => audioSystem.playClick('soft')}>＋</button>
         </div>
-        <div className="hud-cur hud-cur--gem">
+        <div className="hud-cur hud-cur--gem" title="Xu Thị Trấn">
           <span className="hud-cur__icon">
             <GameIcon name="gem" size={16} color="#4dabf7" />
           </span>
           <span className="hud-cur__val">{stats.gems.toLocaleString()}</span>
-          <button className="hud-cur__plus" onClick={() => audioSystem.playClick('soft')}>＋</button>
         </div>
       </div>
 
-      {/* ── right: clock, day badge, settings gear ── */}
+      {/* ── right: quest button, clock, day badge, settings gear ── */}
       <div className="hud-actions">
-        <div className="hud-clock">
+        <button
+          className="hud-quest-bell"
+          onClick={() => { audioSystem.playClick('soft'); onOpenQuests() }}
+          title="Xem nhiệm vụ hàng ngày"
+        >
+          <GameIcon name="bell" size={16} color="#fd7e14" />
+          <small>Nhiệm vụ</small>
+        </button>
+
+        <div
+          className="hud-clock"
+          onClick={() => {
+            audioSystem.playClick('pop')
+            onOpenCurrenciesGuide?.()
+          }}
+          title="Xem lộ trình bắt đầu & hướng dẫn"
+        >
           <span className="hud-clock__time">{timeStr}</span>
-          <span className="hud-clock__day">Ngày {stats.day}/{stats.maxDays}</span>
+          <span className="hud-clock__day">Ngày {stats.day}/{stats.maxDays} ℹ️</span>
         </div>
+
         <button
           className="hud-action-btn hud-action-btn--settings"
           onClick={() => { audioSystem.playClick('pop'); onOpenSettings() }}

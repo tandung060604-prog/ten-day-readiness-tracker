@@ -15,6 +15,14 @@ export interface SceneShellProps {
   children: ReactNode
 }
 
+const SCENE_BANNERS: Record<string, string> = {
+  home: './assets/interiors/home_bg.jpg',
+  beach: './assets/interiors/beach_bg.jpg',
+  restaurant: './assets/interiors/restaurant_bg.jpg',
+  sleep: './assets/interiors/sleep_bg.jpg',
+  water: './assets/interiors/water_bg.jpg'
+}
+
 export function SceneShell({
   sceneId,
   title,
@@ -26,9 +34,25 @@ export function SceneShell({
   children
 }: SceneShellProps) {
   const [showDuoModal, setShowDuoModal] = useState(false)
+  const bannerSrc = SCENE_BANNERS[sceneId]
 
   return (
     <div className={`scene-shell scene-shell-${sceneId} animate-fade-in`}>
+      {/* Visual Themed Anime Banner for building interior */}
+      {bannerSrc && (
+        <div className="scene-visual-banner-card">
+          <img
+            src={bannerSrc}
+            alt={title}
+            className="scene-visual-banner-img"
+            loading="lazy"
+          />
+          <div className="scene-banner-overlay">
+            <span className="scene-banner-badge">{icon} {title}</span>
+          </div>
+        </div>
+      )}
+
       {/* Scene Header */}
       <div className="scene-shell-header">
         <div className="scene-shell-title-group">

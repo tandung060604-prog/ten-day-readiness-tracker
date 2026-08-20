@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { triggerHaptic } from '../../utils/haptics'
 
 const YOUTUBE_VIDEO_ID = 'FqpR7HOCgP0' // SECRET - ANH TRAI 'SAY HI'
+const BGM_VOL_KEY = 'little_days_bgm_volume_pref'
 
 declare global {
   interface Window {
@@ -12,7 +13,14 @@ declare global {
 
 export function YouTubeBGMPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
-  const [volume, setVolume] = useState(20) // default 20%
+  const [volume, setVolume] = useState(() => {
+    try {
+      const saved = localStorage.getItem(BGM_VOL_KEY)
+      return saved ? parseInt(saved, 10) : 25
+    } catch {
+      return 25
+    }
+  })
   const playerRef = useRef<any>(null)
   const containerId = 'yt-bgm-iframe-container'
 
@@ -43,8 +51,7 @@ export function YouTubeBGMPlayer() {
           },
           events: {
             onReady: (event: any) => {
-              event.target.setVolume(20)
-              // Attempt autoplay
+              event.target.setVolume(volume)
               event.target.playVideo()
               setIsPlaying(true)
             },
@@ -69,28 +76,30 @@ export function YouTubeBGMPlayer() {
       window.onYouTubeIframeAPIReady = initPlayer
     }
 
-    // Attempt auto-play on first touch / tap for iOS Safari
-    const handleFirstGesture = () => {
+    // Force autoplay on any user interaction (tap, click, key) for mobile browsers
+    const handleFirstInteraction = () => {
       if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
-        playerRef.current.setVolume(20)
+        playerRef.current.setVolume(volume)
         playerRef.current.playVideo()
         setIsPlaying(true)
       }
-      window.removeEventListener('click', handleFirstGesture)
-      window.removeEventListener('touchstart', handleFirstGesture)
     }
 
-    window.addEventListener('click', handleFirstGesture, { once: true })
-    window.addEventListener('touchstart', handleFirstGesture, { once: true })
+    window.addEventListener('click', handleFirstInteraction)
+    window.addEventListener('touchstart', handleFirstInteraction, { passive: true })
+    window.addEventListener('pointerdown', handleFirstInteraction, { passive: true })
+    window.addEventListener('keydown', handleFirstInteraction, { passive: true })
 
     return () => {
-      window.removeEventListener('click', handleFirstGesture)
-      window.removeEventListener('touchstart', handleFirstGesture)
+      window.removeEventListener('click', handleFirstInteraction)
+      window.removeEventListener('touchstart', handleFirstInteraction)
+      window.removeEventListener('pointerdown', handleFirstInteraction)
+      window.removeEventListener('keydown', handleFirstInteraction)
       if (playerRef.current && typeof playerRef.current.destroy === 'function') {
         playerRef.current.destroy()
       }
     }
-  }, [])
+  }, [volume])
 
   const togglePlay = () => {
     triggerHaptic('light')
@@ -108,6 +117,9 @@ export function YouTubeBGMPlayer() {
 
   const handleVolumeChange = (newVol: number) => {
     setVolume(newVol)
+    try {
+      localStorage.setItem(BGM_VOL_KEY, newVol.toString())
+    } catch { /* ignore */ }
     if (playerRef.current && typeof playerRef.current.setVolume === 'function') {
       playerRef.current.setVolume(newVol)
     }
@@ -143,7 +155,7 @@ export function YouTubeBGMPlayer() {
         <div className="bgm-info">
           <span className="bgm-title">SECRET · Say Hi</span>
           <span className="bgm-status">
-            {isPlaying ? `Đang phát nhẹ (${volume}%)` : 'Tạm dừng'}
+            {isPlaying ? `Đang phát (${volume}%)` : 'Tạm dừng'}
           </span>
         </div>
 

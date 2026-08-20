@@ -31,6 +31,9 @@ import { readiness } from './utils/readiness'
 import { CoupleSetupModal } from './components/onboarding/CoupleSetupModal'
 import { GameDevToolsModal } from './components/dev/GameDevToolsModal'
 import { AudioSubtitleToast } from './components/audio/AudioSubtitleToast'
+import { LevelAndXPModal } from './components/common/LevelAndXPModal'
+import { DayTimelineBar } from './components/common/DayTimelineBar'
+import { CurrencyAndQuickStartModal } from './components/common/CurrencyAndQuickStartModal'
 import { useGameState } from './context/GameStateContext'
 import { getItemDefinition } from './domain/game/itemCatalog'
 import { coupleProfileRepository } from './storage/coupleProfileRepository'
@@ -65,7 +68,13 @@ function loadSettings(): AppSettings {
 
 export function App() {
   // Game Scene States: 'splash' -> 'map' | 'module'
-  const [gameScene, setGameScene] = useState<'splash' | 'map' | 'module'>('splash')
+  const [gameScene, setGameScene] = useState<'splash' | 'map' | 'module'>(() => {
+    try {
+      return localStorage.getItem('little_days_has_entered_game') === 'true' ? 'map' : 'splash'
+    } catch {
+      return 'splash'
+    }
+  })
   const [currentLocation, setCurrentLocation] = useState<LocationId | 'map'>('map')
   const [showLanding, setShowLanding] = useState<boolean>(false)
   const [isInventoryOpen, setIsInventoryOpen] = useState(false)
@@ -85,6 +94,8 @@ export function App() {
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null)
   const [isHudHidden, setIsHudHidden] = useState(false)
   const [activeRole, setActiveRole] = useState<'chiikawa' | 'usagi'>('chiikawa')
+  const [isLevelGuideOpen, setIsLevelGuideOpen] = useState(false)
+  const [isStarterGuideOpen, setIsStarterGuideOpen] = useState(false)
 
   // Toggle DevTools with Ctrl+Shift+D
   useEffect(() => {
@@ -269,6 +280,9 @@ export function App() {
 
   // Handle Splash Screen enter with selected character and target location
   const handleEnterFromSplash = (role: 'chiikawa' | 'usagi', targetLoc: LocationId | 'map' = 'map') => {
+    try {
+      localStorage.setItem('little_days_has_entered_game', 'true')
+    } catch { /* ignore */ }
     setActiveRole(role)
     triggerTransition('cloud', targetLoc)
   }
@@ -317,26 +331,28 @@ export function App() {
   })
 
   return (
-    <div className="game-app-root">
-      {/* Background BGM Player */}
+    <div className="app-container">
+      {/* ── Fixed YouTube BGM Player ── */}
       <YouTubeBGMPlayer />
 
-      {/* Orientation Guide Prompt (Landscape requirement on mobile) */}
+      {/* Cinematic Scene Transition Overlay */}
+      <TransitionSystem
+        type={activeTransition.type}
+        isActive={activeTransition.isActive}
+      />
+
+      {/* Landscape Orientation Prompt for Mobile Devices */}
       <OrientationPrompt />
 
-      {/* Cinematic Transition Overlay */}
-      <TransitionSystem type={activeTransition.type} isActive={activeTransition.isActive} />
-
-      {/* Security PIN Lock Screen */}
-      {isLocked && settings.pinHash && (
+      {isLocked && settings.pinHash ? (
         <LockScreen
           storedPinHash={settings.pinHash}
-          onUnlock={() => setIsLocked(false)}
+          onUnlock={() => {
+            lastActiveTimeRef.current = Date.now()
+            setIsLocked(false)
+          }}
         />
-      )}
-
-      {/* Classic Landing Page Overlay (Optional view) */}
-      {showLanding ? (
+      ) : showLanding ? (
         <LandingPage onEnterApp={() => setShowLanding(false)} />
       ) : gameScene === 'splash' ? (
         /* 1. Splash Screen Scene */
@@ -353,6 +369,16 @@ export function App() {
               onOpenSettings={() => triggerTransition('gear', 'settings')}
               onOpenHome={() => triggerTransition('heart', 'home')}
               onOpenQuests={() => triggerTransition('cloud', 'quests')}
+              onOpenLevelGuide={() => setIsLevelGuideOpen(true)}
+              onOpenCurrenciesGuide={() => setIsStarterGuideOpen(true)}
+            />
+
+            {/* 10-Day Observation Timeline Bar */}
+            <DayTimelineBar
+              currentDay={day}
+              onSelectDay={(selectedDay) => {
+                setSettings((prev) => ({ ...prev, currentDay: selectedDay }))
+              }}
             />
           </div>
 
@@ -543,6 +569,19 @@ export function App() {
 
       {/* Floating Subtitle Toast for Speech & Narration Accessibility */}
       <AudioSubtitleToast />
+
+      {/* Level and XP Progression Guide Modal */}
+      <LevelAndXPModal
+        isOpen={isLevelGuideOpen}
+        onClose={() => setIsLevelGuideOpen(false)}
+      />
+
+      {/* Currencies & Quick Start Roadmap Guide Modal */}
+      <CurrencyAndQuickStartModal
+        isOpen={isStarterGuideOpen}
+        onClose={() => setIsStarterGuideOpen(false)}
+        onNavigateToBuilding={(loc) => triggerTransition('cloud', loc as LocationId)}
+      />
 
       {/* Game State Dev Tools Modal */}
       <GameDevToolsModal

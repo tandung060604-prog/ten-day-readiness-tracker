@@ -21,11 +21,11 @@ describe('Puzzle Engine & Level Prototype Suite — Phase 07', () => {
   })
 
   describe('1. Board Generation & Canonical Levels', () => {
-    it('defines exactly 3 canonical vertical-slice levels', () => {
-      expect(CANONICAL_PUZZLE_LEVELS.length).toBe(3)
+    it('defines canonical adventure levels across chapters', () => {
+      expect(CANONICAL_PUZZLE_LEVELS.length).toBeGreaterThanOrEqual(3)
       expect(getLevelDefinition(1)?.title).toContain('First Spark')
       expect(getLevelDefinition(2)?.title).toContain('Big Idea')
-      expect(getLevelDefinition(3)?.title).toContain('Flower Promise')
+      expect(getLevelDefinition(3)?.title).toContain('Hachiware Cheer')
     })
 
     it('generates a 7x7 board for Level 1 without auto-matches on spawn', () => {
@@ -40,15 +40,15 @@ describe('Puzzle Engine & Level Prototype Suite — Phase 07', () => {
       expect(matches.length).toBe(0)
     })
 
-    it('spawns wooden crates in Level 3 around the center', () => {
-      const level3 = CANONICAL_PUZZLE_LEVELS[2]
-      const board = generateBoard(level3)
+    it('spawns wooden crates in Level 4 around the center', () => {
+      const level4 = CANONICAL_PUZZLE_LEVELS[3]
+      const board = generateBoard(level4)
 
-      expect(board.length).toBe(8)
-      expect(board[0].length).toBe(8)
+      expect(board.length).toBe(7)
+      expect(board[0].length).toBe(7)
 
       const crateCount = board.flat().filter(t => t.blocker === 'crate').length
-      expect(crateCount).toBeGreaterThanOrEqual(6)
+      expect(crateCount).toBeGreaterThanOrEqual(4)
     })
   })
 

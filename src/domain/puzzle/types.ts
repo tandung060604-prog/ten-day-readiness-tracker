@@ -31,8 +31,11 @@ export interface LevelObjective {
 
 export interface LevelDefinition {
   levelNumber: number
+  chapter: 1 | 2 | 3
+  chapterTitle: string
   title: string
   subtitle: string
+  storyBeat: string
   gridRows: number
   gridCols: number
   allowedTileTypes: TileType[]
@@ -50,6 +53,7 @@ export interface LevelDefinition {
     hearts: number
     materials?: { itemId: string; quantity: number }[]
   }
+  buildingImpact?: string
 }
 
 // ─── 3. MATCH & GAME STATE ───

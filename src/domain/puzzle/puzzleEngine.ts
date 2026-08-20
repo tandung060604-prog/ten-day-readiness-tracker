@@ -48,10 +48,13 @@ export function generateBoard(level: LevelDefinition): BoardTile[][] {
         (r >= 2 && board[r - 1][c]?.type === chosenType && board[r - 2][c]?.type === chosenType)
       )
 
-      // Place wooden crates for level 3 around the center
-      let blocker: 'crate' | 'none' = 'none'
-      if (level.levelNumber === 3) {
-        if ((r === 3 || r === 4) && (c === 2 || c === 3 || c === 4 || c === 5)) {
+      // Place wooden crates for levels that have crate blockers
+      let blocker: BlockerType = 'none'
+      const hasCrates = level.objectives.some(o => o.type === 'clear_blockers' && o.blockerType === 'crate')
+      if (hasCrates) {
+        const midR = Math.floor(rows / 2)
+        const midC = Math.floor(cols / 2)
+        if ((r === midR || r === midR - 1) && (c === midC || c === midC - 1 || c === midC + 1)) {
           blocker = 'crate'
         }
       }

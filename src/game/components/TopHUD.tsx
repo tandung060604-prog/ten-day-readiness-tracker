@@ -10,6 +10,8 @@ type Props = {
   stats: GameStats
   activeRole?: 'chiikawa' | 'usagi'
   profile?: CoupleProfile
+  isTimelineOpen?: boolean
+  onToggleTimeline?: () => void
   onOpenSettings: () => void
   onOpenHome: () => void
   onOpenQuests: () => void
@@ -21,6 +23,8 @@ export function TopHUD({
   stats,
   activeRole = 'chiikawa',
   profile,
+  isTimelineOpen = false,
+  onToggleTimeline,
   onOpenSettings,
   onOpenHome,
   onOpenQuests,
@@ -98,8 +102,21 @@ export function TopHUD({
         </div>
       </div>
 
-      {/* ── right: quest button, clock, day badge, settings gear ── */}
+      {/* ── right: 10-day timeline toggle button, quest button, clock, settings gear ── */}
       <div className="hud-actions">
+        {/* 10-Day Timeline Interactive Toggle Button */}
+        <button
+          className={`hud-timeline-toggle-btn ${isTimelineOpen ? 'active' : ''}`}
+          onClick={() => {
+            audioSystem.playClick('pop')
+            onToggleTimeline?.()
+          }}
+          title="Bấm để ẩn / hiện bảng Lộ Trình 10 Ngày"
+        >
+          <span>📅 Ngày {stats.day}/{stats.maxDays}</span>
+          <span className="toggle-arrow">{isTimelineOpen ? '▲' : '▼'}</span>
+        </button>
+
         <button
           className="hud-quest-bell"
           onClick={() => { audioSystem.playClick('soft'); onOpenQuests() }}
@@ -109,16 +126,8 @@ export function TopHUD({
           <small>Nhiệm vụ</small>
         </button>
 
-        <div
-          className="hud-clock"
-          onClick={() => {
-            audioSystem.playClick('pop')
-            onOpenCurrenciesGuide?.()
-          }}
-          title="Xem lộ trình bắt đầu & hướng dẫn"
-        >
+        <div className="hud-clock" title="Thời gian hiện tại">
           <span className="hud-clock__time">{timeStr}</span>
-          <span className="hud-clock__day">Ngày {stats.day}/{stats.maxDays} ℹ️</span>
         </div>
 
         <button

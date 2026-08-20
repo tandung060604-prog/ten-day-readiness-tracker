@@ -5852,6 +5852,49 @@ html, body, #root, .app-shell {
   gap: 8px;
   flex-shrink: 0;
 }
+
+/* 10-Day Timeline Interactive Toggle Button */
+.hud-timeline-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(35, 28, 52, 0.88);
+  border: 1.5px solid rgba(255, 212, 59, 0.45);
+  color: #ffd43b;
+  font-weight: 800;
+  font-size: 11.5px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  white-space: nowrap;
+}
+.hud-timeline-toggle-btn:hover, .hud-timeline-toggle-btn.active {
+  background: rgba(255, 212, 59, 0.2);
+  border-color: #ffd43b;
+  color: #ffffff;
+  transform: scale(1.03);
+  box-shadow: 0 0 12px rgba(255, 212, 59, 0.35);
+}
+.hud-timeline-toggle-btn .toggle-arrow {
+  font-size: 9px;
+  transition: transform 0.2s ease;
+}
+
+/* 10-Day Observation Timeline Floating Dropdown */
+.day-timeline-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, rgba(20, 16, 32, 0.94) 0%, rgba(30, 24, 46, 0.90) 100%);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border-bottom: 1.5px solid rgba(255, 212, 59, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  padding: 8px 14px 12px;
+  z-index: 95;
+}
+
 .hud-clock {
   display: flex;
   flex-direction: column;
@@ -5860,19 +5903,11 @@ html, body, #root, .app-shell {
   border: 1px solid rgba(255, 255, 255, 0.16);
   padding: 3px 10px;
   border-radius: 999px;
-  cursor: pointer;
-  transition: transform .2s ease;
 }
-.hud-clock:hover { transform: scale(1.05); border-color: #ffd43b; }
 .hud-clock__time {
   font-size: 11px;
   font-weight: 800;
   color: #ffffff;
-}
-.hud-clock__day {
-  font-size: 8.5px;
-  font-weight: 700;
-  color: #ffd43b;
 }
 
 .hud-action-btn--settings, .hud-settings-btn {
@@ -6212,14 +6247,30 @@ html, body, #root, .app-shell {
   pointer-events: none;
 }
 
-.map-building-entity:hover .building-hover-glow-indicator {
-  opacity: 0.85;
-  animation: glowPulse 2s ease-in-out infinite alternate;
+/* ── Night Mode Lantern Illuminated Houses ── */
+.map-building-entity.night-lantern-lit .building-3d-model {
+  filter: drop-shadow(0 0 16px rgba(255, 210, 80, 0.95))
+          drop-shadow(0 0 35px rgba(255, 170, 50, 0.7))
+          brightness(1.22) contrast(1.08);
+  animation: lanternGlowBreath 3s ease-in-out infinite alternate;
 }
 
-@keyframes glowPulse {
-  0% { transform: scale(0.9); opacity: 0.5; }
-  100% { transform: scale(1.2); opacity: 0.9; }
+@keyframes lanternGlowBreath {
+  0% { filter: drop-shadow(0 0 14px rgba(255, 205, 80, 0.85)) drop-shadow(0 0 28px rgba(255, 160, 50, 0.55)) brightness(1.18); }
+  100% { filter: drop-shadow(0 0 22px rgba(255, 220, 90, 1)) drop-shadow(0 0 42px rgba(255, 180, 60, 0.85)) brightness(1.28); }
+}
+
+/* ── Smooth, Calm Firefly Drifts ── */
+@keyframes firefly-drift-0 {
+  0% { transform: translate(0, 0) scale(0.9); }
+  50% { transform: translate(30px, -25px) scale(1.25); }
+  100% { transform: translate(-15px, -45px) scale(1); }
+}
+
+@keyframes firefly-drift-1 {
+  0% { transform: translate(0, 0) scale(1.1); }
+  50% { transform: translate(-25px, -20px) scale(0.85); }
+  100% { transform: translate(20px, -40px) scale(1.2); }
 }
 
 /* ── Central Plaza Mascots (Chiikawa & Usagi) ── */
@@ -6253,24 +6304,29 @@ html, body, #root, .app-shell {
 .mascot-pair {
   display: flex;
   align-items: flex-end;
-  gap: 6px;
+  gap: 4px;
 }
 
 .mascot-heart-badge {
-  font-size: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
   animation: heartBeat 1.2s ease-in-out infinite;
-  margin-bottom: 24px;
+  margin-bottom: 14px;
 }
 
 .mascot-dialog-bubble {
   margin-top: 4px;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(10px);
-  border: 1.5px solid #ffccd5;
+  background: rgba(20, 16, 32, 0.88);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 141, 161, 0.45);
   border-radius: 12px;
-  padding: 6px 12px;
-  box-shadow: 0 6px 18px rgba(220, 100, 130, 0.2);
-  max-width: 230px;
+  padding: 5px 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  max-width: 220px;
   text-align: center;
   position: relative;
 }
@@ -6283,15 +6339,16 @@ html, body, #root, .app-shell {
   transform: translateX(-50%);
   border-width: 0 6px 6px;
   border-style: solid;
-  border-color: transparent transparent #ffffff;
+  border-color: transparent transparent rgba(20, 16, 32, 0.88);
 }
 
 .mascot-dialog-bubble p {
   margin: 0;
   font-size: 10px;
   font-weight: 800;
-  color: #3a2328;
+  color: #ffffff;
   line-height: 1.35;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -6301,72 +6358,120 @@ html, body, #root, .app-shell {
 /* ── Zoom Controls (Top Right) ── */
 .map-zoom-hud {
   position: fixed;
-  top: 70px;
-  right: 20px;
+  top: 60px;
+  right: 16px;
   z-index: 50;
   display: flex;
   align-items: center;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.88);
+  gap: 5px;
+  background: rgba(20, 16, 32, 0.88);
   backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 8px 24px rgba(120, 90, 100, 0.16);
-  padding: 4px 8px;
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  padding: 4px 10px;
   border-radius: 999px;
 }
 
-.zoom-btn {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  font-size: 16px;
+.map-tutorial-pill-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 141, 161, 0.22);
+  border: 1px solid rgba(255, 141, 161, 0.45);
+  color: #ffffff;
+  font-size: 11px;
   font-weight: 800;
-  color: #3a2328;
+  padding: 4px 10px;
+  border-radius: 999px;
   cursor: pointer;
-  display: grid;
-  place-items: center;
-  transition: all 0.18s ease;
-  min-height: auto;
-  min-width: auto;
-  padding: 0;
+  transition: all 0.2s ease;
+}
+.map-tutorial-pill-btn:hover {
+  background: #ff758f;
+  color: #ffffff;
 }
 
+.hud-divider-pipe {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 12px;
+}
+
+.zoom-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
 .zoom-btn:hover {
-  background: #ffccd5;
-  color: #d6336c;
-  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .zoom-level-text {
   font-size: 11px;
   font-weight: 800;
-  color: #6a4a55;
-  min-width: 42px;
+  color: #ffd43b;
+  min-width: 36px;
   text-align: center;
 }
 
 .zoom-reset-btn {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  font-size: 13px;
-  cursor: pointer;
+  background: rgba(255, 141, 161, 0.2);
+  border: 1px solid rgba(255, 141, 161, 0.4);
   display: grid;
   place-items: center;
-  transition: all 0.18s ease;
-  min-height: auto;
-  min-width: auto;
-  padding: 0;
+  cursor: pointer;
 }
 
-.zoom-reset-btn:hover {
-  background: #d0ebff;
-  transform: rotate(30deg) scale(1.1);
+/* ── Bottom Left Love Counter Widget ── */
+.game-love-counter-chip {
+  position: fixed;
+  bottom: 24px;
+  left: 20px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(20, 16, 32, 0.88);
+  backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(255, 141, 161, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  padding: 6px 14px;
+  border-radius: 999px;
 }
+
+.love-chip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.love-chip-content small {
+  font-size: 9px;
+  font-weight: 700;
+  color: #ffccd5;
+  display: block;
+}
+
+.love-chip-content strong {
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
 
 /* ── Active Character Voice Floating Chip ── */
 .voice-floating-chip {
@@ -13410,33 +13515,35 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(16px);
-  border-bottom: 1.5px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  background: linear-gradient(180deg, rgba(18, 14, 28, 0.95) 0%, rgba(28, 22, 42, 0.90) 100%);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   flex-shrink: 0;
-  z-index: 10;
+  z-index: 200;
 }
 
 .module-back-btn {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: rgba(255, 235, 240, 0.9);
-  border: 1.5px solid #ffccd5;
-  color: #d6336c;
+  background: rgba(255, 141, 161, 0.22);
+  border: 1.5px solid #ff8da1;
+  color: #ffffff;
   font-weight: 800;
   font-size: 12px;
-  padding: 6px 14px;
+  padding: 5px 14px;
   border-radius: 999px;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(255, 141, 161, 0.25);
 }
 
 .module-back-btn:hover {
   background: #ff758f;
   color: #ffffff;
   transform: translateX(-2px);
+  box-shadow: 0 4px 12px rgba(255, 117, 143, 0.4);
 }
 
 .module-scene-title-group {
@@ -13453,7 +13560,8 @@ body {
   margin: 0;
   font-size: 14px;
   font-weight: 800;
-  color: #2b2b2b;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .module-scene-body {

@@ -96,6 +96,7 @@ export function App() {
   const [activeRole, setActiveRole] = useState<'chiikawa' | 'usagi'>('chiikawa')
   const [isLevelGuideOpen, setIsLevelGuideOpen] = useState(false)
   const [isStarterGuideOpen, setIsStarterGuideOpen] = useState(false)
+  const [isTimelineOpen, setIsTimelineOpen] = useState(false)
 
   // Toggle DevTools with Ctrl+Shift+D
   useEffect(() => {
@@ -360,27 +361,35 @@ export function App() {
       ) : (
         /* 2. Main Game World Scene */
         <div className={`game-canvas-container ${isHudHidden && currentLocation === 'map' ? 'hud-auto-hidden' : ''}`}>
-          {/* Top HUD */}
-          <div className={`hud-top-wrapper ${isHudHidden && currentLocation === 'map' ? 'hud-slide-up' : ''}`}>
-            <TopHUD
-              stats={gameStats}
-              activeRole={activeRole}
-              profile={profile}
-              onOpenSettings={() => triggerTransition('gear', 'settings')}
-              onOpenHome={() => triggerTransition('heart', 'home')}
-              onOpenQuests={() => triggerTransition('cloud', 'quests')}
-              onOpenLevelGuide={() => setIsLevelGuideOpen(true)}
-              onOpenCurrenciesGuide={() => setIsStarterGuideOpen(true)}
-            />
+          {/* Top HUD (Rendered only on Map) */}
+          {currentLocation === 'map' && (
+            <div className={`hud-top-wrapper ${isHudHidden ? 'hud-slide-up' : ''}`}>
+              <TopHUD
+                stats={gameStats}
+                activeRole={activeRole}
+                profile={profile}
+                isTimelineOpen={isTimelineOpen}
+                onToggleTimeline={() => setIsTimelineOpen((prev) => !prev)}
+                onOpenSettings={() => triggerTransition('gear', 'settings')}
+                onOpenHome={() => triggerTransition('heart', 'home')}
+                onOpenQuests={() => triggerTransition('cloud', 'quests')}
+                onOpenLevelGuide={() => setIsLevelGuideOpen(true)}
+                onOpenCurrenciesGuide={() => setIsStarterGuideOpen(true)}
+              />
 
-            {/* 10-Day Observation Timeline Bar */}
-            <DayTimelineBar
-              currentDay={day}
-              onSelectDay={(selectedDay) => {
-                setSettings((prev) => ({ ...prev, currentDay: selectedDay }))
-              }}
-            />
-          </div>
+              {/* 10-Day Observation Timeline Interactive Dropdown Drawer */}
+              {isTimelineOpen && (
+                <div className="day-timeline-dropdown animate-slide-up">
+                  <DayTimelineBar
+                    currentDay={day}
+                    onSelectDay={(selectedDay) => {
+                      setSettings((prev) => ({ ...prev, currentDay: selectedDay }))
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Main Stage: World Map or Active Building Module */}
           <main className="game-viewport">

@@ -60,42 +60,97 @@ export function GameIcon({ name, size = 20, className = '', color, style, ...pro
   switch (name) {
     case 'heart':
       return (
-        <img
-          src="./assets/icons/icon_heart.png"
-          alt="Heart"
-          style={{ ...customStyle, objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(255, 107, 138, 0.4))' }}
-          className={`game-icon-img icon-heart ${className}`}
-        />
+        <svg viewBox="0 0 32 32" style={customStyle} className={`game-icon-svg icon-heart ${className}`} {...props}>
+          <defs>
+            <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ff758f" />
+              <stop offset="60%" stopColor="#ff4d6d" />
+              <stop offset="100%" stopColor="#c9184a" />
+            </linearGradient>
+            <linearGradient id="heartShine" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.85" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+            </linearGradient>
+            <filter id="heartShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#ff4d6d" floodOpacity="0.45" />
+            </filter>
+          </defs>
+          <path
+            d="M16 27s-10-6.8-10-13.8C6 7.8 10 5 14 5c2.3 0 3.8 1.1 5 2.5 1.2-1.4 2.7-2.5 5-2.5 4 0 8 2.8 8 8.2 0 7-10 13.8-10 13.8z"
+            fill="url(#heartGrad)"
+            filter="url(#heartShadow)"
+          />
+          <ellipse cx="11.5" cy="10" rx="3" ry="1.8" fill="url(#heartShine)" transform="rotate(-30 11.5 10)" />
+        </svg>
       )
 
     case 'star':
       return (
-        <img
-          src="./assets/icons/icon_star.png"
-          alt="Star"
-          style={{ ...customStyle, objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(255, 212, 59, 0.4))' }}
-          className={`game-icon-img icon-star ${className}`}
-        />
+        <svg viewBox="0 0 32 32" style={customStyle} className={`game-icon-svg icon-star ${className}`} {...props}>
+          <defs>
+            <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#fff3bf" />
+              <stop offset="40%" stopColor="#ffd43b" />
+              <stop offset="100%" stopColor="#f59f00" />
+            </linearGradient>
+            <filter id="starGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#f59f00" floodOpacity="0.4" />
+            </filter>
+          </defs>
+          <path
+            d="M16 2.5l4.1 8.3 9.2 1.3-6.6 6.5 1.6 9.1L16 23.4l-8.3 4.3 1.6-9.1-6.6-6.5 9.2-1.3z"
+            fill="url(#starGrad)"
+            filter="url(#starGlow)"
+          />
+          <path
+            d="M16 5.5l2.8 5.6 6.2.9-4.5 4.4 1.1 6.2L16 19.5l-5.6 2.9 1.1-6.2-4.5-4.4 6.2-.9z"
+            fill="rgba(255,255,255,0.3)"
+          />
+        </svg>
       )
 
     case 'gem':
       return (
-        <img
-          src="./assets/icons/icon_coin.png"
-          alt="Coin"
-          style={{ ...customStyle, objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(255, 197, 61, 0.4))' }}
-          className={`game-icon-img icon-coin ${className}`}
-        />
+        <svg viewBox="0 0 32 32" style={customStyle} className={`game-icon-svg icon-gem ${className}`} {...props}>
+          <defs>
+            <linearGradient id="coinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ffe066" />
+              <stop offset="50%" stopColor="#fcc419" />
+              <stop offset="100%" stopColor="#e67700" />
+            </linearGradient>
+            <filter id="coinShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#f59f00" floodOpacity="0.45" />
+            </filter>
+          </defs>
+          <circle cx="16" cy="16" r="13" fill="url(#coinGrad)" filter="url(#coinShadow)" />
+          <circle cx="16" cy="16" r="10" fill="none" stroke="#fff3bf" strokeWidth="1.5" strokeDasharray="3 2" />
+          <path d="M16 19.5s-4-2.6-4-5.3c0-2 1.5-3.2 3-3.2 1 0 1.6.5 2 1.1.4-.6 1-1.1 2-1.1 1.5 0 3 1.2 3 3.2 0 2.7-4 5.3-4 5.3z" fill="#ffffff" />
+        </svg>
       )
 
     case 'energy':
       return (
-        <img
-          src="./assets/icons/icon_energy.png"
-          alt="Energy"
-          style={{ ...customStyle, objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(255, 169, 77, 0.4))' }}
-          className={`game-icon-img icon-energy ${className}`}
-        />
+        <svg viewBox="0 0 32 32" style={customStyle} className={`game-icon-svg icon-energy ${className}`} {...props}>
+          <defs>
+            <linearGradient id="energyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ffe066" />
+              <stop offset="50%" stopColor="#ff922b" />
+              <stop offset="100%" stopColor="#e8590c" />
+            </linearGradient>
+            <filter id="energyGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#ff922b" floodOpacity="0.5" />
+            </filter>
+          </defs>
+          <path
+            d="M18 2L7 17h8l-2 13 12-16h-9l3-12z"
+            fill="url(#energyGrad)"
+            filter="url(#energyGlow)"
+          />
+          <path
+            d="M17 5l-8 11h6l-1 8 8-11h-7l2-8z"
+            fill="rgba(255,255,255,0.4)"
+          />
+        </svg>
       )
 
     case 'home':

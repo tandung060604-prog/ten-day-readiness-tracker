@@ -465,21 +465,21 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
     }
   }, [])
 
-  // Tutorial Step Change -> Smooth Zoom In & Center Building directly on screen
+  // Tutorial Step Change -> Smooth Zoom In & Center Building with comfortable breathing room
   const handleTutorialStepChange = useCallback((step: TutorialStep) => {
     setTutorialActiveBuildingId(step.locationId)
     const isMobileLandscape = window.innerHeight < 520 && window.innerWidth > window.innerHeight
-    const targetZoom = isMobileLandscape ? 1.65 : 2.0
+    const targetZoom = isMobileLandscape ? 1.2 : 1.3
     setZoom(targetZoom)
     const vw = window.innerWidth
     const vh = window.innerHeight
 
-    // In mobile landscape, center building at 35% height so the bottom dialogue box doesn't cover it
-    const centerYRatio = isMobileLandscape ? 0.35 : 0.50
+    // Position building comfortably in the upper half of screen (30% on landscape, 40% on portrait)
+    const centerYRatio = isMobileLandscape ? 0.30 : 0.40
     const targetPanX = (0.5 - step.x / 100) * vw * targetZoom
     const targetPanY = (centerYRatio - step.y / 100) * vh * targetZoom
-    setPan({ x: targetPanX, y: targetPanY })
-  }, [])
+    setPan(clampCoords(targetPanX, targetPanY, targetZoom))
+  }, [clampCoords])
 
   const handleCloseTutorial = useCallback(() => {
     setShowTutorial(false)
@@ -695,38 +695,39 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
       {/* ══════ NIGHT MODE OVERLAY (Manual Toggle) ══════ */}
       {isNightMode && (
         <>
-          <div className="night-mode-overlay" style={{ position: 'absolute', inset: 0, background: 'rgba(10, 5, 30, 0.35)', pointerEvents: 'none', zIndex: 2, transition: 'opacity 0.8s ease' }} />
+          <div className="night-mode-overlay" style={{ position: 'absolute', inset: 0, background: 'rgba(12, 10, 32, 0.48)', pointerEvents: 'none', zIndex: 2, transition: 'opacity 0.8s ease' }} />
           <div className="night-stars-container" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 3, overflow: 'hidden' }}>
-            {Array.from({ length: 60 }, (_, i) => (
+            {Array.from({ length: 45 }, (_, i) => (
               <span key={`star-${i}`} className="night-star-dot" style={{
                 position: 'absolute',
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 45}%`,
-                width: `${1.5 + Math.random() * 2.5}px`,
-                height: `${1.5 + Math.random() * 2.5}px`,
+                left: `${(i * 19.3) % 100}%`,
+                top: `${(i * 11.7) % 48}%`,
+                width: `${1.5 + (i % 3)}px`,
+                height: `${1.5 + (i % 3)}px`,
                 borderRadius: '50%',
                 background: '#fffbe6',
                 boxShadow: '0 0 6px 2px rgba(255,251,230,0.6)',
-                animation: `star-twinkle ${1.5 + Math.random() * 3}s ease-in-out infinite`,
-                animationDelay: `${Math.random() * 4}s`,
-                opacity: 0.4 + Math.random() * 0.6
+                animation: `star-twinkle ${2 + (i % 3)}s ease-in-out infinite`,
+                animationDelay: `${(i * 0.4) % 3}s`,
+                opacity: 0.5 + ((i % 5) * 0.1)
               }} />
             ))}
-            {Array.from({ length: 10 }, (_, i) => (
-              <span key={`firefly-${i}`} className="night-firefly" style={{
+            {/* 8 Calm, Gentle Drifting Fireflies */}
+            {Array.from({ length: 8 }, (_, i) => (
+              <span key={`firefly-${i}`} className={`night-firefly firefly-track-${i % 2}`} style={{
                 position: 'absolute',
-                left: `${10 + Math.random() * 80}%`,
-                top: `${30 + Math.random() * 55}%`,
-                width: '4px',
-                height: '4px',
+                left: `${15 + i * 10}%`,
+                top: `${35 + ((i * 13) % 45)}%`,
+                width: '5px',
+                height: '5px',
                 borderRadius: '50%',
-                background: '#a6ff4d',
-                boxShadow: '0 0 8px 3px rgba(166,255,77,0.5)',
-                animation: `firefly-float ${6 + Math.random() * 8}s ease-in-out infinite, star-twinkle ${2 + Math.random() * 2}s ease-in-out infinite`,
-                animationDelay: `${Math.random() * 5}s`
+                background: '#d4ff38',
+                boxShadow: '0 0 10px 4px rgba(212, 255, 56, 0.65)',
+                animation: `firefly-drift-${i % 2} ${8 + i * 1.5}s ease-in-out infinite alternate, star-twinkle ${2.5 + (i % 2)}s ease-in-out infinite`,
+                animationDelay: `${i * 0.8}s`
               }} />
             ))}
-            <div style={{ position: 'absolute', right: '8%', top: '5%', fontSize: '36px', filter: 'drop-shadow(0 0 18px rgba(255,236,130,0.6))', opacity: 0.85 }}>🌙</div>
+            <div style={{ position: 'absolute', right: '8%', top: '5%', fontSize: '36px', filter: 'drop-shadow(0 0 20px rgba(255,236,130,0.7))', opacity: 0.9 }}>🌙</div>
           </div>
         </>
       )}
@@ -780,11 +781,11 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
             pointerEvents: 'none'
           }}
         >
-          <ChiikawaSVG character="chiikawa" size={48} className={mascotPos.isMoving ? 'animate-bounce-gentle' : ''} />
+          <ChiikawaSVG character="chiikawa" size={42} className={mascotPos.isMoving ? 'animate-bounce-gentle' : ''} />
           <span className="mascot-footstep-shadow" />
         </div>
 
-        {/* 3. Farming-Game Style 3D Isometric Buildings (Natural Idle Bobbing, Zero Permanent Text) */}
+        {/* 3. Farming-Game Style 3D Isometric Buildings (Natural Idle Bobbing, Lantern Glowing at Night) */}
         {MAP_BUILDINGS.map((b) => {
           const isSelected = activeStoryBuilding?.id === b.id
           const isTutorialTarget = showTutorial && tutorialActiveBuildingId === b.id
@@ -792,7 +793,7 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
           return (
             <div
               key={b.id}
-              className={`map-building-entity farming-building-idle ${isSelected ? 'entity-selected' : ''} ${isTutorialTarget ? 'entity-tutorial-highlighted' : ''}`}
+              className={`map-building-entity farming-building-idle ${isSelected ? 'entity-selected' : ''} ${isTutorialTarget ? 'entity-tutorial-highlighted' : ''} ${isNightMode ? 'night-lantern-lit' : ''}`}
               style={{
                 left: `${b.x}%`,
                 top: `${b.y}%`,
@@ -833,7 +834,7 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
                 </div>
               )}
 
-              {/* 3D Model Sprite Container with Farm Game Gentle Sway */}
+              {/* 3D Model Sprite Container with Farm Game Gentle Sway & Night Lantern Halo */}
               <div
                 className="building-sprite-wrapper"
                 style={{ width: `${b.size}px`, height: `${b.size}px` }}
@@ -851,7 +852,7 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
           )
         })}
 
-        {/* 4. Central Plaza Mascots (Chiikawa & Usagi) */}
+        {/* 4. Central Plaza Mascots (Chiikawa & Usagi with Clean Transparent 3D Heart) */}
         <div
           className={`central-mascots-group interactive-control ${mascotBounce ? 'mascots-excited' : ''}`}
           onClick={(e) => {
@@ -861,11 +862,11 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
           title="Bé Chiikawa & Usagi (Nhấn để trò chuyện)"
         >
           <div className="mascot-pair">
-            <ChiikawaSVG character="chiikawa" size={76} className="animate-bounce-gentle" />
+            <ChiikawaSVG character="chiikawa" size={50} className="animate-bounce-gentle" />
             <span className="mascot-heart-badge">
-              <GameIcon name="heart" size={24} />
+              <GameIcon name="heart" size={22} />
             </span>
-            <ChiikawaSVG character="usagi" size={76} className="animate-bounce-gentle" />
+            <ChiikawaSVG character="usagi" size={50} className="animate-bounce-gentle" />
           </div>
           <div className="mascot-dialog-bubble">
             <p>{DIALOG_LINES[dialogIdx]}</p>

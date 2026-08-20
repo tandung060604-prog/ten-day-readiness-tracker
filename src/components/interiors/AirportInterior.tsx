@@ -107,7 +107,7 @@ export function AirportInterior({ profile: _profile }: AirportProps) {
             <div className="passenger-info-row">
               <div className="info-block">
                 <span className="lbl">HÀNH KHÁCH / PASSENGERS</span>
-                <strong className="passenger-names">Đặng Tấn Dũng & Mai Trang ❤️</strong>
+                <strong className="passenger-names">Tấn Dũng & Mai Trang ❤️</strong>
               </div>
               <div className="info-block">
                 <span className="lbl">CHUYẾN BAY / FLIGHT</span>

@@ -11,9 +11,9 @@ const OFFICIAL_ASSETS: Record<string, string> = {
   chiikawa: './assets/chiikawa.png',
   usagi: './assets/usagi.png',
   hachiware: './assets/hachiware.png',
-  momonga: './assets/chiikawa.png',
-  kurimanju: './assets/usagi.png',
-  rakko: './assets/hachiware.png'
+  momonga: './assets/momonga.png',
+  kurimanju: './assets/kurimanju.png',
+  rakko: './assets/rakko.png'
 }
 
 export function ChiikawaSVG({ character, size = 64, className = '', onClick }: Props) {

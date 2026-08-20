@@ -4,7 +4,11 @@ import { PlanView } from '../../views/PlanView'
 import { useGameState } from '../../context/GameStateContext'
 import { audioSystem } from '../../game/systems/GameAudioSystem'
 import { triggerConfetti } from '../../utils/confetti'
+import { PuzzleLevelSelectModal } from '../puzzle/PuzzleLevelSelectModal'
+import { PuzzleGameBoard } from '../puzzle/PuzzleGameBoard'
+import { CANONICAL_PUZZLE_LEVELS } from '../../domain/puzzle/levels'
 import type { DailyLog } from '../../types'
+import type { LevelDefinition } from '../../domain/puzzle/types'
 
 interface QuestSquareProps {
   currentDay: number
@@ -82,6 +86,8 @@ export function QuestSquareInterior({
 }: QuestSquareProps) {
   const [activeTab, setActiveTab] = useState<'board' | 'campaign'>('board')
   const [quests, setQuests] = useState<QuestItem[]>(INITIAL_QUESTS)
+  const [showLevelSelect, setShowLevelSelect] = useState(false)
+  const [activePlayingLevel, setActivePlayingLevel] = useState<LevelDefinition | null>(null)
   const { grantReward } = useGameState()
 
   const handleClaimQuest = (quest: QuestItem) => {
@@ -125,6 +131,23 @@ export function QuestSquareInterior({
             onClick={() => { audioSystem.playClick('soft'); setActiveTab('campaign'); }}
           >
             🗺️ Lộ Trình 10 Ngày Rèn Luyện
+          </button>
+        </div>
+
+        {/* Adventure Puzzle Section Banner */}
+        <div className="quest-adventure-banner">
+          <div className="adventure-banner-content">
+            <div className="adventure-icon">🧩✨</div>
+            <div>
+              <h3>Thám Hiểm Giải Đố (Little Days Adventure)</h3>
+              <p>Ghép nối các bạn nhỏ Chiikawa & Usagi vượt qua thử thách để nhận thêm Ngôi Sao, Tim và Xu vàng!</p>
+            </div>
+          </div>
+          <button 
+            className="play-adventure-btn animate-bounce-gentle"
+            onClick={() => setShowLevelSelect(true)}
+          >
+            🎮 Bắt Đầu Chơi!
           </button>
         </div>
 
@@ -181,6 +204,26 @@ export function QuestSquareInterior({
               onNavigateToTraining={onNavigateToTraining}
             />
           </div>
+        )}
+
+        {/* Puzzle Level Select Modal */}
+        {showLevelSelect && (
+          <PuzzleLevelSelectModal
+            isOpen={showLevelSelect}
+            onClose={() => setShowLevelSelect(false)}
+            onSelectLevel={(level) => {
+              setShowLevelSelect(false)
+              setActivePlayingLevel(level)
+            }}
+          />
+        )}
+
+        {/* Active Fullscreen Puzzle Game Board */}
+        {activePlayingLevel && (
+          <PuzzleGameBoard
+            level={activePlayingLevel}
+            onClose={() => setActivePlayingLevel(null)}
+          />
         )}
       </div>
     </SceneShell>

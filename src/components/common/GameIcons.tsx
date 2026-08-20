@@ -60,183 +60,162 @@ export function GameIcon({ name, size = 20, className = '', color, style, ...pro
   switch (name) {
     case 'heart':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-heart ${className}`} {...props}>
-          <defs>
-            <linearGradient id="gHeart" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#ff758c" />
-              <stop offset="100%" stopColor="#ff4b72" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-            fill={color || 'url(#gHeart)'}
-            filter="drop-shadow(0 2px 4px rgba(255, 75, 114, 0.35))"
-          />
-          <circle cx="7.5" cy="7.5" r="1.5" fill="rgba(255,255,255,0.7)" />
-        </svg>
+        <img
+          src="./assets/icons/icon_heart.png"
+          alt="Heart"
+          style={{ ...customStyle, objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(255, 107, 138, 0.4))' }}
+          className={`game-icon-img icon-heart ${className}`}
+        />
       )
 
     case 'star':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-star ${className}`} {...props}>
-          <defs>
-            <linearGradient id="gStar" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#ffe066" />
-              <stop offset="100%" stopColor="#f59f00" />
-            </linearGradient>
-          </defs>
-          <polygon
-            points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"
-            fill={color || 'url(#gStar)'}
-            stroke="#f59f00"
-            strokeWidth="0.8"
-            filter="drop-shadow(0 2px 4px rgba(245, 159, 0, 0.35))"
-          />
-          <polygon points="12,5 13.5,9 18,9.7 14.5,13.1 15.3,17.5 12,15.2 8.7,17.5 9.5,13.1 6,9.7 10.5,9" fill="rgba(255,255,255,0.4)" />
-        </svg>
+        <img
+          src="./assets/icons/icon_star.png"
+          alt="Star"
+          style={{ ...customStyle, objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(255, 212, 59, 0.4))' }}
+          className={`game-icon-img icon-star ${className}`}
+        />
       )
 
     case 'gem':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-gem ${className}`} {...props}>
-          <defs>
-            <linearGradient id="gGem" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#74c0fc" />
-              <stop offset="100%" stopColor="#1c7ed6" />
-            </linearGradient>
-          </defs>
-          <polygon
-            points="6,3 18,3 22,9 12,22 2,9"
-            fill={color || 'url(#gGem)'}
-            stroke="#1c7ed6"
-            strokeWidth="0.8"
-            filter="drop-shadow(0 2px 4px rgba(28, 126, 214, 0.35))"
-          />
-          <polygon points="6,3 12,9 18,3" fill="#a5d8ff" />
-          <polygon points="2,9 12,9 6,3" fill="#4dabf7" />
-          <polygon points="18,3 12,9 22,9" fill="#339af0" />
-          <polygon points="2,9 12,22 12,9" fill="#228be6" />
-          <polygon points="12,9 12,22 22,9" fill="#1864ab" />
-        </svg>
+        <img
+          src="./assets/icons/icon_coin.png"
+          alt="Coin"
+          style={{ ...customStyle, objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(255, 197, 61, 0.4))' }}
+          className={`game-icon-img icon-coin ${className}`}
+        />
       )
 
     case 'energy':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-energy ${className}`} {...props}>
-          <defs>
-            <linearGradient id="gEnergy" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#ffd43b" />
-              <stop offset="100%" stopColor="#f08c00" />
-            </linearGradient>
-          </defs>
-          <polygon
-            points="13,2 4,14 11,14 9,22 20,9 13,9"
-            fill={color || 'url(#gEnergy)'}
-            stroke="#e67700"
-            strokeWidth="0.8"
-            filter="drop-shadow(0 2px 4px rgba(240, 140, 0, 0.4))"
-          />
-        </svg>
+        <img
+          src="./assets/icons/icon_energy.png"
+          alt="Energy"
+          style={{ ...customStyle, objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(255, 169, 77, 0.4))' }}
+          className={`game-icon-img icon-energy ${className}`}
+        />
       )
 
     case 'home':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-home ${className}`} {...props}>
-          <defs>
-            <linearGradient id="gHome" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ff8787" />
-              <stop offset="100%" stopColor="#fa5252" />
-            </linearGradient>
-          </defs>
-          <path d="M12 2L2 10h3v10h14V10h3L12 2z" fill={color || 'url(#gHome)'} />
-          <rect x="9" y="13" width="6" height="7" rx="1.5" fill="#ffe3e3" />
-          <circle cx="13.5" cy="16.5" r="0.8" fill="#e03131" />
-        </svg>
+        <img
+          src="./assets/buildings/house.png"
+          alt="Home"
+          style={{ ...customStyle, objectFit: 'contain' }}
+          className={`game-icon-img icon-home ${className}`}
+        />
       )
 
     case 'gym':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-gym ${className}`} {...props}>
-          <path d="M20 7h-2V5c0-.55-.45-1-1-1s-1 .45-1 1v2h-8V5c0-.55-.45-1-1-1s-1 .45-1 1v2H4c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h2v2c0 .55.45 1 1 1s1-.45 1-1v-2h8v2c0 .55.45 1 1 1s1-.45 1-1v-2h2c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM4 15V9h2v6H4zm14 0h-2V9h2v6z" fill={color || '#f59f00'} />
-        </svg>
+        <img
+          src="./assets/buildings/gym.png"
+          alt="Gym"
+          style={{ ...customStyle, objectFit: 'contain' }}
+          className={`game-icon-img icon-gym ${className}`}
+        />
       )
 
     case 'water':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-water ${className}`} {...props}>
-          <defs>
-            <linearGradient id="gWater" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#4dabf7" />
-              <stop offset="100%" stopColor="#1971c2" />
-            </linearGradient>
-          </defs>
-          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill={color || 'url(#gWater)'} filter="drop-shadow(0 2px 4px rgba(25, 113, 194, 0.35))" />
-          <circle cx="9.5" cy="11.5" r="1.5" fill="rgba(255,255,255,0.6)" />
-        </svg>
+        <img
+          src="./assets/buildings/water.png"
+          alt="Water"
+          style={{ ...customStyle, objectFit: 'contain' }}
+          className={`game-icon-img icon-water ${className}`}
+        />
       )
 
     case 'journal':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-journal ${className}`} {...props}>
-          <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" fill={color || '#9775fa'} />
-        </svg>
+        <img
+          src="./assets/buildings/library.png"
+          alt="Library Journal"
+          style={{ ...customStyle, objectFit: 'contain' }}
+          className={`game-icon-img icon-journal ${className}`}
+        />
       )
 
     case 'album':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-album ${className}`} {...props}>
-          <circle cx="12" cy="12" r="3" fill="#ff6b6b" />
-          <path d="M20 4h-3.17L15 2H9L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" fill={color || '#fa5252'} />
-        </svg>
+        <img
+          src="./assets/buildings/album.png"
+          alt="Photo Album"
+          style={{ ...customStyle, objectFit: 'contain' }}
+          className={`game-icon-img icon-album ${className}`}
+        />
       )
 
     case 'sleep':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-sleep ${className}`} {...props}>
-          <path d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.6-11.6A10 10 0 0 1 12.3 2z" fill={color || '#7048e8'} />
-        </svg>
+        <img
+          src="./assets/buildings/sleep.png"
+          alt="Sleep Haven"
+          style={{ ...customStyle, objectFit: 'contain' }}
+          className={`game-icon-img icon-sleep ${className}`}
+        />
       )
 
     case 'quest':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-quest ${className}`} {...props}>
-          <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z" fill={color || '#f59f00'} />
-        </svg>
+        <img
+          src="./assets/buildings/quest.png"
+          alt="Quest"
+          style={{ ...customStyle, objectFit: 'contain' }}
+          className={`game-icon-img icon-quest ${className}`}
+        />
       )
 
     case 'market':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-market ${className}`} {...props}>
-          <path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z" fill={color || '#20bf6b'} />
-        </svg>
+        <img
+          src="./assets/buildings/market.png"
+          alt="Market"
+          style={{ ...customStyle, objectFit: 'contain' }}
+          className={`game-icon-img icon-market ${className}`}
+        />
       )
 
     case 'restaurant':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-restaurant ${className}`} {...props}>
-          <path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z" fill={color || '#e83e8c'} />
-        </svg>
+        <img
+          src="./assets/buildings/restaurant.png"
+          alt="Restaurant"
+          style={{ ...customStyle, objectFit: 'contain' }}
+          className={`game-icon-img icon-restaurant ${className}`}
+        />
       )
 
     case 'townhall':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-townhall ${className}`} {...props}>
-          <path d="M12 1L3 5v2h18V5L12 1zm-7 8v9h2v-9H5zm4 0v9h2v-9H9zm4 0v9h2v-9h-2zm4 0v9h2v-9h-2zM2 20v2h20v-2H2z" fill={color || '#495057'} />
-        </svg>
+        <img
+          src="./assets/buildings/townhall.png"
+          alt="Town Hall"
+          style={{ ...customStyle, objectFit: 'contain' }}
+          className={`game-icon-img icon-townhall ${className}`}
+        />
       )
 
     case 'airport':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-airport ${className}`} {...props}>
-          <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill={color || '#00a8ff'} />
-        </svg>
+        <img
+          src="./assets/buildings/airport.png"
+          alt="Airport"
+          style={{ ...customStyle, objectFit: 'contain' }}
+          className={`game-icon-img icon-airport ${className}`}
+        />
       )
 
     case 'beach':
       return (
-        <svg viewBox="0 0 24 24" style={customStyle} className={`game-icon-svg icon-beach ${className}`} {...props}>
-          <path d="M17 5.92L9 2v18H7v-1.73c-1.79.35-3 .99-3 1.73 0 1.1 2.69 2 6 2s6-.9 6-2c0-.74-1.21-1.38-3-1.73V13.8l8-3.92V5.92z" fill={color || '#20bf6b'} />
-        </svg>
+        <img
+          src="./assets/buildings/beach.png"
+          alt="Beach"
+          style={{ ...customStyle, objectFit: 'contain' }}
+          className={`game-icon-img icon-beach ${className}`}
+        />
       )
 
     case 'map':

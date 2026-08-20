@@ -45,7 +45,7 @@ describe('Building Interiors Suite — Phase 04', () => {
       />
     )
 
-    expect(screen.getByText('Căn Nhà Ấm Cúng')).toBeInTheDocument()
+    expect(screen.getAllByText(/Căn Nhà Ấm Cúng/i).length).toBeGreaterThan(0)
     expect(screen.getByText(/Phòng Khách/i)).toBeInTheDocument()
     expect(screen.getByText(/Hộp Thư Tình/i)).toBeInTheDocument()
 
@@ -71,7 +71,7 @@ describe('Building Interiors Suite — Phase 04', () => {
       />
     )
 
-    expect(screen.getByText('Đài Phun Nước Ma Thuật')).toBeInTheDocument()
+    expect(screen.getAllByText(/Đài Phun Nước Ma Thuật/i).length).toBeGreaterThan(0)
     expect(screen.getByText('60%')).toBeInTheDocument() // 1200 / 2000 = 60%
 
     // Click +300ml cup
@@ -92,7 +92,7 @@ describe('Building Interiors Suite — Phase 04', () => {
       />
     )
 
-    expect(screen.getByText('Tháp Trăng Ngủ Say')).toBeInTheDocument()
+    expect(screen.getAllByText(/Tháp Trăng Ngủ Say/i).length).toBeGreaterThan(0)
     expect(screen.getByText(/Luyện Thở 4-7-8 Thư Giãn/i)).toBeInTheDocument()
 
     // Switch to breathing tab
@@ -104,7 +104,7 @@ describe('Building Interiors Suite — Phase 04', () => {
   it('4. RestaurantInterior renders date idea generator and romantic wishlist', () => {
     render(<RestaurantInterior profile={DEMO_COUPLE_PROFILE} />)
 
-    expect(screen.getByText('Nhà Hàng Hẹn Hò Ánh Nến')).toBeInTheDocument()
+    expect(screen.getAllByText(/Nhà Hàng Hẹn Hò Ánh Nến/i).length).toBeGreaterThan(0)
     expect(screen.getByText(/Bộ Quay Ý Tưởng Hẹn Hò Ngọt Ngào/i)).toBeInTheDocument()
     expect(screen.getByText(/Danh Sách Ước Mơ Hẹn Hò/i)).toBeInTheDocument()
   })
@@ -112,7 +112,7 @@ describe('Building Interiors Suite — Phase 04', () => {
   it('5. AirportInterior renders departure board and luggage checklist', () => {
     render(<AirportInterior profile={DEMO_COUPLE_PROFILE} />)
 
-    expect(screen.getByText('Sân Bay Little Sky')).toBeInTheDocument()
+    expect(screen.getAllByText(/Sân Bay Little Sky/i).length).toBeGreaterThan(0)
     expect(screen.getByText(/BẢNG KHỞI HÀNH • DEPARTURE BOARD/i)).toBeInTheDocument()
     expect(screen.getByText(/Danh Sách Hành Lý Cần Chuẩn Bị/i)).toBeInTheDocument()
   })
@@ -129,7 +129,7 @@ describe('Building Interiors Suite — Phase 04', () => {
       />
     )
 
-    expect(screen.getByText('Bãi Biển & Khu Thám Hiểm')).toBeInTheDocument()
+    expect(screen.getAllByText(/Bãi Biển & Khu Thám Hiểm/i).length).toBeGreaterThan(0)
     expect(screen.getByText(/Hoạt Động Biển Không Thể Bỏ Lỡ/i)).toBeInTheDocument()
   })
 

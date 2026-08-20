@@ -6,8 +6,6 @@ import { playChiikawaVoice } from '../../utils/chiikawaAudio'
 import { speakVietnamese, BUILDING_VIETNAMESE_VOICES } from '../../utils/vietnameseAudio'
 import { MapAnimationCanvas } from './MapAnimationCanvas'
 import { GameTutorialModal, TUTORIAL_STEPS } from './GameTutorialModal'
-import { getTimeOfDayPeriod, getAtmosphereConfig, getSunMoonPosition } from '../../domain/world/timeOfDay'
-import { detectSeasonalTheme } from '../../domain/world/seasonalTheme'
 import type { MascotMapPosition } from '../../domain/world/types'
 import type { TutorialStep } from './GameTutorialModal'
 import type { LocationId, MapBuilding, TransitionType } from '../types'
@@ -426,14 +424,13 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
   const [dialogIdx, setDialogIdx] = useState(0)
   const [mascotBounce, setMascotBounce] = useState(false)
   const [activeVoicePhrase, setActiveVoicePhrase] = useState<string | null>(null)
-  const [showTutorial, setShowTutorial] = useState(true)
+  const [showTutorial, setShowTutorial] = useState(() => {
+    try { return localStorage.getItem('little_days_tutorial_completed') !== 'true' } catch { return true }
+  })
   const [tutorialActiveBuildingId, setTutorialActiveBuildingId] = useState<LocationId | null>('home')
 
-  // Living World Engine: Time of Day & Seasonal Atmospheres
-  const period = getTimeOfDayPeriod()
-  const atmosphere = getAtmosphereConfig(period)
-  const sunMoon = getSunMoonPosition(period)
-  const seasonalTheme = detectSeasonalTheme(null)
+  // Night Mode Toggle (Manual)
+  const [isNightMode, setIsNightMode] = useState(false)
 
   // Character Map Locomotion State
   const [mascotPos, setMascotPos] = useState<MascotMapPosition>({
@@ -489,6 +486,7 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
     setTutorialActiveBuildingId(null)
     setZoom(1.0)
     setPan({ x: 0, y: 0 })
+    try { localStorage.setItem('little_days_tutorial_completed', 'true') } catch { /* noop */ }
   }, [])
 
   // 5-Second Idle Inactivity Timer for Top & Bottom HUD Auto-Hide
@@ -694,41 +692,44 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchEnd}
     >
-      {/* ══════ LIVING TIME-OF-DAY ATMOSPHERIC LIGHTING ══════ */}
-      <div
-        className={`time-of-day-atmosphere-overlay period-${period}`}
-        style={{
-          background: atmosphere.skyGradient,
-          position: 'absolute',
-          inset: 0,
-          opacity: period === 'night' ? 0.38 : period === 'sunset' ? 0.28 : 0.12,
-          pointerEvents: 'none',
-          zIndex: 2,
-          transition: 'all 1s ease'
-        }}
-      />
-
-      {/* Dynamic Sun/Moon Celestial Body */}
-      <div
-        className="celestial-body-indicator animate-pulse"
-        style={{
-          position: 'absolute',
-          left: `${sunMoon.x}%`,
-          top: `${sunMoon.y}%`,
-          transform: 'translate(-50%, -50%)',
-          fontSize: '32px',
-          filter: `drop-shadow(0 0 20px ${atmosphere.sunlightGlow})`,
-          zIndex: 3,
-          pointerEvents: 'none',
-          transition: 'left 1s ease, top 1s ease'
-        }}
-        title={`${atmosphere.label} (${period})`}
-      >
-        {period === 'night' ? '🌙' : period === 'sunset' ? '🌅' : '☀️'}
-      </div>
-
-      {/* ══════ SUNLIGHT GOD RAYS & VOLUMETRIC ATMOSPHERE ══════ */}
-      <div className="sunlight-god-rays" />
+      {/* ══════ NIGHT MODE OVERLAY (Manual Toggle) ══════ */}
+      {isNightMode && (
+        <>
+          <div className="night-mode-overlay" style={{ position: 'absolute', inset: 0, background: 'rgba(10, 5, 30, 0.35)', pointerEvents: 'none', zIndex: 2, transition: 'opacity 0.8s ease' }} />
+          <div className="night-stars-container" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 3, overflow: 'hidden' }}>
+            {Array.from({ length: 60 }, (_, i) => (
+              <span key={`star-${i}`} className="night-star-dot" style={{
+                position: 'absolute',
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 45}%`,
+                width: `${1.5 + Math.random() * 2.5}px`,
+                height: `${1.5 + Math.random() * 2.5}px`,
+                borderRadius: '50%',
+                background: '#fffbe6',
+                boxShadow: '0 0 6px 2px rgba(255,251,230,0.6)',
+                animation: `star-twinkle ${1.5 + Math.random() * 3}s ease-in-out infinite`,
+                animationDelay: `${Math.random() * 4}s`,
+                opacity: 0.4 + Math.random() * 0.6
+              }} />
+            ))}
+            {Array.from({ length: 10 }, (_, i) => (
+              <span key={`firefly-${i}`} className="night-firefly" style={{
+                position: 'absolute',
+                left: `${10 + Math.random() * 80}%`,
+                top: `${30 + Math.random() * 55}%`,
+                width: '4px',
+                height: '4px',
+                borderRadius: '50%',
+                background: '#a6ff4d',
+                boxShadow: '0 0 8px 3px rgba(166,255,77,0.5)',
+                animation: `firefly-float ${6 + Math.random() * 8}s ease-in-out infinite, star-twinkle ${2 + Math.random() * 2}s ease-in-out infinite`,
+                animationDelay: `${Math.random() * 5}s`
+              }} />
+            ))}
+            <div style={{ position: 'absolute', right: '8%', top: '5%', fontSize: '36px', filter: 'drop-shadow(0 0 18px rgba(255,236,130,0.6))', opacity: 0.85 }}>🌙</div>
+          </div>
+        </>
+      )}
 
       {/* ══════ SEAMLESS INTEGRATED SKY CLOUDS ══════ */}
       <div className="sky-integrated-clouds">
@@ -874,33 +875,39 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
 
       {/* ══════ MAP OVERLAY HUD (Fixed UI Controls) ══════ */}
 
-      {/* 0. Living Time of Day & Seasonal Badge (Top Left) */}
-      <div
-        className="time-of-day-badge-chip animate-slide-up interactive-control"
+      {/* 0. Night Mode Toggle Badge (Top Left) */}
+      <button
+        className="night-mode-toggle-chip animate-slide-up interactive-control"
+        onClick={() => { audioSystem.playClick('soft'); setIsNightMode(prev => !prev); }}
         style={{
           position: 'absolute',
           top: '16px',
           left: '16px',
           zIndex: 30,
-          background: 'rgba(255, 255, 255, 0.92)',
+          background: isNightMode ? 'rgba(20, 15, 45, 0.88)' : 'rgba(255, 255, 255, 0.92)',
           backdropFilter: 'blur(8px)',
           padding: '6px 14px',
           borderRadius: '20px',
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
-          border: `1.5px solid ${seasonalTheme.accentColor}`
+          boxShadow: isNightMode ? '0 4px 15px rgba(100,80,200,0.25)' : '0 4px 15px rgba(0,0,0,0.08)',
+          border: isNightMode ? '1.5px solid rgba(150,130,255,0.5)' : '1.5px solid rgba(100,200,100,0.4)',
+          cursor: 'pointer',
+          transition: 'all 0.3s ease'
         }}
+        title={isNightMode ? 'Chuyển về Ban Ngày ☀️' : 'Bật Chế Độ Đêm 🌙'}
       >
-        <span style={{ fontSize: '18px' }}>{period === 'night' ? '🌙' : period === 'sunset' ? '🌅' : '☀️'}</span>
+        <span style={{ fontSize: '18px' }}>{isNightMode ? '🌙' : '☀️'}</span>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <small style={{ fontSize: '10px', fontWeight: 800, color: seasonalTheme.accentColor, textTransform: 'uppercase' }}>
-            {seasonalTheme.title}
+          <small style={{ fontSize: '10px', fontWeight: 800, color: isNightMode ? '#c4b5fd' : '#38a169', textTransform: 'uppercase' }}>
+            {isNightMode ? 'ĐÊM SAO' : 'BAN NGÀY'}
           </small>
-          <strong style={{ fontSize: '12px', color: '#2b2d42' }}>{atmosphere.label}</strong>
+          <strong style={{ fontSize: '12px', color: isNightMode ? '#e2e8f0' : '#2b2d42' }}>
+            {isNightMode ? 'Ánh Trăng & Đom Đóm' : 'Nắng Ấm Thị Trấn'}
+          </strong>
         </div>
-      </div>
+      </button>
 
       {/* 1. Zoom Controls & Tutorial Button (Top Right) */}
       <div className="map-zoom-hud interactive-control">

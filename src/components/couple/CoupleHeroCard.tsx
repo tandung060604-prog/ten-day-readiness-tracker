@@ -66,15 +66,23 @@ export function CoupleHeroCard({ profile = DEMO_COUPLE_PROFILE }: Props) {
         </p>
       </div>
 
-      {/* Couple Avatars with Heart Connection */}
+      {/* Couple Avatars with Heart Connection (Real Photos of Couple) */}
       <div className="couple-avatars-row">
-        {/* Player 1 */}
+        {/* Player 1 - Dũng */}
         <div className="couple-avatar-wrap">
-          <div className="couple-avatar-ring dung-ring" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff0f3' }}>
-            <ChiikawaSVG character={p1.avatarCharacter} size={54} />
+          <div className="couple-avatar-ring dung-ring">
+            <img
+              src="./assets/dung.jpg"
+              alt={p1.nickname}
+              className="couple-real-photo"
+              onError={(e) => {
+                // Fallback to character svg if image fails
+                e.currentTarget.style.display = 'none'
+              }}
+            />
           </div>
           <strong className="couple-name">{p1.nickname}</strong>
-          <span className="couple-role-tag">{p1.roleTitle || 'Đồng hành yêu thương'}</span>
+          <span className="couple-role-tag">{p1.roleTitle || 'Người yêu thương em'}</span>
         </div>
 
         {/* Animated Heart Center */}
@@ -90,13 +98,20 @@ export function CoupleHeroCard({ profile = DEMO_COUPLE_PROFILE }: Props) {
           </div>
         </div>
 
-        {/* Player 2 */}
+        {/* Player 2 - Em Yêu */}
         <div className="couple-avatar-wrap">
-          <div className="couple-avatar-ring love-ring" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff9e6' }}>
-            <ChiikawaSVG character={p2.avatarCharacter} size={54} />
+          <div className="couple-avatar-ring love-ring">
+            <img
+              src="./assets/nguoiyeu.jpg"
+              alt={p2.nickname}
+              className="couple-real-photo"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none'
+              }}
+            />
           </div>
           <strong className="couple-name">{p2.nickname}</strong>
-          <span className="couple-role-tag">{p2.roleTitle || 'Đồng hành ngọt ngào'}</span>
+          <span className="couple-role-tag">{p2.roleTitle || 'Công chúa của anh'}</span>
         </div>
       </div>
 
@@ -118,6 +133,17 @@ export function CoupleHeroCard({ profile = DEMO_COUPLE_PROFILE }: Props) {
           <span className="time-val">{String(seconds).padStart(2, '0')}</span>
           <span className="time-lbl">Giây</span>
         </div>
+      </div>
+
+      {/* Heartfelt Note: Vì Sao Anh Viết App Này Cho Em */}
+      <div className="couple-heartfelt-letter-card">
+        <div className="heartfelt-letter-header">
+          <span className="letter-icon">💌</span>
+          <h4>Vì Sao Anh Viết Ứng Dụng Này Dành Riêng Cho Em?</h4>
+        </div>
+        <p className="heartfelt-letter-body">
+          "Gửi em yêu của anh! App này anh lập trình riêng tặng em để làm tổ ấm kỷ niệm của hai đứa mình. Anh muốn mỗi ngày đều có thể đồng hành, nhắc em uống đủ nước, ngủ đủ giấc, chăm sóc em từng ngày nhạy cảm và cùng nhau đếm ngược chuẩn bị chu đáo nhất cho chuyến đi biển Nha Trang 27/08. Yêu em thật nhiều! 💖✨"
+        </p>
       </div>
 
       {/* Cozy Note */}

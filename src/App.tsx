@@ -70,7 +70,7 @@ export function App() {
   // Game Scene States: 'splash' -> 'map' | 'module'
   const [gameScene, setGameScene] = useState<'splash' | 'map' | 'module'>(() => {
     try {
-      return localStorage.getItem('little_days_has_entered_game') === 'true' ? 'map' : 'splash'
+      return sessionStorage.getItem('little_days_has_entered_game') === 'true' ? 'map' : 'splash'
     } catch {
       return 'splash'
     }
@@ -281,7 +281,7 @@ export function App() {
   // Handle Splash Screen enter with selected character and target location
   const handleEnterFromSplash = (role: 'chiikawa' | 'usagi', targetLoc: LocationId | 'map' = 'map') => {
     try {
-      localStorage.setItem('little_days_has_entered_game', 'true')
+      sessionStorage.setItem('little_days_has_entered_game', 'true')
     } catch { /* ignore */ }
     setActiveRole(role)
     triggerTransition('cloud', targetLoc)

@@ -46,7 +46,7 @@ export function TopHUD({
         <div className="hud-profile__avatars" style={{ background: activeRole === 'chiikawa' ? '#fff0f3' : '#fff9e6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <ChiikawaSVG character={activeRole} size={28} />
           <span className="hud-char-role-badge">
-            {activeRole === 'chiikawa' ? '🐹' : '🐰'}
+            <img src={activeRole === 'chiikawa' ? './assets/chiikawa.png' : './assets/usagi.png'} alt={activeRole} style={{ width: 18, height: 18, objectFit: 'contain', borderRadius: '50%' }} />
           </span>
         </div>
         <div className="hud-profile__info">

@@ -240,7 +240,6 @@ export function getMonthlyCalendarGrid(
   const daysInMonth = lastDayOfMonth.getDate()
 
   const grid: CalendarDayInfo[] = []
-  const msPerDay = 1000 * 60 * 60 * 24
   const lastStart = parseDate(settings.lastPeriodStartDate)
 
   // Previous month trailing days

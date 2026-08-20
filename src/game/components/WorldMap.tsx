@@ -6,6 +6,9 @@ import { playChiikawaVoice } from '../../utils/chiikawaAudio'
 import { speakVietnamese, BUILDING_VIETNAMESE_VOICES } from '../../utils/vietnameseAudio'
 import { MapAnimationCanvas } from './MapAnimationCanvas'
 import { GameTutorialModal, TUTORIAL_STEPS } from './GameTutorialModal'
+import { getTimeOfDayPeriod, getAtmosphereConfig, getSunMoonPosition } from '../../domain/world/timeOfDay'
+import { detectSeasonalTheme } from '../../domain/world/seasonalTheme'
+import type { MascotMapPosition } from '../../domain/world/types'
 import type { TutorialStep } from './GameTutorialModal'
 import type { LocationId, MapBuilding, TransitionType } from '../types'
 import type { ChiikawaCharacter } from '../../utils/chiikawaAudio'
@@ -426,6 +429,21 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
   const [showTutorial, setShowTutorial] = useState(true)
   const [tutorialActiveBuildingId, setTutorialActiveBuildingId] = useState<LocationId | null>('home')
 
+  // Living World Engine: Time of Day & Seasonal Atmospheres
+  const period = getTimeOfDayPeriod()
+  const atmosphere = getAtmosphereConfig(period)
+  const sunMoon = getSunMoonPosition(period)
+  const seasonalTheme = detectSeasonalTheme(null)
+
+  // Character Map Locomotion State
+  const [mascotPos, setMascotPos] = useState<MascotMapPosition>({
+    x: 48,
+    y: 55,
+    isMoving: false,
+    facing: 'right',
+    targetBuildingId: null
+  })
+
   // Zoom & Clamped Pan Engine (Farm Game Style - cannot drag out of bounds)
   const [zoom, setZoom] = useState(1.0)
   const [pan, setPan] = useState({ x: 0, y: 0 })
@@ -606,10 +624,27 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
     }
   }, [handleMouseMove, handleMouseUp])
 
-  // Click on Building -> Play SFX, Vietnamese Voice Speech & Open Story Modal
+  // Click on Building -> Mascot Locomotion, Play SFX, Speech & Open Story Modal
   const handleBuildingClick = (b: (typeof MAP_BUILDINGS)[0]) => {
     recordMapActivity()
     audioSystem.playBuildingInspectSFX(b.id)
+
+    // Smooth Mascot Locomotion Walk to building anchor
+    const targetX = b.x
+    const targetY = b.y + 6
+    const facing = targetX < mascotPos.x ? 'left' : 'right'
+    setMascotPos({
+      x: targetX,
+      y: targetY,
+      isMoving: true,
+      facing,
+      targetBuildingId: b.id
+    })
+
+    setTimeout(() => {
+      setMascotPos((prev) => ({ ...prev, isMoving: false }))
+    }, 450)
+
     const phrase = playChiikawaVoice(b.story.voiceChar)
     setActiveVoicePhrase(`${b.story.charName}: "${phrase}"`)
     setActiveStoryBuilding(b)
@@ -659,6 +694,39 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchEnd}
     >
+      {/* ══════ LIVING TIME-OF-DAY ATMOSPHERIC LIGHTING ══════ */}
+      <div
+        className={`time-of-day-atmosphere-overlay period-${period}`}
+        style={{
+          background: atmosphere.skyGradient,
+          position: 'absolute',
+          inset: 0,
+          opacity: period === 'night' ? 0.38 : period === 'sunset' ? 0.28 : 0.12,
+          pointerEvents: 'none',
+          zIndex: 2,
+          transition: 'all 1s ease'
+        }}
+      />
+
+      {/* Dynamic Sun/Moon Celestial Body */}
+      <div
+        className="celestial-body-indicator animate-pulse"
+        style={{
+          position: 'absolute',
+          left: `${sunMoon.x}%`,
+          top: `${sunMoon.y}%`,
+          transform: 'translate(-50%, -50%)',
+          fontSize: '32px',
+          filter: `drop-shadow(0 0 20px ${atmosphere.sunlightGlow})`,
+          zIndex: 3,
+          pointerEvents: 'none',
+          transition: 'left 1s ease, top 1s ease'
+        }}
+        title={`${atmosphere.label} (${period})`}
+      >
+        {period === 'night' ? '🌙' : period === 'sunset' ? '🌅' : '☀️'}
+      </div>
+
       {/* ══════ SUNLIGHT GOD RAYS & VOLUMETRIC ATMOSPHERE ══════ */}
       <div className="sunlight-god-rays" />
 
@@ -698,6 +766,23 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
         {/* ── Darkened Canvas Overlay during Tutorial (Dims everything except active building) ── */}
         {showTutorial && <div className="map-tutorial-dimmed-backdrop animate-fade-in" />}
 
+        {/* Dynamic Walking Mascot Wanderer */}
+        <div
+          className={`world-mascot-wanderer ${mascotPos.isMoving ? 'mascot-walking' : 'mascot-idle'}`}
+          style={{
+            position: 'absolute',
+            left: `${mascotPos.x}%`,
+            top: `${mascotPos.y}%`,
+            transform: `translate(-50%, -50%) scaleX(${mascotPos.facing === 'left' ? -1 : 1})`,
+            transition: 'left 0.45s cubic-bezier(0.25, 1, 0.5, 1), top 0.45s cubic-bezier(0.25, 1, 0.5, 1)',
+            zIndex: 14,
+            pointerEvents: 'none'
+          }}
+        >
+          <ChiikawaSVG character="chiikawa" size={48} className={mascotPos.isMoving ? 'animate-bounce-gentle' : ''} />
+          <span className="mascot-footstep-shadow" />
+        </div>
+
         {/* 3. Farming-Game Style 3D Isometric Buildings (Natural Idle Bobbing, Zero Permanent Text) */}
         {MAP_BUILDINGS.map((b) => {
           const isSelected = activeStoryBuilding?.id === b.id
@@ -713,6 +798,15 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
                 '--bldg-theme-color': b.color,
                 '--bldg-theme-glow': b.glow
               } as React.CSSProperties}
+              tabIndex={0}
+              role="button"
+              aria-label={`${b.name} - ${b.subtitle}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  handleBuildingClick(b)
+                }
+              }}
               onClick={(e) => {
                 e.stopPropagation()
                 handleBuildingClick(b)
@@ -779,6 +873,34 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
       </div>
 
       {/* ══════ MAP OVERLAY HUD (Fixed UI Controls) ══════ */}
+
+      {/* 0. Living Time of Day & Seasonal Badge (Top Left) */}
+      <div
+        className="time-of-day-badge-chip animate-slide-up interactive-control"
+        style={{
+          position: 'absolute',
+          top: '16px',
+          left: '16px',
+          zIndex: 30,
+          background: 'rgba(255, 255, 255, 0.92)',
+          backdropFilter: 'blur(8px)',
+          padding: '6px 14px',
+          borderRadius: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
+          border: `1.5px solid ${seasonalTheme.accentColor}`
+        }}
+      >
+        <span style={{ fontSize: '18px' }}>{period === 'night' ? '🌙' : period === 'sunset' ? '🌅' : '☀️'}</span>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <small style={{ fontSize: '10px', fontWeight: 800, color: seasonalTheme.accentColor, textTransform: 'uppercase' }}>
+            {seasonalTheme.title}
+          </small>
+          <strong style={{ fontSize: '12px', color: '#2b2d42' }}>{atmosphere.label}</strong>
+        </div>
+      </div>
 
       {/* 1. Zoom Controls & Tutorial Button (Top Right) */}
       <div className="map-zoom-hud interactive-control">

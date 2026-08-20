@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { SetPinModal } from '../components/security/SetPinModal'
+import { ChiikawaSVG } from '../components/common/ChiikawaSVG'
 import { getNotificationPermission, requestNotificationPermission, testNotification } from '../utils/notifications'
 import { downloadCalendarICS } from '../utils/calendarSync'
 import { triggerHaptic } from '../utils/haptics'
 import type { AppSettings } from '../types'
+import type { CoupleProfile } from '../domain/couple/types'
 
 type Props = {
   settings: AppSettings
   setSettings: React.Dispatch<React.SetStateAction<AppSettings>>
+  profile?: CoupleProfile
+  onUpdateProfile?: (profile: CoupleProfile) => void
   exportData: () => void
   importData: (f: File | undefined) => void
   resetData: () => void
@@ -16,6 +20,8 @@ type Props = {
 export function SettingsView({
   settings,
   setSettings,
+  profile,
+  onUpdateProfile,
   exportData,
   importData,
   resetData
@@ -206,6 +212,118 @@ export function SettingsView({
           📅 Đồng bộ lịch trình 10 ngày vào Lịch iPhone / Google (.ICS)
         </button>
       </section>
+
+      {/* Couple Profile & Personalization */}
+      {profile && onUpdateProfile && (
+        <section className="card couple-settings-card">
+          <div className="section-head">
+            <div>
+              <small>HỒ SƠ CẶP ĐÔI &amp; LINH VẬT (COUPLE PROFILE)</small>
+              <h3>Tổ ấm của chúng mình</h3>
+            </div>
+            <span className="soft-badge">🌸 Living Town</span>
+          </div>
+
+          <p className="settings-desc">
+            Tùy chỉnh tên gọi, linh vật đồng hành và ngày kỷ niệm của hai bạn. Mọi thông tin được bảo mật cục bộ 100% trên thiết bị.
+          </p>
+
+          <div className="form-grid">
+            <label className="settings-field">
+              <span>Tên / Biệt danh Bạn (Player 1)</span>
+              <input
+                type="text"
+                value={profile.player1.nickname || profile.player1.displayName}
+                onChange={(e) =>
+                  onUpdateProfile({
+                    ...profile,
+                    player1: {
+                      ...profile.player1,
+                      displayName: e.target.value,
+                      nickname: e.target.value
+                    }
+                  })
+                }
+              />
+            </label>
+
+            <label className="settings-field">
+              <span>Linh vật của Bạn</span>
+              <select
+                value={profile.player1.avatarCharacter}
+                onChange={(e) =>
+                  onUpdateProfile({
+                    ...profile,
+                    player1: {
+                      ...profile.player1,
+                      avatarCharacter: e.target.value as 'chiikawa' | 'usagi'
+                    },
+                    player2: {
+                      ...profile.player2,
+                      avatarCharacter: e.target.value === 'chiikawa' ? 'usagi' : 'chiikawa'
+                    }
+                  })
+                }
+                style={{ padding: '10px', borderRadius: '10px', border: '1px solid var(--border)' }}
+              >
+                <option value="chiikawa">Bé Chiikawa 🐹 (Ấm áp, chu đáo)</option>
+                <option value="usagi">Thỏ Usagi 🐰 (Năng lượng siêu cấp)</option>
+              </select>
+            </label>
+
+            <label className="settings-field">
+              <span>Tên / Biệt danh Người Ấy (Player 2)</span>
+              <input
+                type="text"
+                value={profile.player2.nickname || profile.player2.displayName}
+                onChange={(e) =>
+                  onUpdateProfile({
+                    ...profile,
+                    player2: {
+                      ...profile.player2,
+                      displayName: e.target.value,
+                      nickname: e.target.value
+                    }
+                  })
+                }
+              />
+            </label>
+
+            <label className="settings-field">
+              <span>Ngày bắt đầu yêu nhau</span>
+              <input
+                type="date"
+                value={profile.relationshipStartDate || '2026-06-11'}
+                onChange={(e) =>
+                  onUpdateProfile({
+                    ...profile,
+                    relationshipStartDate: e.target.value,
+                    importantDates: profile.importantDates.map((d) =>
+                      d.category === 'anniversary' ? { ...d, date: e.target.value } : d
+                    )
+                  })
+                }
+              />
+            </label>
+          </div>
+
+          <div style={{ display: 'flex', gap: '12px', marginTop: '16px', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <ChiikawaSVG character={profile.player1.avatarCharacter} size={36} />
+              <span style={{ fontSize: '13px', fontWeight: 700 }}>
+                {profile.player1.nickname || profile.player1.displayName}
+              </span>
+            </div>
+            <span style={{ color: '#e63956', fontWeight: 800 }}>❤️</span>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <ChiikawaSVG character={profile.player2.avatarCharacter} size={36} />
+              <span style={{ fontSize: '13px', fontWeight: 700 }}>
+                {profile.player2.nickname || profile.player2.displayName}
+              </span>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Routine & Schedule Preferences */}
       <section className="card">

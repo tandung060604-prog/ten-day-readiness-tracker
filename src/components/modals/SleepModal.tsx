@@ -24,7 +24,7 @@ export function SleepModal({ initialSleep, onClose, onSave }: Props) {
     try {
       const [bH, bM] = bed.split(':').map(Number)
       const [wH, wM] = wake.split(':').map(Number)
-      let bMinutes = bH * 60 + bM
+      const bMinutes = bH * 60 + bM
       let wMinutes = wH * 60 + wM
       if (wMinutes < bMinutes) {
         wMinutes += 24 * 60

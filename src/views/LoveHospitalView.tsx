@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { ChiikawaSVG } from '../components/common/ChiikawaSVG'
-import { GameIcon } from '../components/common/GameIcons'
 import { audioSystem } from '../game/systems/GameAudioSystem'
 import { speakVietnamese } from '../utils/vietnameseAudio'
 import {
@@ -13,6 +12,7 @@ import {
   formatVNDate
 } from '../utils/menstrualEngine'
 import type { DayMenstrualLog, MenstrualCycleSettings } from '../utils/menstrualEngine'
+import type { CoupleProfile } from '../domain/couple/types'
 
 const SYMPTOMS_LIST = [
   { id: 'cramps', label: 'Đau bụng dưới', icon: '😣' },
@@ -34,7 +34,11 @@ const MOODS_LIST = [
   { id: 'irritated', label: 'Hơi cáu nhẹ', icon: '😤' }
 ]
 
-export function LoveHospitalView() {
+type Props = {
+  profile?: CoupleProfile
+}
+
+export function LoveHospitalView({ profile }: Props) {
   const [activeTab, setActiveTab] = useState<'tracker' | 'haruGuide' | 'calendar' | 'settings'>('tracker')
   const [settings, setSettings] = useState<MenstrualCycleSettings>(() => loadCycleSettings())
   const [dailyLogs, setDailyLogs] = useState<Record<string, DayMenstrualLog>>(() => loadDailyLogs())
@@ -119,6 +123,9 @@ export function LoveHospitalView() {
     'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
   ]
 
+  const boyName = profile?.player1.nickname || 'Bạn Nam'
+  const girlName = profile?.player2.nickname || 'Bạn Nữ'
+
   const calendarGrid = getMonthlyCalendarGrid(2026, calMonthOffset, settings, dailyLogs)
 
   return (
@@ -129,9 +136,9 @@ export function LoveHospitalView() {
           <div className="hospital-badge-chip">
             <span>🏥 BỆNH VIỆN TÌNH YÊU · FLO CYCLE HEALTH</span>
           </div>
-          <h1 className="hospital-hero-title">Sức Khỏe &amp; Chu Kỳ Của Mai Trang 🌸</h1>
+          <h1 className="hospital-hero-title">Sức Khỏe &amp; Chu Kỳ Của {girlName} 🌸</h1>
           <p className="hospital-hero-subtitle">
-            Theo dõi chu kỳ kinh nguyệt khoa học chuẩn <strong>Flo App</strong>, dự đoán ngày rụng trứng, cảnh báo lịch trình và cẩm nang chăm sóc cho <strong>Haru</strong>.
+            Theo dõi chu kỳ kinh nguyệt khoa học chuẩn <strong>Flo App</strong>, dự đoán ngày rụng trứng, cảnh báo lịch trình và cẩm nang chăm sóc cho <strong>{boyName}</strong>.
           </p>
         </div>
 
@@ -327,55 +334,55 @@ export function LoveHospitalView() {
       )}
 
       {/* ══════════════════════════════════════════════════════════════════
-         TAB 2: HARU'S CARE GUIDE (FOR BOYFRIEND DŨNG)
+         TAB 2: CARE GUIDE (FOR PARTNER)
          ══════════════════════════════════════════════════════════════════ */}
       {activeTab === 'haruGuide' && (
         <div className="hospital-haru-guide-view animate-slide-up">
           <div className="haru-guide-hero-banner">
             <div className="guide-hero-badge">
-              <span>🐹 BÍ KÍP YÊU THƯƠNG DÀNH RIÊNG CHO HARU</span>
+              <span>🐹 BÍ KÍP YÊU THƯƠNG DÀNH CHO {boyName.toUpperCase()}</span>
             </div>
-            <h2>Cách Chăm Sóc Mai Trang Chu Đáo &amp; Ngọt Ngào Nhất 💖</h2>
-            <p>Trong những ngày nhạy cảm và sắp tới kỳ kinh, một chút quan tâm ấm áp của Haru sẽ là liều thuốc xoa dịu tuyệt vời nhất cho bạn gái!</p>
+            <h2>Cách Chăm Sóc {girlName} Chu Đáo &amp; Ngọt Ngào Nhất 💖</h2>
+            <p>Trong những ngày nhạy cảm và sắp tới kỳ kinh, một chút quan tâm ấm áp của {boyName} sẽ là liều thuốc xoa dịu tuyệt vời nhất cho {girlName}!</p>
           </div>
 
           <div className="care-guide-cards-grid">
             <div className="care-card care-tea">
               <span className="care-card-icon">🫖</span>
               <h3>1. Nước Ấm &amp; Trà Gừng Mật Ong</h3>
-              <p>Chủ động mang nước ấm cho Mai Trang, pha trà hoa cúc hoặc trà gừng mật ong để làm ấm tử cung và giảm co thắt bụng dưới.</p>
+              <p>Chủ động mang nước ấm cho {girlName}, pha trà hoa cúc hoặc trà gừng mật ong để làm ấm tử cung và giảm co thắt bụng dưới.</p>
             </div>
 
             <div className="care-card care-massage">
               <span className="care-card-icon">💆‍♂️</span>
               <h3>2. Massage &amp; Chườm Ấm</h3>
-              <p>Nhẹ nhàng xoa bóp vùng thắt lưng và bả vai. Chuẩn bị túi chườm ấm để Mai Trang áp lên bụng dưới khi thấy tức mỏi.</p>
+              <p>Nhẹ nhàng xoa bóp vùng thắt lưng và bả vai. Chuẩn bị túi chườm ấm để {girlName} áp lên bụng dưới khi thấy tức mỏi.</p>
             </div>
 
             <div className="care-card care-sweets">
               <span className="care-card-icon">🍫</span>
               <h3>3. Món Ngọt &amp; Đồ Ăn Yêu Thích</h3>
-              <p>Mua socola đen, bánh pudding sữa, dâu tây hoặc món bánh ngọt Mai Trang yêu thích để bổ sung dopamine tăng cảm giác vui vẻ.</p>
+              <p>Mua socola đen, bánh pudding sữa, dâu tây hoặc món ngọt {girlName} yêu thích để bổ sung dopamine tăng cảm giác vui vẻ.</p>
             </div>
 
             <div className="care-card care-love">
               <span className="care-card-icon">🫂</span>
               <h3>4. Nhường Nhịn &amp; Ôm Thật Nhiều</h3>
-              <p>Khi hormone thay đổi, Mai Trang có thể dễ xúc động hoặc cáu nhẹ. Haru hãy luôn mỉm cười, lắng nghe và ôm bạn gái vào lòng nhé!</p>
+              <p>Khi hormone thay đổi, {girlName} có thể dễ xúc động hoặc cáu nhẹ. {boyName} hãy luôn mỉm cười, lắng nghe và ôm bạn gái vào lòng nhé!</p>
             </div>
           </div>
 
-          {/* Special Nha Trang Trip Packing Checklist for Boyfriend */}
+          {/* Special Trip Packing Checklist for Partner */}
           <div className="haru-packing-checklist-card">
             <div className="card-header-row">
               <span className="header-icon">🎒</span>
-              <h3>Checklist Hành Lý Đi Nha Trang 27/08 (Haru Nhắc Nhở)</h3>
+              <h3>Checklist Hành Lý Chuyến Đi ({boyName} Nhắc Nhở)</h3>
             </div>
             <ul className="haru-checklist-ul">
-              <li>✅ <strong>Băng vệ sinh &amp; Tampon:</strong> Nhắc Mai Trang mang đủ loại ban ngày, ban đêm và loại siêu mỏng đi biển.</li>
-              <li>✅ <strong>Túi sưởi mini dán bụng:</strong> Mua sẵn 3-5 miếng dán nhiệt giữ ấm bụng khi di chuyển trên máy bay.</li>
+              <li>✅ <strong>Băng vệ sinh &amp; Tampon:</strong> Nhắc {girlName} mang đủ loại ban ngày, ban đêm và loại siêu mỏng khi đi xa.</li>
+              <li>✅ <strong>Túi sưởi mini dán bụng:</strong> Mua sẵn 3-5 miếng dán nhiệt giữ ấm bụng khi di chuyển trên xe/máy bay.</li>
               <li>✅ <strong>Thuốc giảm đau bụng kinh (Drotavet / Paracetamol):</strong> Mang theo dự phòng trong balo cá nhân.</li>
-              <li>✅ <strong>Đồ bơi &amp; Trang phục tối màu:</strong> Ưu tiên váy maxi mềm, quần shorts cotton co giãn thoáng mát.</li>
+              <li>✅ <strong>Trang phục thoáng mát:</strong> Ưu tiên váy mềm, quần shorts cotton co giãn thoáng mát.</li>
             </ul>
           </div>
         </div>

@@ -1,8 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
+import { ErrorBoundary } from './components/common/ErrorBoundary'
+import { GameStateProvider } from './context/GameStateContext'
 import './styles.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode><App /></React.StrictMode>,
+  <React.StrictMode>
+    <ErrorBoundary>
+      <GameStateProvider>
+        <App />
+      </GameStateProvider>
+    </ErrorBoundary>
+  </React.StrictMode>,
 )
+
+

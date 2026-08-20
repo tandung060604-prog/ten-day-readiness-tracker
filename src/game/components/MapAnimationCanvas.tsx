@@ -49,8 +49,8 @@ export function MapAnimationCanvas() {
     if (!ctx) return
 
     let animationFrameId: number
-    let width = (canvas.width = 1920)
-    let height = (canvas.height = 1080)
+    const width = (canvas.width = 1920)
+    const height = (canvas.height = 1080)
 
     // Chimney positions in 1920x1080 coordinates
     const chimneys = [

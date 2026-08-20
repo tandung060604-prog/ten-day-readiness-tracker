@@ -23,54 +23,18 @@ import { TransitionSystem } from './game/systems/TransitionSystem'
 import { audioSystem } from './game/systems/GameAudioSystem'
 import { defaultSettings, seededLogs, trainingPlan } from './data/plan'
 import { readiness } from './utils/readiness'
+import { CoupleSetupModal } from './components/onboarding/CoupleSetupModal'
+import { GameDevToolsModal } from './components/dev/GameDevToolsModal'
+import { useGameState } from './context/GameStateContext'
+import { getItemDefinition } from './domain/game/itemCatalog'
+import { coupleProfileRepository } from './storage/coupleProfileRepository'
+import { getRelationshipDays } from './domain/couple/selectors'
 import type { AppSettings, DailyLog, Exercise, MealEntry } from './types'
 import type { GameStats, InventoryItem, LocationId, TransitionType } from './game/types'
+import type { CoupleProfile } from './domain/couple/types'
 
 const STORAGE_KEY = 'ten-day-readiness-v1'
 const SETTINGS_KEY = 'ten-day-readiness-settings-v1'
-
-const INITIAL_INVENTORY: InventoryItem[] = [
-  {
-    id: 'strawberries',
-    name: 'Dâu Tây Ngọt Lành',
-    icon: '🍓',
-    description: 'Trái cây vitamin bổ sung năng lượng sạch cho buổi tập.',
-    count: 12,
-    category: 'food'
-  },
-  {
-    id: 'pudding',
-    name: 'Bánh Pudding Sữa',
-    icon: '🍮',
-    description: 'Món tráng miệng ngọt ngào bé Chiikawa cực kỳ yêu thích.',
-    count: 5,
-    category: 'food'
-  },
-  {
-    id: 'gold_star',
-    name: 'Ngôi Sao Kỷ Luật',
-    icon: '⭐',
-    description: 'Huy hiệu hoàn thành 100% checklist ngày.',
-    count: 10,
-    category: 'special'
-  },
-  {
-    id: 'love_ribbon',
-    name: 'Dây Ruy Băng Tình Yêu',
-    icon: '🎀',
-    description: 'Biểu tượng kỷ niệm ngày yêu nhau 11/06 của Dũng & Em Yêu.',
-    count: 1,
-    category: 'souvenir'
-  },
-  {
-    id: 'beach_shell',
-    name: 'Vỏ Sò Biển Nha Trang',
-    icon: '🐚',
-    description: 'Quà lưu niệm chuẩn bị cho chuyến bay 27/08.',
-    count: 3,
-    category: 'decoration'
-  }
-]
 
 function loadLogs(): DailyLog[] {
   try {
@@ -104,20 +68,52 @@ export function App() {
     isActive: false
   })
 
+  // Authoritative Game State Engine
+  const { state: gameState } = useGameState()
+  const [isDevToolsOpen, setIsDevToolsOpen] = useState(false)
+
   // Tracker Engine State
   const [logs, setLogs] = useState<DailyLog[]>(loadLogs)
   const [settings, setSettings] = useState<AppSettings>(loadSettings)
   const [showAddMealModal, setShowAddMealModal] = useState(false)
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null)
-  const [inventoryItems] = useState<InventoryItem[]>(INITIAL_INVENTORY)
   const [isHudHidden, setIsHudHidden] = useState(false)
   const [activeRole, setActiveRole] = useState<'chiikawa' | 'usagi'>('chiikawa')
+
+  // Toggle DevTools with Ctrl+Shift+D
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'd') {
+        e.preventDefault()
+        setIsDevToolsOpen((prev) => !prev)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   // Security Lock State
   const [isLocked, setIsLocked] = useState<boolean>(() => {
     return !!(settings.isLockEnabled && settings.pinHash)
   })
   const lastActiveTimeRef = useRef<number>(Date.now())
+
+  // Couple Profile & Onboarding State
+  const [profile, setProfile] = useState<CoupleProfile>(() => coupleProfileRepository.loadProfile())
+  const [showSetupModal, setShowSetupModal] = useState<boolean>(() => !coupleProfileRepository.hasCustomProfile())
+
+  const handleSetupComplete = (newProfile: CoupleProfile) => {
+    coupleProfileRepository.saveProfile(newProfile)
+    setProfile(newProfile)
+    setShowSetupModal(false)
+  }
+
+  const handleSkipSetupToDemo = () => {
+    const demo = coupleProfileRepository.resetToDemo()
+    coupleProfileRepository.saveProfile(demo)
+    setProfile(demo)
+    setShowSetupModal(false)
+  }
 
   // Persist logs & settings
   useEffect(() => {
@@ -276,25 +272,43 @@ export function App() {
     triggerTransition(transition, locationId)
   }
 
-  // Love days counter
-  const loveStart = new Date('2026-06-11T00:00:00')
-  const nowDate = new Date()
-  const loveDays = Math.max(0, Math.floor((nowDate.getTime() - loveStart.getTime()) / 86400000))
+  // Love days counter derived from CoupleProfile
+  const loveDays = getRelationshipDays(profile)
 
-  // Game Stats for Top HUD
-  const completedDays = logs.filter((l) => l.checklist.every((c) => c.done)).length
+  // Game Stats for Top HUD sourced directly from Authoritative Game State
   const gameStats: GameStats = {
-    hearts: 12520 + loveDays * 10,
-    stars: completedDays * 864 + 200,
-    gems: logs.filter((l) => l.workout?.completed).length * 125 + 500,
+    hearts: gameState.currencies.hearts,
+    stars: gameState.currencies.stars,
+    gems: gameState.currencies.coins,
     energy: 60,
     energyMax: 60,
-    level: 28 + completedDays,
-    levelProgress: Math.min(100, currentScore),
+    level: gameState.progression.level,
+    levelProgress: Math.min(100, Math.floor((gameState.progression.xp / Math.max(1, gameState.progression.xpToNextLevel)) * 100)),
     loveDays,
     day,
     maxDays: 10
   }
+
+  // Authoritative Inventory Items for InventoryModal
+  const inventoryItems: InventoryItem[] = gameState.inventory.map((slot) => {
+    const def = getItemDefinition(slot.itemId)
+    let category: 'food' | 'souvenir' | 'decoration' | 'special' = 'special'
+    if (def.category === 'food' || def.category === 'ingredients') {
+      category = 'food'
+    } else if (def.category === 'decorations') {
+      category = 'decoration'
+    } else if (def.category === 'souvenirs' || def.category === 'memories') {
+      category = 'souvenir'
+    }
+    return {
+      id: slot.itemId,
+      name: def.name,
+      icon: def.icon,
+      description: def.description,
+      count: slot.quantity,
+      category
+    }
+  })
 
   return (
     <div className="game-app-root">
@@ -320,7 +334,7 @@ export function App() {
         <LandingPage onEnterApp={() => setShowLanding(false)} />
       ) : gameScene === 'splash' ? (
         /* 1. Splash Screen Scene */
-        <SplashScreen onEnterGame={handleEnterFromSplash} />
+        <SplashScreen onEnterGame={handleEnterFromSplash} profile={profile} />
       ) : (
         /* 2. Main Game World Scene */
         <div className={`game-canvas-container ${isHudHidden && currentLocation === 'map' ? 'hud-auto-hidden' : ''}`}>
@@ -329,6 +343,7 @@ export function App() {
             <TopHUD
               stats={gameStats}
               activeRole={activeRole}
+              profile={profile}
               onOpenSettings={() => triggerTransition('gear', 'settings')}
               onOpenHome={() => triggerTransition('heart', 'home')}
               onOpenQuests={() => triggerTransition('cloud', 'quests')}
@@ -356,6 +371,7 @@ export function App() {
                     day={day}
                     score={currentScore}
                     settings={settings}
+                    profile={profile}
                     toggleChecklist={toggleChecklist}
                     addWater={addWater}
                     toggleWorkout={toggleWorkout}
@@ -512,6 +528,11 @@ export function App() {
                   <SettingsView
                     settings={settings}
                     setSettings={setSettings}
+                    profile={profile}
+                    onUpdateProfile={(p) => {
+                      coupleProfileRepository.saveProfile(p)
+                      setProfile(p)
+                    }}
                     exportData={exportData}
                     importData={importData}
                     resetData={resetData}
@@ -520,7 +541,7 @@ export function App() {
 
                 {/* 13. Love Hospital (Flo Menstrual Cycle & Health) Module */}
                 {currentLocation === 'hospital' && (
-                  <LoveHospitalView />
+                  <LoveHospitalView profile={profile} />
                 )}
               </BuildingModuleModal>
             )}
@@ -557,6 +578,19 @@ export function App() {
         isOpen={isInventoryOpen}
         onClose={() => setIsInventoryOpen(false)}
         items={inventoryItems}
+      />
+
+      {/* Onboarding Couple Setup Modal */}
+      <CoupleSetupModal
+        isOpen={showSetupModal}
+        onComplete={handleSetupComplete}
+        onSkipToDemo={handleSkipSetupToDemo}
+      />
+
+      {/* Game State Dev Tools Modal */}
+      <GameDevToolsModal
+        isOpen={isDevToolsOpen}
+        onClose={() => setIsDevToolsOpen(false)}
       />
     </div>
   )

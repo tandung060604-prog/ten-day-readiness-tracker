@@ -3,11 +3,14 @@ import { ChiikawaSVG } from '../../components/common/ChiikawaSVG'
 import { GameIcon } from '../../components/common/GameIcons'
 import { audioSystem } from '../systems/GameAudioSystem'
 import { playChiikawaVoice } from '../../utils/chiikawaAudio'
+import { getPlayerByCharacter } from '../../domain/couple/selectors'
+import type { CoupleProfile } from '../../domain/couple/types'
 import type { ChiikawaCharacter } from '../../utils/chiikawaAudio'
 import type { LocationId } from '../types'
 
 type Props = {
   onEnterGame: (character: 'chiikawa' | 'usagi', targetLocation?: LocationId | 'map') => void
+  profile?: CoupleProfile
 }
 
 interface CharacterCard {
@@ -24,44 +27,47 @@ interface CharacterCard {
   quote: string
 }
 
-const CHARACTERS: CharacterCard[] = [
-  {
-    id: 'chiikawa',
-    name: 'Haru (Chiikawa)',
-    jpName: 'ちいかわ',
-    roleTitle: 'Chiến Binh Trắng · Haru',
-    genderTag: 'BẠN NAM · HARU',
-    color: '#ff8da1',
-    glow: 'rgba(255, 141, 161, 0.4)',
-    isLocked: false,
-    desc: 'Đại diện cho Bạn Nam (Haru). Tập trung rèn luyện thể lực cao độ, kỷ luật 10 ngày sẵn sàng và quản lý quỹ du lịch chuẩn bị cho kỳ nghỉ Nha Trang.',
-    features: [
-      '🏋️ Rèn luyện thể lực Gym / Dojo & Tạ mỗi ngày',
-      '💧 Theo dõi lượng nước 2,500ml & Điện giải',
-      '💰 Quản lý Quỹ MOMO du lịch 8 Triệu (Haru góp 5tr)',
-      '🎯 Checklist 10 Ngày Sẵn Sàng đi Nha Trang'
-    ],
-    quote: 'Waaah! Hãy cùng Haru rèn luyện thật chăm chỉ và kiên định mỗi ngày nhé!'
-  },
-  {
-    id: 'usagi',
-    name: 'Mai Trang (Usagi)',
-    jpName: 'うさぎ',
-    roleTitle: 'Năng Lượng Siêu Cấp · Mai Trang',
-    genderTag: 'BẠN NỮ · MAI TRANG',
-    color: '#ffd166',
-    glow: 'rgba(255, 209, 102, 0.4)',
-    isLocked: false,
-    desc: 'Đại diện cho Bạn Nữ (Mai Trang). Tập trung lưu giữ khoảnh khắc ngọt ngào, cảm xúc nhật ký, khám phá ẩm thực và lên kế hoạch hẹn hò lãng mạn.',
-    features: [
-      '📸 Bộ sưu tập Album Ảnh Hẹn Hò & Dấu Mốc Kỷ Niệm',
-      '📖 Thư viện Nhật Ký Cảm Xúc & Lời Nhắn Yêu Thương',
-      '🍷 Lên lịch Bữa Tối Lãng Mạn Queen Ann Sky Lounge',
-      '🏖️ Khám phá Tour 3 Đảo Mini Beach, Hòn Mun & Viện Hải Dương Học',
-      '🌙 Theo dõi Giấc Ngủ 90 Phút & Âm thanh thư giãn'
-    ],
-    quote: 'Ya-haaa! Uraaaa! Chuẩn bị tinh thần và trang phục đẹp cùng Mai Trang để đi biển Nha Trang nào!'
-  },
+function getCharacterCards(profile?: CoupleProfile): CharacterCard[] {
+  const pChiikawa = getPlayerByCharacter(profile, 'chiikawa')
+  const pUsagi = getPlayerByCharacter(profile, 'usagi')
+
+  return [
+    {
+      id: 'chiikawa',
+      name: `${pChiikawa.nickname} (Chiikawa)`,
+      jpName: 'ちいかわ',
+      roleTitle: `${pChiikawa.roleTitle || 'Đồng hành yêu thương'} · ${pChiikawa.nickname}`,
+      genderTag: pChiikawa.genderTag || 'BẠN ĐỒNG HÀNH',
+      color: '#ff8da1',
+      glow: 'rgba(255, 141, 161, 0.4)',
+      isLocked: false,
+      desc: `Đại diện cho ${pChiikawa.nickname}. Tập trung rèn luyện thể lực, thói quen tốt và chăm sóc tổ ấm mỗi ngày.`,
+      features: [
+        '🏋️ Rèn luyện thể lực Gym / Dojo & Tạ mỗi ngày',
+        '💧 Theo dõi lượng nước 2,500ml & Điện giải',
+        '🎯 Checklist 10 Ngày Sẵn Sàng',
+        '💖 Đếm ngày yêu thương và gắn kết'
+      ],
+      quote: `Waaah! Hãy cùng ${pChiikawa.nickname} rèn luyện thật chăm chỉ và kiên định mỗi ngày nhé!`
+    },
+    {
+      id: 'usagi',
+      name: `${pUsagi.nickname} (Usagi)`,
+      jpName: 'うさぎ',
+      roleTitle: `${pUsagi.roleTitle || 'Năng Lượng Siêu Cấp'} · ${pUsagi.nickname}`,
+      genderTag: pUsagi.genderTag || 'BẠN ĐỒNG HÀNH',
+      color: '#ffd166',
+      glow: 'rgba(255, 209, 102, 0.4)',
+      isLocked: false,
+      desc: `Đại diện cho ${pUsagi.nickname}. Tập trung lưu giữ khoảnh khắc ngọt ngào, cảm xúc nhật ký và khám phá ẩm thực.`,
+      features: [
+        '📸 Bộ sưu tập Album Ảnh Hẹn Hò & Dấu Mốc Kỷ Niệm',
+        '📖 Thư viện Nhật Ký Cảm Xúc & Lời Nhắn Yêu Thương',
+        '🍷 Lên lịch hẹn hò và địa điểm yêu thích',
+        '🌙 Theo dõi Giấc Ngủ 90 Phút & Âm thanh thư giãn'
+      ],
+      quote: `Ya-haaa! Uraaaa! Cùng ${pUsagi.nickname} sẵn sàng cho những chuyến phiêu lưu tuyệt vời nào!`
+    },
   {
     id: 'hachiware',
     name: 'Hachiware',
@@ -115,14 +121,17 @@ const CHARACTERS: CharacterCard[] = [
     quote: 'Kỷ luật và kiên trì là chìa khóa của mọi chiến thắng!'
   }
 ]
+}
 
-export function SplashScreen({ onEnterGame }: Props) {
+export function SplashScreen({ onEnterGame, profile }: Props) {
   const [screenStage, setScreenStage] = useState<'title' | 'select'>('title')
   const [selectedChar, setSelectedChar] = useState<'chiikawa' | 'usagi'>('chiikawa')
   const [targetLocation, setTargetLocation] = useState<LocationId | 'map'>('map')
   const [targetTitle, setTargetTitle] = useState<string>('Bản Đồ Thế Giới')
   const [lockedNotice, setLockedNotice] = useState<string | null>(null)
   const [mascotVoiceCheer, setMascotVoiceCheer] = useState<string | null>(null)
+
+  const characters = getCharacterCards(profile)
 
   // Handle clicking on any interactive hotspot in the opening art
   const handleTriggerHotspot = (loc: LocationId | 'map', label: string) => {
@@ -139,7 +148,9 @@ export function SplashScreen({ onEnterGame }: Props) {
     audioSystem.initAudioContext()
     audioSystem.playClick('enter')
     playChiikawaVoice(selectedChar)
-    setMascotVoiceCheer('💖 Ya-haa! Dũng & Em Yêu chúc bạn một ngày tràn đầy niềm vui!')
+    const p1 = profile?.player1.nickname || 'Haru'
+    const p2 = profile?.player2.nickname || 'Mai Trang'
+    setMascotVoiceCheer(`💖 Ya-haa! ${p1} & ${p2} chúc bạn một ngày tràn đầy niềm vui!`)
     setTimeout(() => setMascotVoiceCheer(null), 3000)
   }
 
@@ -355,7 +366,7 @@ export function SplashScreen({ onEnterGame }: Props) {
 
           {/* Characters Grid */}
           <div className="characters-selection-grid">
-            {CHARACTERS.map((char) => {
+            {characters.map((char) => {
               const isSelected = selectedChar === char.id
 
               return (

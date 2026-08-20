@@ -12,8 +12,8 @@ type Props = {
 
 export function SleepTrackerPro({
   sleep,
-  targetBedtime = '23:00',
-  targetWaketime = '07:00',
+  targetBedtime: _targetBedtime = '23:00',
+  targetWaketime: _targetWaketime = '07:00',
   onOpenSleepModal
 }: Props) {
   const [activeSound, setActiveSound] = useState<'rain' | 'ocean' | '432hz' | null>(null)

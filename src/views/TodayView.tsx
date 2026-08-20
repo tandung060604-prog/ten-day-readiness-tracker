@@ -14,6 +14,7 @@ import { triggerConfetti } from '../utils/confetti'
 import { triggerHaptic } from '../utils/haptics'
 import { deskBreaks, schedule, trainingPlan } from '../data/plan'
 import type { AppSettings, DailyLog, Exercise, SleepEntry } from '../types'
+import type { CoupleProfile } from '../domain/couple/types'
 
 type Props = {
   log: DailyLog
@@ -21,6 +22,7 @@ type Props = {
   day: number
   score: number
   settings: AppSettings
+  profile?: CoupleProfile
   toggleChecklist: (id: string) => void
   addWater: (amount: number) => void
   toggleWorkout: () => void
@@ -36,13 +38,14 @@ export function TodayView({
   day,
   score,
   settings,
+  profile,
   toggleChecklist,
   addWater,
   toggleWorkout,
   updateLog,
   setMetric,
   onExercise,
-  onOpenAddMeal
+  onOpenAddMeal: _onOpenAddMeal
 }: Props) {
   const [showSleepModal, setShowSleepModal] = useState(false)
   const remaining = 10 - day
@@ -87,8 +90,8 @@ export function TodayView({
 
   return (
     <div className="view-container animate-fade-in">
-      {/* Couple Hero Section: Love Days & Dũng Greeting */}
-      <CoupleHeroCard />
+      {/* Couple Hero Section: Love Days & Dynamic Couple Greeting */}
+      <CoupleHeroCard profile={profile} />
 
       {/* Flight to Nha Trang 27/08 & MoMo Couple Fund */}
       <NhaTrangTripCard />
@@ -96,7 +99,7 @@ export function TodayView({
       {/* Chiikawa Companion Banner */}
       <ChiikawaVoiceCard
         character="chiikawa"
-        customQuote="Bé Chiikawa cổ vũ Dũng & Em Yêu rèn luyện thể lực mỗi ngày! (Bấm để nghe tiếng kêu cute ✨)"
+        customQuote={`Bé Chiikawa cổ vũ ${profile?.player1.nickname || 'Haru'} & ${profile?.player2.nickname || 'Mai Trang'} rèn luyện thể lực mỗi ngày! (Bấm để nghe tiếng kêu cute ✨)`}
       />
 
       {/* Hero Banner */}

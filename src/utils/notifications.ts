@@ -21,7 +21,7 @@ export async function requestNotificationPermission(): Promise<NotificationPermi
   }
 }
 
-export function sendLocalNotification(title: string, body: string, icon = '✦') {
+export function sendLocalNotification(title: string, body: string, _icon = '✦') {
   if (!isNotificationSupported()) return false
 
   if (Notification.permission === 'granted') {

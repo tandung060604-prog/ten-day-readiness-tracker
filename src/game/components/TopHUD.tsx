@@ -2,16 +2,27 @@ import { useEffect, useState } from 'react'
 import type { GameStats } from '../types'
 import { audioSystem } from '../systems/GameAudioSystem'
 import { GameIcon } from '../../components/common/GameIcons'
+import { ChiikawaSVG } from '../../components/common/ChiikawaSVG'
+import { getPlayerByCharacter } from '../../domain/couple/selectors'
+import type { CoupleProfile } from '../../domain/couple/types'
 
 type Props = {
   stats: GameStats
   activeRole?: 'chiikawa' | 'usagi'
+  profile?: CoupleProfile
   onOpenSettings: () => void
   onOpenHome: () => void
   onOpenQuests: () => void
 }
 
-export function TopHUD({ stats, activeRole = 'chiikawa', onOpenSettings, onOpenHome, onOpenQuests }: Props) {
+export function TopHUD({
+  stats,
+  activeRole = 'chiikawa',
+  profile,
+  onOpenSettings,
+  onOpenHome,
+  onOpenQuests
+}: Props) {
   const [timeStr, setTimeStr] = useState('')
 
   useEffect(() => {
@@ -21,19 +32,22 @@ export function TopHUD({ stats, activeRole = 'chiikawa', onOpenSettings, onOpenH
     return () => clearInterval(t)
   }, [])
 
+  const activePlayer = getPlayerByCharacter(profile, activeRole)
+  const charLabel = activeRole === 'chiikawa' ? 'Chiikawa' : 'Usagi'
+
   return (
     <header className="hud-top">
       {/* ── left: couple profile chip with active character role ── */}
       <button className="hud-profile" onClick={() => { audioSystem.playClick('pop'); onOpenHome() }}>
-        <div className="hud-profile__avatars">
-          <img src={activeRole === 'chiikawa' ? './assets/dung.jpg' : './assets/nguoiyeu.jpg'} alt="Avatar" />
+        <div className="hud-profile__avatars" style={{ background: activeRole === 'chiikawa' ? '#fff0f3' : '#fff9e6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <ChiikawaSVG character={activeRole} size={28} />
           <span className="hud-char-role-badge">
             {activeRole === 'chiikawa' ? '🐹' : '🐰'}
           </span>
         </div>
         <div className="hud-profile__info">
           <strong>
-            {activeRole === 'chiikawa' ? 'Haru (Chiikawa)' : 'Mai Trang (Usagi)'} <GameIcon name="heart" size={13} style={{ marginLeft: 3 }} />
+            {activePlayer.nickname} ({charLabel}) <GameIcon name="heart" size={13} style={{ marginLeft: 3 }} />
           </strong>
           <div className="hud-level-row">
             <span className="hud-level-tag">Level {stats.level}</span>
@@ -58,31 +72,32 @@ export function TopHUD({ stats, activeRole = 'chiikawa', onOpenSettings, onOpenH
         </div>
         <div className="hud-cur hud-cur--star">
           <span className="hud-cur__icon">
-            <GameIcon name="star" size={16} />
+            <GameIcon name="star" size={16} color="#ffd43b" />
           </span>
           <span className="hud-cur__val">{stats.stars.toLocaleString()}</span>
           <button className="hud-cur__plus" onClick={() => audioSystem.playClick('soft')}>＋</button>
         </div>
         <div className="hud-cur hud-cur--gem">
           <span className="hud-cur__icon">
-            <GameIcon name="gem" size={16} />
+            <GameIcon name="gem" size={16} color="#4dabf7" />
           </span>
           <span className="hud-cur__val">{stats.gems.toLocaleString()}</span>
           <button className="hud-cur__plus" onClick={() => audioSystem.playClick('soft')}>＋</button>
         </div>
-        <div className="hud-cur hud-cur--energy">
-          <span className="hud-cur__icon">
-            <GameIcon name="energy" size={16} />
-          </span>
-          <span className="hud-cur__val">{stats.energy}/{stats.energyMax}</span>
-        </div>
       </div>
 
-      {/* ── right: time + settings ── */}
-      <div className="hud-right">
-        <span className="hud-time">{timeStr}</span>
-        <button className="hud-settings-btn" onClick={() => { audioSystem.playClick('soft'); onOpenSettings() }}>
-          <GameIcon name="gear" size={18} color="#495057" />
+      {/* ── right: clock, day badge, settings gear ── */}
+      <div className="hud-actions">
+        <div className="hud-clock">
+          <span className="hud-clock__time">{timeStr}</span>
+          <span className="hud-clock__day">Ngày {stats.day}/{stats.maxDays}</span>
+        </div>
+        <button
+          className="hud-action-btn hud-action-btn--settings"
+          onClick={() => { audioSystem.playClick('pop'); onOpenSettings() }}
+          title="Cài đặt & Tòa thị chính"
+        >
+          <GameIcon name="gear" size={18} />
         </button>
       </div>
     </header>

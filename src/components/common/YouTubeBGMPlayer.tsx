@@ -13,7 +13,6 @@ declare global {
 export function YouTubeBGMPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolume] = useState(20) // default 20%
-  const [isReady, setIsReady] = useState(false)
   const playerRef = useRef<any>(null)
   const containerId = 'yt-bgm-iframe-container'
 
@@ -44,7 +43,6 @@ export function YouTubeBGMPlayer() {
           },
           events: {
             onReady: (event: any) => {
-              setIsReady(true)
               event.target.setVolume(20)
               // Attempt autoplay
               event.target.playVideo()

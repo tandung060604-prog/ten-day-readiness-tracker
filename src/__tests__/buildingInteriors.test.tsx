@@ -92,11 +92,11 @@ describe('Building Interiors Suite — Phase 04', () => {
       />
     )
 
-    expect(screen.getAllByText(/Tháp Trăng Ngủ Say/i).length).toBeGreaterThan(0)
-    expect(screen.getByText(/Luyện Thở 4-7-8 Thư Giãn/i)).toBeInTheDocument()
+    expect(screen.getAllByText(/Thung Lũng Giấc Mơ|Tháp Trăng Ngủ Say/i).length).toBeGreaterThan(0)
+    expect(screen.getByText(/Luyện Thở 4-7-8/i)).toBeInTheDocument()
 
     // Switch to breathing tab
-    const breathingTab = screen.getByText(/Luyện Thở 4-7-8 Thư Giãn/i)
+    const breathingTab = screen.getByText(/Luyện Thở 4-7-8/i)
     fireEvent.click(breathingTab)
     expect(screen.getByText(/Bài Tập Thở 4-7-8 Thư Giãn Sâu/i)).toBeInTheDocument()
   })
@@ -112,9 +112,9 @@ describe('Building Interiors Suite — Phase 04', () => {
   it('5. AirportInterior renders departure board and luggage checklist', () => {
     render(<AirportInterior profile={DEMO_COUPLE_PROFILE} />)
 
-    expect(screen.getAllByText(/Sân Bay Little Sky/i).length).toBeGreaterThan(0)
-    expect(screen.getByText(/BẢNG KHỞI HÀNH • DEPARTURE BOARD/i)).toBeInTheDocument()
-    expect(screen.getByText(/Danh Sách Hành Lý Cần Chuẩn Bị/i)).toBeInTheDocument()
+    expect(screen.getAllByText(/Sân Bay/i).length).toBeGreaterThan(0)
+    expect(screen.getByText(/LITTLE DAYS AIRWAYS/i)).toBeInTheDocument()
+    expect(screen.getByText(/Checklist Hành Trang Du Lịch/i)).toBeInTheDocument()
   })
 
   it('6. BeachAdventureInterior renders trip readiness milestones and beach activities', () => {

@@ -3,6 +3,7 @@ import { SceneShell } from './SceneShell'
 import { BreathingTimer } from '../BreathingTimer'
 import { SleepTrackerPro } from '../features/SleepTrackerPro'
 import { SleepModal } from '../modals/SleepModal'
+import { SoundscapeMixerWidget } from '../common/SoundscapeMixerWidget'
 import { audioSystem } from '../../game/systems/GameAudioSystem'
 import type { DailyLog, SleepEntry } from '../../types'
 
@@ -17,7 +18,7 @@ export function SleepHavenInterior({
   updateLog,
   setMetric: _setMetric
 }: SleepHavenProps) {
-  const [activeMode, setActiveMode] = useState<'bed' | 'breathing' | 'routine'>('bed')
+  const [activeMode, setActiveMode] = useState<'bed' | 'breathing' | 'soundscape' | 'routine'>('bed')
   const [showSleepModal, setShowSleepModal] = useState(false)
 
   const handleSaveSleep = (entry: SleepEntry) => {
@@ -28,8 +29,8 @@ export function SleepHavenInterior({
 
   return (
     <SceneShell
-      sceneId="sleep-haven"
-      title="Tháp Trăng Ngủ Say"
+      sceneId="sleep"
+      title="Thung Lũng Giấc Mơ & Sleep Haven"
       subtitle="Không gian êm dịu nâng niu giấc ngủ ngon và phục hồi năng lượng"
       icon="🌙"
       companionRole="chiikawa"
@@ -45,18 +46,31 @@ export function SleepHavenInterior({
             🛏️ Giường Mây & Thống Kê
           </button>
           <button
+            className={`sleep-tab-btn ${activeMode === 'soundscape' ? 'active' : ''}`}
+            onClick={() => { audioSystem.playClick('soft'); setActiveMode('soundscape'); }}
+          >
+            🎧 Âm Thanh ASMR & Ru Ngủ
+          </button>
+          <button
             className={`sleep-tab-btn ${activeMode === 'breathing' ? 'active' : ''}`}
             onClick={() => { audioSystem.playClick('soft'); setActiveMode('breathing'); }}
           >
-            🫁 Luyện Thở 4-7-8 Thư Giãn
+            🫁 Luyện Thở 4-7-8
           </button>
           <button
             className={`sleep-tab-btn ${activeMode === 'routine' ? 'active' : ''}`}
             onClick={() => { audioSystem.playClick('soft'); setActiveMode('routine'); }}
           >
-            ✨ Nghi Thức Trước Khi Ngủ
+            ✨ Nghi Thức Buổi Tối
           </button>
         </div>
+
+        {/* Mode 2: Soundscape ASMR */}
+        {activeMode === 'soundscape' && (
+          <div className="sleep-soundscape-scene animate-fade-in">
+            <SoundscapeMixerWidget />
+          </div>
+        )}
 
         {/* Mode 1: Cloud Bed & Sleep Tracker */}
         {activeMode === 'bed' && (

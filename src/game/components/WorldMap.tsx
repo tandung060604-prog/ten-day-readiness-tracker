@@ -431,6 +431,34 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
 
   // Night Mode Toggle (Manual)
   const [isNightMode, setIsNightMode] = useState(false)
+  const [shootingStar, setShootingStar] = useState<{ id: number; top: number; left: number } | null>(null)
+  const [starRewardToast, setStarRewardToast] = useState<string | null>(null)
+
+  // Periodic Shooting Star in Night Mode
+  useEffect(() => {
+    if (!isNightMode) {
+      setShootingStar(null)
+      return
+    }
+    const interval = setInterval(() => {
+      setShootingStar({
+        id: Date.now(),
+        top: 8 + Math.random() * 28,
+        left: 10 + Math.random() * 55
+      })
+      setTimeout(() => setShootingStar(null), 3500)
+    }, 18000)
+
+    return () => clearInterval(interval)
+  }, [isNightMode])
+
+  const handleShootingStarClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    audioSystem.playAchievement('quest')
+    setShootingStar(null)
+    setStarRewardToast('✨ +20 ⭐ Điều ước tình yêu của Dũng & Mai Trang đã bay vào bầu trời sao!')
+    setTimeout(() => setStarRewardToast(null), 3800)
+  }
 
   // Character Map Locomotion State
   const [mascotPos, setMascotPos] = useState<MascotMapPosition>({
@@ -727,9 +755,36 @@ export function WorldMap({ onSelectBuilding, loveDays, onDragStateChange }: Prop
                 animationDelay: `${i * 0.8}s`
               }} />
             ))}
+            {/* Interactive Shooting Star (Click for Lucky Reward) */}
+            {shootingStar && (
+              <div
+                className="shooting-star-entity animate-shooting-star"
+                style={{
+                  position: 'absolute',
+                  top: `${shootingStar.top}%`,
+                  left: `${shootingStar.left}%`,
+                  zIndex: 20,
+                  cursor: 'pointer',
+                  pointerEvents: 'auto'
+                }}
+                onClick={handleShootingStarClick}
+                title="Sao Băng May Mắn! (Chạm để ước một điều ước ⭐)"
+              >
+                <div className="shooting-star-head">💫</div>
+                <div className="shooting-star-trail" />
+              </div>
+            )}
+
             <div style={{ position: 'absolute', right: '8%', top: '5%', fontSize: '36px', filter: 'drop-shadow(0 0 20px rgba(255,236,130,0.7))', opacity: 0.9 }}>🌙</div>
           </div>
         </>
+      )}
+
+      {/* Lucky Star Reward Toast */}
+      {starRewardToast && (
+        <div className="shooting-star-reward-toast animate-slide-up">
+          {starRewardToast}
+        </div>
       )}
 
       {/* ══════ SEAMLESS INTEGRATED SKY CLOUDS ══════ */}

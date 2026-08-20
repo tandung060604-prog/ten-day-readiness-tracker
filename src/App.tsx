@@ -30,6 +30,7 @@ import { defaultSettings, seededLogs, trainingPlan } from './data/plan'
 import { readiness } from './utils/readiness'
 import { CoupleSetupModal } from './components/onboarding/CoupleSetupModal'
 import { GameDevToolsModal } from './components/dev/GameDevToolsModal'
+import { AudioSubtitleToast } from './components/audio/AudioSubtitleToast'
 import { useGameState } from './context/GameStateContext'
 import { getItemDefinition } from './domain/game/itemCatalog'
 import { coupleProfileRepository } from './storage/coupleProfileRepository'
@@ -539,6 +540,9 @@ export function App() {
         onComplete={handleSetupComplete}
         onSkipToDemo={handleSkipSetupToDemo}
       />
+
+      {/* Floating Subtitle Toast for Speech & Narration Accessibility */}
+      <AudioSubtitleToast />
 
       {/* Game State Dev Tools Modal */}
       <GameDevToolsModal

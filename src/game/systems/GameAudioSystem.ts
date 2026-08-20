@@ -1,4 +1,5 @@
 import { triggerHaptic } from '../../utils/haptics'
+import { audioManager } from '../../domain/audio/audioManager'
 import type { TransitionType } from '../types'
 
 interface AudioSettings {
@@ -45,16 +46,9 @@ class GameAudioSystem {
     return { ...this.settings }
   }
 
-  public initAudioContext() {
-    if (!this.ctx) {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext
-      if (AudioCtx) {
-        this.ctx = new AudioCtx()
-      }
-    }
-    if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume()
-    }
+  public initAudioContext(): AudioContext | null {
+    this.ctx = audioManager.initContext()
+    return this.ctx
   }
 
   // Play synthesized UI click

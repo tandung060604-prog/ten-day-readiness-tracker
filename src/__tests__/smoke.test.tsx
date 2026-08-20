@@ -30,8 +30,8 @@ describe('ErrorBoundary & Core Boot Smoke Tests', () => {
       </ErrorBoundary>
     )
 
-    expect(screen.getByText(/Ối, có một chút sự cố nhỏ!/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Tải lại trang/i })).toBeInTheDocument()
+    expect(screen.getByText(/Đã có sự cố nhỏ xảy ra/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Tải Lại Trang/i })).toBeInTheDocument()
 
     consoleSpy.mockRestore()
   })

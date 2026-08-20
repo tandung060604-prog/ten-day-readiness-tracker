@@ -95,7 +95,6 @@ export function PhotoStrip({ photoIds, onChange }: Props) {
           <input
             type="file"
             accept="image/*"
-            capture="environment"
             multiple
             onChange={(e) => handleAdd(e.target.files)}
             disabled={isUploading}

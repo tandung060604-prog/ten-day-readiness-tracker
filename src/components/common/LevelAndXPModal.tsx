@@ -19,11 +19,6 @@ export function LevelAndXPModal({ isOpen, onClose }: LevelAndXPModalProps) {
   const requiredXp = calculateXpToNextLevel(level)
   const xpPct = Math.min(100, Math.floor((currentXp / Math.max(1, requiredXp)) * 100))
 
-  const bondLevel = state.progression.bondLevel
-  const currentBondXp = state.progression.bondXp
-  const requiredBondXp = calculateBondXpToNextLevel(bondLevel)
-  const bondPct = Math.min(100, Math.floor((currentBondXp / Math.max(1, requiredBondXp)) * 100))
-
   // Level Title Mapping
   const getLevelTitle = (lvl: number) => {
     if (lvl <= 2) return 'Cặp Đôi Mầm Trắng 🌱'
@@ -57,18 +52,6 @@ export function LevelAndXPModal({ isOpen, onClose }: LevelAndXPModalProps) {
             </div>
             <span className="xp-needed-text">Còn <strong>{Math.max(0, requiredXp - currentXp)} XP</strong> nữa để lên Cấp {level + 1}!</span>
           </div>
-        </div>
-
-        {/* Bond Level Mini Card */}
-        <div className="bond-level-pill-card">
-          <div className="bond-info-left">
-            <span className="bond-icon">💞</span>
-            <div>
-              <h4>Cấp Độ Gắn Kết (Bond Level {bondLevel})</h4>
-              <span className="bond-sub">{currentBondXp} / {requiredBondXp} Bond XP ({bondPct}%)</span>
-            </div>
-          </div>
-          <span className="bond-perk-badge">+{(bondLevel - 1) * 5}% Tim & Xu</span>
         </div>
 
         {/* 1. What is XP & Leveling */}

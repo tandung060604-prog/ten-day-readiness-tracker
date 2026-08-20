@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { SceneShell } from './SceneShell'
 import { InsightsView } from '../../views/InsightsView'
+import { PhotoboothStudio } from '../photobooth/PhotoboothStudio'
 import { audioSystem } from '../../game/systems/GameAudioSystem'
 import { triggerConfetti } from '../../utils/confetti'
 import type { AppSettings, DailyLog } from '../../types'
@@ -54,7 +55,7 @@ const INITIAL_POLAROIDS: PolaroidPhoto[] = [
 ]
 
 export function PhotoStudioInterior({ logs, settings }: PhotoStudioProps) {
-  const [activeTab, setActiveTab] = useState<'corkboard' | 'insights'>('corkboard')
+  const [activeTab, setActiveTab] = useState<'corkboard' | 'photobooth' | 'insights'>('corkboard')
   const [polaroids, setPolaroids] = useState<PolaroidPhoto[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY)
@@ -148,6 +149,26 @@ export function PhotoStudioInterior({ logs, settings }: PhotoStudioProps) {
     triggerConfetti()
   }
 
+  const handlePinPhotoboothStrip = (stripDataUrl: string, title: string) => {
+    const todayStr = new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    const newStripPhoto: PolaroidPhoto = {
+      id: `photobooth_${Date.now()}`,
+      title: title || 'Dải Ảnh Photobooth Life4Cuts',
+      date: todayStr,
+      category: 'trip',
+      imageUrl: stripDataUrl,
+      caption: 'Dải ảnh kỷ niệm phong cách Photobooth Chiikawa 🌸📸',
+      isFavorite: true
+    }
+
+    const updated = [newStripPhoto, ...polaroids]
+    setPolaroids(updated)
+    setSelectedPhoto(newStripPhoto)
+    setActiveTab('corkboard')
+    audioSystem.playClick('pop')
+    triggerConfetti()
+  }
+
   return (
     <SceneShell
       sceneId="photo-studio"
@@ -155,7 +176,7 @@ export function PhotoStudioInterior({ logs, settings }: PhotoStudioProps) {
       subtitle="Bảng ghim lưu giữ những khung hình rạng rỡ và biểu đồ hành trình"
       icon="📸"
       companionRole="usagi"
-      companionMessage="Tách tách! Hãy chọn một bức ảnh đẹp từ máy và ghim lên bảng nhé! 📷✨"
+      companionMessage="Tách tách! Hãy thử tạo dải ảnh Photobooth 4 ô hoặc 6 ô cực dễ thương nhé! 📷✨"
     >
       <div className="photo-studio-container">
         {/* Top Control Bar with Upload Button & Tabs */}
@@ -168,10 +189,16 @@ export function PhotoStudioInterior({ logs, settings }: PhotoStudioProps) {
               📌 Bảng Ghim Ảnh Polaroid ({polaroids.length})
             </button>
             <button
+              className={`studio-tab-btn ${activeTab === 'photobooth' ? 'active' : ''}`}
+              onClick={() => { audioSystem.playClick('soft'); setActiveTab('photobooth'); }}
+            >
+              📸 Tiệm Photobooth (8 Mẫu)
+            </button>
+            <button
               className={`studio-tab-btn ${activeTab === 'insights' ? 'active' : ''}`}
               onClick={() => { audioSystem.playClick('soft'); setActiveTab('insights'); }}
             >
-              📊 Biểu Đồ & Thống Kê Hành Trình
+              📊 Biểu Đồ & Thống Kê
             </button>
           </div>
 
@@ -244,6 +271,10 @@ export function PhotoStudioInterior({ logs, settings }: PhotoStudioProps) {
                 <p className="spotlight-quote">"{selectedPhoto.caption}"</p>
               </div>
             )}
+          </div>
+        ) : activeTab === 'photobooth' ? (
+          <div className="photobooth-tab-content animate-fade-in">
+            <PhotoboothStudio onPinToCorkboard={handlePinPhotoboothStrip} />
           </div>
         ) : (
           <div className="studio-insights-scene animate-fade-in">

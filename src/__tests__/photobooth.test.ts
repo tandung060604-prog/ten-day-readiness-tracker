@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { PHOTOBOOTH_TEMPLATES } from '../domain/photobooth/photoboothTemplates'
 import { renderPhotoboothStrip } from '../domain/photobooth/photoboothEngine'
+import { getPhotoboothCharacterAsset } from '../components/photobooth/PhotoboothStudio'
 
 describe('Photobooth Engine & 8 Templates Suite', () => {
   it('1. Contains exactly 8 templates: 6 templates of 4-photo and 2 templates of 6-photo', () => {
@@ -27,6 +28,13 @@ describe('Photobooth Engine & 8 Templates Suite', () => {
     const ids = PHOTOBOOTH_TEMPLATES.map(t => t.id)
     expect(ids).toContain('chiikawa_family_mega_6cut')
     expect(ids).toContain('vintage_cinema_film_6cut')
+  })
+
+  it('uses the existing Chiikawa family assets for every frame choice', () => {
+    expect(PHOTOBOOTH_TEMPLATES.map(getPhotoboothCharacterAsset)).toEqual([
+      './assets/chiikawa.png', './assets/hachiware.png', './assets/kurimanju.png', './assets/usagi.png',
+      './assets/momonga.png', './assets/rakko.png', './assets/chiikawa.png', './assets/chiikawa.png'
+    ])
   })
 
   it('4. renderPhotoboothStrip executes and generates valid data URL for 4-cut and 6-cut', async () => {

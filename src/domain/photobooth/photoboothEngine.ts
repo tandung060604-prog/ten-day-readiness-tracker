@@ -16,9 +16,10 @@ export interface RenderOptions {
 function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image()
+    const timeout = window.setTimeout(() => reject(new Error('Timed out loading image: ' + src)), 800)
     img.crossOrigin = 'anonymous'
-    img.onload = () => resolve(img)
-    img.onerror = () => reject(new Error('Failed to load image: ' + src))
+    img.onload = () => { window.clearTimeout(timeout); resolve(img) }
+    img.onerror = () => { window.clearTimeout(timeout); reject(new Error('Failed to load image: ' + src)) }
     img.src = src
   })
 }
@@ -171,6 +172,18 @@ function drawLife4CutsFooter(
   }
 
   ctx.restore()
+}
+
+function getMascotSources(template: PhotoboothTemplate): string[] {
+  if (template.stickers.character === 'all') return ['./assets/chiikawa.png', './assets/hachiware.png', './assets/usagi.png']
+  return [`./assets/${template.stickers.character ?? 'chiikawa'}.png`]
+}
+
+async function drawMascots(ctx: CanvasRenderingContext2D, template: PhotoboothTemplate, footerY: number) {
+  const mascots = await Promise.all(getMascotSources(template).map(source => loadImage(source).catch(() => null)))
+  const visible = mascots.filter((mascot): mascot is HTMLImageElement => mascot !== null)
+  const size = visible.length > 1 ? 38 : 46
+  visible.forEach((mascot, index) => ctx.drawImage(mascot, 12 + index * (size - 4), footerY + 2, size, size))
 }
 
 /**
@@ -330,6 +343,7 @@ export async function renderPhotoboothStrip(options: RenderOptions): Promise<str
     footerY = 710
   }
 
+  await drawMascots(ctx, template, footerY)
   drawLife4CutsFooter(
     ctx,
     0,

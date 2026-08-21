@@ -446,6 +446,11 @@ export function App() {
               <BuildingModuleModal
                 locationId={currentLocation}
                 onBackToMap={() => triggerTransition('cloud', 'map')}
+                day={day}
+                maxDays={10}
+                onOpenDayPlan={() => { setAppRoute({ mode: 'daily', screen: 'plan' }); setShowHomeHub(false) }}
+                onOpenQuests={() => currentLocation !== 'quests' && triggerTransition('cloud', 'quests')}
+                onOpenSettings={() => currentLocation !== 'settings' && triggerTransition('gear', 'settings')}
               >
                 {/* 1. Home Cottage Module */}
                 {currentLocation === 'home' && (

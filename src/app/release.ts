@@ -1,8 +1,10 @@
-export const APP_RELEASE = {
-  version: '0.2.0',
-  kind: 'major' as const,
-  title: 'Little Days đã cập nhật',
-  body: 'Bản cập nhật lớn: Hôm Nay, Phiêu Lưu, Endless, offline và sửa lỗi PIN đã sẵn sàng.'
+type ReleaseKind = 'major' | 'bugfix'
+
+export const APP_RELEASE: { version: string; kind: ReleaseKind; title: string; body: string } = {
+  version: '0.2.1',
+  kind: 'bugfix',
+  title: 'Little Days đã sửa giao diện',
+  body: 'Photobooth chụp trước - chọn khung sau, và màn Phiêu lưu đã vừa khít điện thoại.'
 }
 
 // ponytail: local-first release notices; add VAPID/backend push only when closed-app delivery is required.

@@ -29,7 +29,7 @@ export function PuzzleLevelSelectModal({ isOpen, onClose, onSelectLevel }: Puzzl
   const objectiveText = selected.objectives.map(objective => objective.type === 'collect_tiles' ? `Thu thập ${objective.targetCount} ô ${objective.tileType}` : objective.type === 'clear_blockers' ? `Phá ${objective.targetCount} chướng ngại` : `Kích hoạt ${objective.targetCount} kỹ năng`).join(' · ')
 
   return (
-    <Modal title="Phiêu lưu giải đố" onClose={onClose}>
+    <Modal title="Phiêu lưu giải đố" onClose={onClose} maxWidth="760px">
       <div className="level-select-container campaign-selector">
         <div className="campaign-overall-banner"><div className="campaign-stats-line"><span>⭐ {overall.totalEarnedStars}/{overall.maxPossibleStars} sao</span><span>{overall.totalCompletedLevels}/30 màn · {overall.completionPercentage}%</span></div></div>
         <div className="chapter-tabs-row" role="tablist">{summaries.map(summary => <button key={summary.chapter} className={`chapter-tab-btn ${activeChapter === summary.chapter ? 'active' : ''} ${!summary.isUnlocked ? 'locked-tab' : ''}`} onClick={() => activateChapter(summary.chapter)} role="tab" aria-selected={activeChapter === summary.chapter}><span className="tab-icon">{summary.isUnlocked ? summary.icon : '🔒'}</span><span className="tab-title">Chương {summary.chapter}</span><span className="tab-stars">{summary.isUnlocked ? `${summary.earnedStars}/${summary.maxStars} ⭐` : 'Khóa'}</span></button>)}</div>

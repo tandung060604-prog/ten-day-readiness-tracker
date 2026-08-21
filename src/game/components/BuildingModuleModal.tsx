@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { ChiikawaSVG } from '../../components/common/ChiikawaSVG'
+import { GameIcon } from '../../components/common/GameIcons'
 import { audioSystem } from '../systems/GameAudioSystem'
 import { MAP_BUILDINGS } from './WorldMap'
 import type { LocationId } from '../types'
@@ -7,10 +8,15 @@ import type { LocationId } from '../types'
 type Props = {
   locationId: LocationId
   onBackToMap: () => void
+  day: number
+  maxDays: number
+  onOpenDayPlan: () => void
+  onOpenQuests: () => void
+  onOpenSettings: () => void
   children: ReactNode
 }
 
-export function BuildingModuleModal({ locationId, onBackToMap, children }: Props) {
+export function BuildingModuleModal({ locationId, onBackToMap, day, maxDays, onOpenDayPlan, onOpenQuests, onOpenSettings, children }: Props) {
   const building = MAP_BUILDINGS.find((b) => b.id === locationId) || MAP_BUILDINGS[0]
 
   const handleBack = () => {
@@ -34,8 +40,13 @@ export function BuildingModuleModal({ locationId, onBackToMap, children }: Props
           </div>
         </div>
 
-        <div className="module-char-badge" title="Bé Chiikawa đang đồng hành cùng bạn">
-          <ChiikawaSVG character="chiikawa" size={42} className="animate-bounce-gentle" />
+        <div className="module-top-actions" aria-label="Tiện ích hành trình">
+          <button className="module-day-btn" onClick={onOpenDayPlan} title="Xem kế hoạch theo ngày">Ngày {day}/{maxDays}</button>
+          <button className="module-icon-btn" onClick={onOpenQuests} title="Nhiệm vụ"><GameIcon name="target" size={18} /></button>
+          <button className="module-icon-btn" onClick={onOpenSettings} title="Cài đặt"><GameIcon name="gear" size={18} /></button>
+          <div className="module-char-badge" title="Bé Chiikawa đang đồng hành cùng bạn">
+            <ChiikawaSVG character="chiikawa" size={38} className="animate-bounce-gentle" />
+          </div>
         </div>
       </header>
 

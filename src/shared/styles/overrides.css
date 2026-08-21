@@ -54,6 +54,14 @@
 .play-endless-btn { min-height: 44px; padding: 8px 14px; border: 1px solid rgba(216,93,131,.55); border-radius: 999px; background: rgba(216,93,131,.14); color: #ffeaf1; font-size: 12px; font-weight: 800; }
 .endless-score-line { display: block; margin-top: 5px; color: #f5a7bf; font-size: 10px; }
 .offline-status { position: fixed; top: max(10px, env(safe-area-inset-top)); left: 50%; z-index: 10000; transform: translateX(-50%); padding: 8px 14px; border: 1px solid rgba(242,196,92,.4); border-radius: 999px; background: #332a1c; color: #ffe9ad; font-size: 11px; font-weight: 800; box-shadow: var(--shadow-md); }
+.release-notice { position: fixed; top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right)); z-index: 10001; display: grid; gap: 12px; width: min(420px, calc(100vw - 32px)); padding: 16px; border: 1px solid rgba(216,93,131,.38); border-radius: 16px; background: color-mix(in srgb, var(--panel) 96%, #d85d83 4%); color: var(--text); box-shadow: var(--shadow-lg); }
+.release-notice small, .release-notice strong, .release-notice p { display: block; }
+.release-notice small { color: var(--accent-berry); font-size: 10px; font-weight: 900; letter-spacing: .08em; }
+.release-notice strong { margin-top: 5px; font-size: 16px; }
+.release-notice p { margin: 4px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.release-notice__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.release-notice__actions button { min-height: 44px; padding: 8px 12px; border: 0; border-radius: 12px; background: var(--accent-berry); color: #fff; font-size: 12px; font-weight: 800; }
+.release-notice__actions .release-notice__dismiss { border: 1px solid var(--line); background: transparent; color: var(--muted); }
 .sync-section-card { border-color: rgba(216,93,131,.3); background: linear-gradient(135deg, rgba(216,93,131,.1), var(--panel)); }
 .sync-section-card input { width: min(100%, 420px); min-height: 44px; margin: 8px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel2); color: var(--text); }
 .campaign-selector { min-width: min(680px, 76vw); }

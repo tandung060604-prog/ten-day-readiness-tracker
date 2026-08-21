@@ -44,6 +44,8 @@ import type { AppRoute, DailyScreen } from './app/appRoute'
 import { TodayView } from './views/TodayView'
 import { DailyModeShell } from './features/daily/DailyModeShell'
 import { OfflineStatus } from './shared/ui/OfflineStatus'
+import { ReleaseNotice } from './shared/ui/ReleaseNotice'
+import { consumeReleaseNotice } from './app/release'
 import type { AppSettings, DailyLog, Exercise, MealEntry } from './types'
 import type { GameStats, InventoryItem, LocationId, TransitionType } from './game/types'
 import type { CoupleProfile } from './domain/couple/types'
@@ -95,6 +97,7 @@ export function App() {
   // Authoritative Game State Engine
   const { state: gameState } = useGameState()
   const [isDevToolsOpen, setIsDevToolsOpen] = useState(false)
+  const [showReleaseNotice, setShowReleaseNotice] = useState(consumeReleaseNotice)
 
   // Tracker Engine State
   const [logs, setLogs] = useState<DailyLog[]>(loadLogs)
@@ -353,6 +356,7 @@ export function App() {
   return (
     <div className="app-container">
       <OfflineStatus />
+      {!isLocked && showReleaseNotice && <ReleaseNotice onDismiss={() => setShowReleaseNotice(false)} />}
       {/* ── Fixed YouTube BGM Player ── */}
       <YouTubeBGMPlayer />
 

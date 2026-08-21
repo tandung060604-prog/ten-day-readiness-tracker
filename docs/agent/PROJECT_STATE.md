@@ -4,7 +4,7 @@ Updated: 2026-08-21
 
 ## Current task
 
-Implement the next product directions: wellness-linked daily challenges, a deterministic couple endless mode, offline PWA support, and an optional encrypted local sync flow.
+Deploy closed-app release notifications with Cloudflare Worker, KV, and VAPID.
 
 ## Verified progress
 
@@ -13,15 +13,17 @@ Implement the next product directions: wellness-linked daily challenges, a deter
 - Endless mode uses a stable date + couple seed, an 8x8 board, and a two-slot local best-score ledger.
 - `public/sw.js` caches the app shell and falls back to `index.html` for offline navigation.
 - AES-GCM backup encryption already existed; `encryptedSync` now wraps it in a device envelope and merges claims, puzzle progress, and wellness logs before restore.
+- Cloudflare Worker `little-days-push` and its `PUSH_SUBSCRIPTIONS` KV namespace are deployed; VAPID and dispatch credentials are stored only as Cloudflare/GitHub secrets.
 
 ## Validation evidence
 
-- `npm test -- --run`: 21 files, 142 tests passed on the final sweep.
-- `npm run build`: passed after the service worker and sync changes.
+- `npm test -- --run`: 23 files, 148 tests passed after the Web Push client addition.
+- `npm run build`: passed after the Web Push client addition.
 - `npm run lint`: exit 0, 0 errors and 37 pre-existing warnings remain.
-- `node --check public/sw.js`: passed; production preview returned HTTP 200 for `/`, `/manifest.json`, and `/sw.js`.
+- `node --check public/sw.js`: passed; the Worker also passed `wrangler deploy --dry-run`.
 
 ## Known follow-up
 
 - Service-worker behavior still needs an installed-browser smoke check.
 - The current local sync intentionally has no transport/backend; the encrypted JSON envelope is the transport boundary.
+- An installed iPhone PWA still needs to press **Bật thông báo** once before it can receive a closed-app release notification.

@@ -4,3 +4,4 @@ dist
 *.log
 .vscode
 .agy-review
+workers/push/.dev.vars*

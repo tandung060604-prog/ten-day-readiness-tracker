@@ -2,8 +2,7 @@
 
 ## READY
 
-- Run the complete test/build/lint sweep after the daily challenge, endless, PWA, and sync changes.
-- Add a browser smoke check for offline fallback and the daily/endless entry points.
+- **PUSH-001:** On an installed iPhone PWA, press **Bật thông báo**, then verify the next GitHub Pages deployment arrives while the app is closed.
 
 ## Later
 

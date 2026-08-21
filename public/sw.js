@@ -43,6 +43,27 @@ self.addEventListener('notificationclick', event => {
   }))
 })
 
+self.addEventListener('push', event => {
+  const fallback = {
+    title: 'Little Days đã cập nhật',
+    body: 'Có một bản cập nhật mới đang chờ bạn.',
+    url: new URL('./', BASE_URL).href
+  }
+  let payload = fallback
+  try {
+    payload = { ...fallback, ...event.data?.json() }
+  } catch {
+    // A malformed payload still receives a safe, visible notification.
+  }
+  event.waitUntil(self.registration.showNotification(payload.title, {
+    body: payload.body,
+    icon: new URL('./icon-192.png', BASE_URL).href,
+    badge: new URL('./icon-192.png', BASE_URL).href,
+    tag: `little-days-release-${payload.version || 'latest'}`,
+    data: { url: payload.url }
+  }))
+})
+
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return
   const isNavigation = event.request.mode === 'navigate'

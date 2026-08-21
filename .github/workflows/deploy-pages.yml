@@ -17,6 +17,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      VITE_PUSH_WORKER_URL: ${{ vars.LITTLE_DAYS_PUSH_WORKER_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -37,3 +39,17 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+  notify-release:
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    env:
+      PUSH_WORKER_URL: ${{ vars.LITTLE_DAYS_PUSH_WORKER_URL }}
+      PUSH_DISPATCH_TOKEN: ${{ secrets.PUSH_DISPATCH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - if: ${{ needs.deploy.result == 'success' && env.PUSH_WORKER_URL != '' && env.PUSH_DISPATCH_TOKEN != '' }}
+        name: Send release notification
+        shell: bash
+        run: |
+          payload=$(node -e "const source=require('fs').readFileSync('src/app/release.ts','utf8');const read=(key)=>source.match(new RegExp(key+\"\\\\s*:\\\\s*'([^']+)'\"))?.[1];console.log(JSON.stringify({version:read('version')||process.env.GITHUB_SHA.slice(0,7),kind:read('kind')||'bugfix',title:read('title')||'Little Days đã cập nhật',body:read('body')||'Có một bản cập nhật mới đang chờ bạn.',url:'https://tandung060604-prog.github.io/ten-day-readiness-tracker/'}))")
+          curl --fail --silent --show-error --request POST "$PUSH_WORKER_URL/v1/dispatch" --header "authorization: Bearer $PUSH_DISPATCH_TOKEN" --header "content-type: application/json" --data "$payload"

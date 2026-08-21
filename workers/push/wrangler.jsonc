@@ -1,0 +1,12 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "little-days-push",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-21",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "kv_namespaces": [{ "binding": "PUSH_SUBSCRIPTIONS" }],
+  "vars": {
+    "APP_ORIGIN": "https://tandung060604-prog.github.io"
+  }
+}

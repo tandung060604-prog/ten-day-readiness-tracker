@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { APP_RELEASE } from '../../app/release'
+import { subscribeToReleasePush } from '../../app/push'
 import { getNotificationPermission, requestNotificationPermission } from '../../utils/notifications'
 
 interface ReleaseNoticeProps {
@@ -10,7 +11,8 @@ export function ReleaseNotice({ onDismiss }: ReleaseNoticeProps) {
   const [permission, setPermission] = useState<NotificationPermission>(() => getNotificationPermission())
 
   const enableNotifications = async () => {
-    const nextPermission = await requestNotificationPermission()
+    const result = await subscribeToReleasePush()
+    const nextPermission = result === 'not-configured' ? await requestNotificationPermission() : getNotificationPermission()
     setPermission(nextPermission)
     onDismiss()
   }

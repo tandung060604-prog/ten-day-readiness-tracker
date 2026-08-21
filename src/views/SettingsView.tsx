@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { SetPinModal } from '../components/security/SetPinModal'
 import { ChiikawaSVG } from '../components/common/ChiikawaSVG'
 import { getNotificationPermission, requestNotificationPermission, testNotification } from '../utils/notifications'
+import { isBackgroundPushConfigured, subscribeToReleasePush } from '../app/push'
 import { downloadCalendarICS } from '../utils/calendarSync'
 import { triggerHaptic } from '../utils/haptics'
 import type { AppSettings } from '../types'
@@ -37,10 +38,12 @@ export function SettingsView({
 
   const handleRequestNotification = async () => {
     triggerHaptic('medium')
-    const perm = await requestNotificationPermission()
+    const result = await subscribeToReleasePush()
+    const perm = result === 'not-configured' ? await requestNotificationPermission() : getNotificationPermission()
     setNotifPermission(perm)
     if (perm === 'granted') {
       testNotification()
+      if (result === 'failed') alert('Đã cấp quyền nhưng chưa kết nối được thông báo nền. Hãy thử lại sau.')
     }
   }
 
@@ -177,8 +180,8 @@ export function SettingsView({
               <strong>Trạng thái quyền thông báo: {notifPermission.toUpperCase()}</strong>
               <small>
                 {notifPermission === 'granted'
-                  ? 'Ứng dụng đã sẵn sàng gửi nhắc nhở đến thiết bị của bạn.'
-                  : 'Bấm nút bên cạnh để cấp quyền thông báo cho ứng dụng.'}
+                  ? (isBackgroundPushConfigured() ? 'Đã kết nối thông báo nền cho bản cập nhật mới.' : 'Đã bật thông báo khi app đang mở.')
+                  : 'Bấm nút bên cạnh để nhận thông báo cập nhật trên điện thoại.'}
               </small>
             </div>
             <div className="btn-group-row">

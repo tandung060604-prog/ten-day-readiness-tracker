@@ -1,13 +1,13 @@
 type ReleaseKind = 'major' | 'bugfix'
 
 export const APP_RELEASE: { version: string; kind: ReleaseKind; title: string; body: string } = {
-  version: '0.2.1',
-  kind: 'bugfix',
-  title: 'Little Days đã sửa giao diện',
-  body: 'Photobooth chụp trước - chọn khung sau, và màn Phiêu lưu đã vừa khít điện thoại.'
+  version: '0.3.0',
+  kind: 'major',
+  title: 'Little Days đã có thông báo cập nhật',
+  body: 'Bật thông báo một lần để nhận tin ngay khi có bản mới.'
 }
 
-// ponytail: local-first release notices; add VAPID/backend push only when closed-app delivery is required.
+// ponytail: only push subscriptions are stored remotely; profile and wellness data stay local-first.
 const RELEASE_SEEN_KEY = 'little_days_seen_release_v1'
 const APP_DATA_KEYS = [
   'little_days_couple_profile_v1',

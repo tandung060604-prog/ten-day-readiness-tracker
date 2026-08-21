@@ -10,12 +10,9 @@ type Props = {
 }
 
 const DOCK_ITEMS: { loc: LocationId | 'map'; icon: GameIconName; label: string }[] = [
-  { loc: 'map',      icon: 'map',     label: 'Bản Đồ'       },
-  { loc: 'quests',    icon: 'bag',     label: 'Kho Báu'       },
-  { loc: 'market',    icon: 'shop',    label: 'Cửa Hàng'      },
-  { loc: 'album',     icon: 'event',   label: 'Sự Kiện'       },
-  { loc: 'journal',   icon: 'friends', label: 'Bạn Bè'        },
-  { loc: 'settings',  icon: 'trophy',  label: 'Bảng Xếp Hạng' },
+  { loc: 'map',    icon: 'map',    label: 'Bản Đồ'   },
+  { loc: 'quests', icon: 'target', label: 'Nhiệm Vụ' },
+  { loc: 'home',   icon: 'heart',  label: 'Hôm Nay'  },
 ]
 
 export function BottomHUD({ currentLocation, onNavigate, onOpenInventory }: Props) {
@@ -24,6 +21,7 @@ export function BottomHUD({ currentLocation, onNavigate, onOpenInventory }: Prop
       {DOCK_ITEMS.map((d) => (
         <button
           key={d.loc}
+          aria-label={d.label}
           className={`hud-dock ${currentLocation === d.loc ? 'hud-dock--active' : ''}`}
           onClick={() => { audioSystem.playClick('soft'); onNavigate(d.loc) }}
         >
@@ -34,6 +32,7 @@ export function BottomHUD({ currentLocation, onNavigate, onOpenInventory }: Prop
         </button>
       ))}
       <button
+        aria-label="Túi Đồ"
         className="hud-dock hud-dock--inventory"
         onClick={() => { audioSystem.playClick('pop'); onOpenInventory() }}
       >

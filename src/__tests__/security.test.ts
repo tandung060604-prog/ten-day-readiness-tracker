@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { hashPin, verifyPin } from '../utils/security'
+import { DEFAULT_PIN_HASH, hashPin, verifyPin } from '../utils/security'
 
 describe('Security & PIN Hashing', () => {
   it('correctly hashes a 4-digit PIN deterministically', async () => {
@@ -7,6 +7,10 @@ describe('Security & PIN Hashing', () => {
     const hash2 = await hashPin('1234')
     expect(hash1).toBe(hash2)
     expect(hash1.length).toBe(64) // SHA-256 hex string length
+  })
+
+  it('keeps the default app PIN aligned with its stored hash', async () => {
+    expect(await hashPin('0601')).toBe(DEFAULT_PIN_HASH)
   })
 
   it('produces different hashes for different PINs', async () => {

@@ -1,5 +1,35 @@
 import '@testing-library/jest-dom'
 
+// jsdom intentionally does not implement Canvas. Keep visual effects testable
+// without adding a native canvas dependency to the app.
+Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
+  configurable: true,
+  value: () => ({
+    clearRect: () => {},
+    fillRect: () => {},
+    fillText: () => {},
+    beginPath: () => {},
+    arc: () => {},
+    roundRect: () => {},
+    setLineDash: () => {},
+    stroke: () => {},
+    fill: () => {},
+    save: () => {},
+    restore: () => {},
+    translate: () => {},
+    rotate: () => {},
+    scale: () => {},
+    drawImage: () => {},
+    createLinearGradient: () => ({ addColorStop: () => {} }),
+    globalAlpha: 1,
+    fillStyle: '#000'
+  })
+})
+Object.defineProperty(HTMLCanvasElement.prototype, 'toDataURL', {
+  configurable: true,
+  value: () => 'data:image/png;base64,test',
+})
+
 // Mock Web Audio API
 class AudioContextMock {
   state = 'running'

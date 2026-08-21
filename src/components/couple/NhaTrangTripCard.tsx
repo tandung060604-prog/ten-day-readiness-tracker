@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
+import type { CoupleProfile } from '../../domain/couple/types'
 
-const NHA_TRANG_FLIGHT_DATE = new Date('2026-08-27T08:00:00')
 const TOTAL_FUND = 8000000
 const DUNG_FUND = 5000000
 
@@ -50,7 +50,12 @@ const NHA_TRANG_DESTINATIONS = [
   }
 ]
 
-export function NhaTrangTripCard() {
+export function NhaTrangTripCard({ profile }: { profile?: CoupleProfile }) {
+  const tripDate = profile?.importantDates.find(date => date.category === 'trip')?.date
+  const flightDate = new Date(`${tripDate || new Date().toISOString().slice(0, 10)}T08:00:00`)
+  const tripDateLabel = flightDate.toLocaleDateString('vi-VN')
+  const firstName = profile?.player1.nickname || 'mình'
+  const secondName = profile?.player2.nickname || 'người thương'
   const [now, setNow] = useState(new Date())
 
   useEffect(() => {
@@ -60,7 +65,7 @@ export function NhaTrangTripCard() {
     return () => window.clearInterval(timer)
   }, [])
 
-  const diffMs = NHA_TRANG_FLIGHT_DATE.getTime() - now.getTime()
+  const diffMs = flightDate.getTime() - now.getTime()
   const isDeparted = diffMs <= 0
 
   const days = Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)))
@@ -75,7 +80,7 @@ export function NhaTrangTripCard() {
       <div className="section-head">
         <div>
           <small>CHUYẾN BAY DU LỊCH NHA TRANG 🌊</small>
-          <h3>Đếm ngược ngày bay: 27/08/2026</h3>
+          <h3>Đếm ngược ngày bay: {tripDateLabel}</h3>
         </div>
         <span className="nha-trang-badge">✈️ Flight Confirmed · 6 Điểm Đến</span>
       </div>
@@ -122,14 +127,14 @@ export function NhaTrangTripCard() {
         <p className="flight-countdown-hint">
           {isDeparted
             ? '🎉 Đã tới ngày bay Nha Trang! Chúc hai đứa mình có chuyến đi ngập tràn tiếng cười và kỷ niệm đẹp!'
-            : `Còn ${days} ngày nữa thôi! Dũng đang nỗ lực hoàn thành 10 ngày thể lực để đưa em đi chơi thật trọn vẹn.`}
+            : `Còn ${days} ngày nữa thôi! ${firstName} & ${secondName} đang cùng hoàn thành 10 ngày thể lực.`}
         </p>
       </div>
 
       {/* 6 Exact Nha Trang Itinerary Spots */}
       <div className="nha-trang-real-gallery">
         <div className="gallery-header-row">
-          <span className="gallery-section-label">🏝️ Lịch trình 6 địa điểm Dũng & Em Yêu sẽ đi tại Nha Trang:</span>
+          <span className="gallery-section-label">🏝️ Lịch trình 6 địa điểm của {firstName} & {secondName}:</span>
           <span className="soft-badge">Tour 3 Đảo · Sky Lounge · Viện Hải Dương</span>
         </div>
 
@@ -184,12 +189,12 @@ export function NhaTrangTripCard() {
         <div className="momo-breakdown-row">
           <div className="fund-member-pill">
             <span className="member-avatar">👦</span>
-            <span>Dũng đã góp: <strong>5.000.000đ</strong></span>
+            <span>{firstName} đã góp: <strong>5.000.000đ</strong></span>
             <span className="member-status done">✓ Đã chuyển</span>
           </div>
           <div className="fund-member-pill">
             <span className="member-avatar">👧</span>
-            <span>Em yêu: <strong>3.000.000đ</strong></span>
+            <span>{secondName}: <strong>3.000.000đ</strong></span>
             <span className="member-status pending">⏳ Đang gom quỹ</span>
           </div>
         </div>

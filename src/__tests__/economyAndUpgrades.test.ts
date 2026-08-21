@@ -43,7 +43,7 @@ describe('Economy, Inventory & Building Upgrades Suite — Phase 09', () => {
     })
 
     it('removes items and cleans up empty slots', () => {
-      let inv: InventorySlot[] = [
+      const inv: InventorySlot[] = [
         { itemId: 'item_sakura_wood', quantity: 4 },
         { itemId: 'item_granite_stone', quantity: 2 }
       ]

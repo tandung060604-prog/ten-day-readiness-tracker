@@ -135,6 +135,8 @@ export interface GameState {
   quests: QuestDefinition[]
   activeAdventure: AdventureDefinition
   updatedAt: string
+  /** Date-keyed claim ledger; optional so existing v1 saves remain readable. */
+  dailyChallengeClaims?: Record<string, string[]>
 }
 
 // ─── 8. TYPED EVENT BUS DEFINITIONS ───

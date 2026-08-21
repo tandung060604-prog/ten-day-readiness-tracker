@@ -1,21 +1,21 @@
 {
   "name": "Little Days - Tổ Ấm Tình Yêu & 10 Ngày Sẵn Sàng",
   "short_name": "Little Days",
-  "description": "Ứng dụng theo dõi tình yêu, rèn luyện 10 ngày và đồng hành du lịch Nha Trang của Haru & Mai Trang",
+  "description": "Ứng dụng wellness, tình yêu và phiêu lưu local-first cho hai người",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#1c6fa8",
-  "theme_color": "#ff8da1",
+  "background_color": "#080d12",
+  "theme_color": "#D85D83",
   "orientation": "any",
   "icons": [
     {
-      "src": "./assets/chiikawa.png",
+      "src": "./icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "./assets/usagi.png",
+      "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

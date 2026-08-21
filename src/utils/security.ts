@@ -1,3 +1,6 @@
+// Default onboarding PIN. Only the hash is persisted in app settings.
+export const DEFAULT_PIN_HASH = '5761ba7a5ad2f88d92f573adb81ff4627e880ad163e427a4b4e13bdcbc8564f6'
+
 export async function hashPin(pin: string): Promise<string> {
   const encoder = new TextEncoder()
   const data = encoder.encode(pin + '_readiness_salt_v1')

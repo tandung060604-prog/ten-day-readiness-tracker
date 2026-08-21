@@ -13,6 +13,7 @@ declare global {
 
 export function YouTubeBGMPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
+  const [hasRequested, setHasRequested] = useState(false)
   const [volume, setVolume] = useState(() => {
     try {
       const saved = localStorage.getItem(BGM_VOL_KEY)
@@ -21,10 +22,16 @@ export function YouTubeBGMPlayer() {
       return 25
     }
   })
+  const volumeRef = useRef(volume)
   const playerRef = useRef<any>(null)
   const containerId = 'yt-bgm-iframe-container'
 
   useEffect(() => {
+    volumeRef.current = volume
+  }, [volume])
+
+  useEffect(() => {
+    if (!hasRequested) return
     // 1. Load YouTube IFrame Player API
     if (!window.YT) {
       const tag = document.createElement('script')
@@ -51,7 +58,7 @@ export function YouTubeBGMPlayer() {
           },
           events: {
             onReady: (event: any) => {
-              event.target.setVolume(volume)
+              event.target.setVolume(volumeRef.current)
               event.target.playVideo()
               setIsPlaying(true)
             },
@@ -76,33 +83,19 @@ export function YouTubeBGMPlayer() {
       window.onYouTubeIframeAPIReady = initPlayer
     }
 
-    // Force autoplay on any user interaction (tap, click, key) for mobile browsers
-    const handleFirstInteraction = () => {
-      if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
-        playerRef.current.setVolume(volume)
-        playerRef.current.playVideo()
-        setIsPlaying(true)
-      }
-    }
-
-    window.addEventListener('click', handleFirstInteraction)
-    window.addEventListener('touchstart', handleFirstInteraction, { passive: true })
-    window.addEventListener('pointerdown', handleFirstInteraction, { passive: true })
-    window.addEventListener('keydown', handleFirstInteraction, { passive: true })
-
     return () => {
-      window.removeEventListener('click', handleFirstInteraction)
-      window.removeEventListener('touchstart', handleFirstInteraction)
-      window.removeEventListener('pointerdown', handleFirstInteraction)
-      window.removeEventListener('keydown', handleFirstInteraction)
       if (playerRef.current && typeof playerRef.current.destroy === 'function') {
         playerRef.current.destroy()
       }
     }
-  }, [volume])
+  }, [hasRequested])
 
   const togglePlay = () => {
     triggerHaptic('light')
+    if (!hasRequested) {
+      setHasRequested(true)
+      return
+    }
     if (!playerRef.current) return
 
     if (isPlaying) {

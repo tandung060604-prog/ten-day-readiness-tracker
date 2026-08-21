@@ -239,6 +239,7 @@ export function createDefaultGameState(): GameState {
     buildings: createDefaultBuildings(),
     quests: createDefaultQuests(),
     activeAdventure: createDefaultAdventure(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
+    dailyChallengeClaims: {}
   }
 }

@@ -24,6 +24,8 @@ export interface BackupPayload {
   memoryCapsules: any
   bucketList: any
   privacySettings: PrivacySettings
+  wellnessLogs?: unknown
+  appSettings?: unknown
 }
 
 export interface EncryptedBackupPayload {
@@ -33,6 +35,14 @@ export interface EncryptedBackupPayload {
   saltHex: string
   ivHex: string
   ciphertextHex: string
+}
+
+export interface EncryptedSyncEnvelope {
+  version: 1
+  kind: 'little-days-encrypted-sync'
+  deviceId: string
+  createdAt: string
+  payload: EncryptedBackupPayload
 }
 
 export interface MigrationResult {

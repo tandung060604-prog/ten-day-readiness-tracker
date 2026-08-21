@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Modal } from '../common/Modal'
 import { backupManager } from '../../domain/privacy/backupManager'
+import { encryptedSync } from '../../domain/privacy/encryptedSync'
 import { audioSystem } from '../../game/systems/GameAudioSystem'
 import { triggerConfetti } from '../../utils/confetti'
 
@@ -16,6 +17,7 @@ export function DataBackupModal({ isOpen, onClose }: DataBackupModalProps) {
   const [pendingPayload, setPendingPayload] = useState<any | null>(null)
   const [statusMessage, setStatusMessage] = useState<{ text: string; isError: boolean } | null>(null)
   const [showResetConfirm, setShowResetConfirm] = useState(false)
+  const [syncMode, setSyncMode] = useState(false)
 
   if (!isOpen) return null
 
@@ -55,6 +57,17 @@ export function DataBackupModal({ isOpen, onClose }: DataBackupModalProps) {
     }
   }
 
+  const handleSyncExport = async () => {
+    audioSystem.playClick('pop')
+    if (!passphrase.trim()) { setStatusMessage({ text: 'Vui lòng nhập mật khẩu đồng bộ!', isError: true }); return }
+    try {
+      const envelope = await encryptedSync.createEnvelope(passphrase.trim())
+      const blob = new Blob([JSON.stringify(envelope, null, 2)], { type: 'application/json' })
+      const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = `little_days_sync_${new Date().toISOString().slice(0, 10)}.json`; link.click(); URL.revokeObjectURL(url)
+      setStatusMessage({ text: 'Đã tạo gói đồng bộ mã hóa. Chuyển file này sang thiết bị còn lại.', isError: false })
+    } catch (error) { setStatusMessage({ text: error instanceof Error ? error.message : 'Không tạo được gói đồng bộ.', isError: true }) }
+  }
+
   // 2. Handle File Selected for Import
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -65,6 +78,10 @@ export function DataBackupModal({ isOpen, onClose }: DataBackupModalProps) {
       try {
         const raw = event.target?.result as string
         const parsed = JSON.parse(raw)
+        if (parsed?.kind === 'little-days-encrypted-sync') {
+          setPendingPayload(parsed); setSyncMode(true); setImportSummary('Gói đồng bộ mã hóa AES-GCM'); setStatusMessage(null); return
+        }
+        setSyncMode(false)
         const validation = backupManager.validateBackupPayload(parsed)
 
         if (!validation.isValid) {
@@ -94,7 +111,13 @@ export function DataBackupModal({ isOpen, onClose }: DataBackupModalProps) {
     try {
       let finalPayload = pendingPayload
 
-      if (pendingPayload.isEncrypted) {
+      if (syncMode) {
+        if (!passphrase.trim()) {
+          setStatusMessage({ text: 'Vui lòng nhập mật khẩu đồng bộ!', isError: true })
+          return
+        }
+        finalPayload = await encryptedSync.decryptEnvelope(pendingPayload, passphrase.trim())
+      } else if (pendingPayload.isEncrypted) {
         if (!passphrase.trim()) {
           setStatusMessage({ text: 'Vui lòng nhập mật khẩu giải mã!', isError: true })
           return
@@ -102,7 +125,9 @@ export function DataBackupModal({ isOpen, onClose }: DataBackupModalProps) {
         finalPayload = await backupManager.decryptBackup(pendingPayload, passphrase.trim())
       }
 
-      const res = backupManager.restoreBackupPayload(finalPayload)
+      const res = syncMode
+        ? encryptedSync.restoreMergedPayload(backupManager.generateBackupPayload(), finalPayload)
+        : backupManager.restoreBackupPayload(finalPayload)
       if (res.success) {
         setStatusMessage({ text: 'Khôi phục dữ liệu thành công! Ứng dụng sẽ tải lại sau 2 giây...', isError: false })
         triggerConfetti()
@@ -124,6 +149,12 @@ export function DataBackupModal({ isOpen, onClose }: DataBackupModalProps) {
   return (
     <Modal title="Sao Lưu & Khôi Phục Dữ Liệu (Data Vault)" onClose={onClose}>
       <div className="backup-modal-container">
+        <div className="backup-section-card sync-section-card">
+          <h4>🔐 Đồng Bộ Mã Hóa Giữa Hai Thiết Bị</h4>
+          <p className="section-desc">Tạo một gói AES-GCM cục bộ, chuyển qua kênh riêng tư rồi nhập ở thiết bị còn lại. Không cần máy chủ.</p>
+          <input type="password" placeholder="Mật khẩu đồng bộ (ít nhất 4 ký tự)" value={passphrase} onChange={e => setPassphrase(e.target.value)} />
+          <button className="export-action-btn" onClick={handleSyncExport}>Tạo gói đồng bộ mã hóa</button>
+        </div>
         {/* Export Section */}
         <div className="backup-section-card">
           <h4>📦 Xuất File Sao Lưu (Export Backup)</h4>

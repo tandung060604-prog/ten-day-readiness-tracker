@@ -4,6 +4,7 @@ import { triggerConfetti } from '../../utils/confetti'
 import { audioSystem } from '../../game/systems/GameAudioSystem'
 import { useGameState } from '../../context/GameStateContext'
 import { puzzleProgressRepository } from '../../domain/puzzle/puzzleProgressRepository'
+import { recordEndlessScore } from '../../domain/puzzle/endlessMode'
 import type { LevelDefinition } from '../../domain/puzzle/types'
 
 interface PuzzleVictoryModalProps {
@@ -31,6 +32,14 @@ export function PuzzleVictoryModal({
   if (isWon && stars === 0) stars = 1
 
   const handleClaimAndClose = () => {
+    if (level.mode === 'endless') {
+      if (level.challengeDate && level.seed !== undefined) {
+        recordEndlessScore(level.challengeDate, level.seed, level.endlessPlayer ?? 'player1', score)
+      }
+      audioSystem.playAchievement('level')
+      onClose()
+      return
+    }
     if (isWon) {
       audioSystem.playAchievement('level')
       triggerConfetti()
@@ -57,7 +66,7 @@ export function PuzzleVictoryModal({
   }
 
   return (
-    <Modal title={isWon ? '🎉 Chiến Thắng Màn Chơi!' : '😢 Hết Lượt Đi Rồi!'} onClose={onClose}>
+    <Modal title={isWon ? '🎉 Chiến Thắng Màn Chơi!' : '😢 Hết Lượt Đi Rồi!'} onClose={level.mode === 'endless' ? handleClaimAndClose : isWon ? handleClaimAndClose : onClose}>
       <div className="puzzle-victory-container animate-fade-in">
         {/* Companion Victory Pose */}
         <div className="victory-mascot-row animate-bounce-gentle">
@@ -82,7 +91,7 @@ export function PuzzleVictoryModal({
         </div>
 
         {/* Reward Summary */}
-        {isWon && (
+        {isWon && level.mode !== 'endless' && (
           <div className="victory-rewards-card">
             <h4>🎁 Phần Thưởng Nhận Được</h4>
             <div className="rewards-badges-row">
@@ -100,7 +109,7 @@ export function PuzzleVictoryModal({
             🔄 Chơi Lại
           </button>
           <button className="claim-return-btn" onClick={handleClaimAndClose}>
-            {isWon ? '🎁 Nhận Thưởng & Về Thị Trấn' : '🚪 Thoát Ra'}
+            {level.mode === 'endless' ? '📊 Lưu điểm & Về thị trấn' : isWon ? '🎁 Nhận Thưởng & Về Thị Trấn' : '🚪 Thoát Ra'}
           </button>
         </div>
       </div>

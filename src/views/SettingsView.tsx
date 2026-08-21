@@ -6,6 +6,7 @@ import { downloadCalendarICS } from '../utils/calendarSync'
 import { triggerHaptic } from '../utils/haptics'
 import type { AppSettings } from '../types'
 import type { CoupleProfile } from '../domain/couple/types'
+import { DataBackupModal } from '../components/privacy/DataBackupModal'
 
 type Props = {
   settings: AppSettings
@@ -28,6 +29,7 @@ export function SettingsView({
 }: Props) {
   const [showPinModal, setShowPinModal] = useState(false)
   const [notifPermission, setNotifPermission] = useState<NotificationPermission>('default')
+  const [showBackupModal, setShowBackupModal] = useState(false)
 
   useEffect(() => {
     setNotifPermission(getNotificationPermission())
@@ -211,6 +213,12 @@ export function SettingsView({
         <button className="primary wide-calendar-sync-btn" onClick={handleDownloadCalendar}>
           📅 Đồng bộ lịch trình 10 ngày vào Lịch iPhone / Google (.ICS)
         </button>
+      </section>
+
+      <section className="card sync-settings-card">
+        <div className="section-head"><div><small>LOCAL-FIRST · AES-GCM</small><h3>Sao lưu &amp; đồng bộ riêng tư</h3></div><span className="soft-badge">Không cần backend</span></div>
+        <p className="settings-desc">Mã hóa toàn bộ wellness log, hồ sơ đôi, currency và tiến trình trước khi chuyển sang thiết bị còn lại.</p>
+        <button className="primary wide-calendar-sync-btn" onClick={() => setShowBackupModal(true)}>🔐 Mở Data Vault &amp; Sync</button>
       </section>
 
       {/* Couple Profile & Personalization */}
@@ -402,6 +410,7 @@ export function SettingsView({
           onSuccess={handleSavePinHash}
         />
       )}
+      <DataBackupModal isOpen={showBackupModal} onClose={() => setShowBackupModal(false)} />
     </div>
   )
 }

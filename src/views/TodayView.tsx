@@ -5,6 +5,7 @@ import { ChiikawaSVG } from '../components/common/ChiikawaSVG'
 import { ChiikawaVoiceCard } from '../components/common/ChiikawaVoiceCard'
 import { CoupleHeroCard } from '../components/couple/CoupleHeroCard'
 import { NhaTrangTripCard } from '../components/couple/NhaTrangTripCard'
+import { DailyChallengeCard } from '../features/daily/DailyChallengeCard'
 import { BreathingTimer } from '../components/BreathingTimer'
 import { DeskBreakTracker } from '../components/features/DeskBreakTracker'
 import { WaterTrackerCard } from '../components/features/WaterTrackerCard'
@@ -94,7 +95,8 @@ export function TodayView({
       <CoupleHeroCard profile={profile} />
 
       {/* Flight to Nha Trang 27/08 & MoMo Couple Fund */}
-      <NhaTrangTripCard />
+      <NhaTrangTripCard profile={profile} />
+      <DailyChallengeCard log={log} waterTargetMl={settings.waterTargetMl} />
 
       {/* Chiikawa Companion Banner */}
       <ChiikawaVoiceCard

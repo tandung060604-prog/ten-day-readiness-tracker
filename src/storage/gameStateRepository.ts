@@ -2,6 +2,7 @@ import { createDefaultGameState } from '../domain/game/defaultState'
 import { gameEvents } from '../domain/game/events'
 import { rewardService } from '../domain/game/rewardService'
 import type { CurrencyBalances, GameState } from '../domain/game/types'
+import type { DailyChallengeDefinition } from '../domain/challenges/dailyChallenge'
 
 const STORAGE_KEY = 'little_days_game_state_v1'
 
@@ -136,6 +137,28 @@ export const gameStateRepository = {
       title: quest.title
     })
 
+    this.saveGameState(rewardedState)
+    return { success: true, nextState: rewardedState, summary }
+  },
+
+  claimDailyChallenge(
+    state: GameState,
+    dateKey: string,
+    challenge: DailyChallengeDefinition,
+    completed: boolean
+  ): { success: boolean; nextState: GameState; summary?: string } {
+    if (!completed || challenge.dateKey !== dateKey) return { success: false, nextState: state }
+    const claimedForDate = state.dailyChallengeClaims?.[dateKey] ?? []
+    const persistedClaims = this.loadGameState().dailyChallengeClaims?.[dateKey] ?? []
+    if (claimedForDate.includes(challenge.id) || persistedClaims.includes(challenge.id)) return { success: false, nextState: state }
+
+    const nextState: GameState = JSON.parse(JSON.stringify(state))
+    nextState.dailyChallengeClaims = { ...(nextState.dailyChallengeClaims ?? {}) }
+    nextState.dailyChallengeClaims[dateKey] = [...claimedForDate, challenge.id]
+    const { nextState: rewardedState, summary } = rewardService.processReward(nextState, {
+      ...challenge.reward,
+      source: `daily_challenge:${dateKey}:${challenge.id}`
+    })
     this.saveGameState(rewardedState)
     return { success: true, nextState: rewardedState, summary }
   }

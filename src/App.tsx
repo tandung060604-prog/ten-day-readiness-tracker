@@ -38,12 +38,19 @@ import { useGameState } from './context/GameStateContext'
 import { getItemDefinition } from './domain/game/itemCatalog'
 import { coupleProfileRepository } from './storage/coupleProfileRepository'
 import { getRelationshipDays } from './domain/couple/selectors'
+import { HomeHub } from './app/HomeHub'
+import { adventureRoute } from './app/appRoute'
+import type { AppRoute, DailyScreen } from './app/appRoute'
+import { TodayView } from './views/TodayView'
+import { DailyModeShell } from './features/daily/DailyModeShell'
+import { OfflineStatus } from './shared/ui/OfflineStatus'
 import type { AppSettings, DailyLog, Exercise, MealEntry } from './types'
 import type { GameStats, InventoryItem, LocationId, TransitionType } from './game/types'
 import type { CoupleProfile } from './domain/couple/types'
 
 const STORAGE_KEY = 'ten-day-readiness-v1'
 const SETTINGS_KEY = 'ten-day-readiness-settings-v1'
+type AdventureScene = Extract<AppRoute, { mode: 'adventure' }>['scene']
 
 function loadLogs(): DailyLog[] {
   try {
@@ -68,13 +75,15 @@ function loadSettings(): AppSettings {
 
 export function App() {
   // Game Scene States: 'splash' -> 'map' | 'module'
-  const [gameScene, setGameScene] = useState<'splash' | 'map' | 'module'>(() => {
+  const [gameScene, setGameScene] = useState<'splash' | AdventureScene>(() => {
     try {
       return sessionStorage.getItem('little_days_has_entered_game') === 'true' ? 'map' : 'splash'
     } catch {
       return 'splash'
     }
   })
+  const [appRoute, setAppRoute] = useState<AppRoute>(() => adventureRoute())
+  const [showHomeHub, setShowHomeHub] = useState(false)
   const [currentLocation, setCurrentLocation] = useState<LocationId | 'map'>('map')
   const [showLanding, setShowLanding] = useState<boolean>(false)
   const [isInventoryOpen, setIsInventoryOpen] = useState(false)
@@ -273,6 +282,7 @@ export function App() {
     setTimeout(() => {
       setCurrentLocation(nextLocation)
       setGameScene(nextLocation === 'map' ? 'map' : 'module')
+      setAppRoute(adventureRoute(nextLocation === 'map' ? undefined : nextLocation))
       setTimeout(() => {
         setActiveTransition({ type, isActive: false })
       }, 350)
@@ -285,7 +295,16 @@ export function App() {
       sessionStorage.setItem('little_days_has_entered_game', 'true')
     } catch { /* ignore */ }
     setActiveRole(role)
-    triggerTransition('cloud', targetLoc)
+    setShowHomeHub(true)
+    setAppRoute(adventureRoute(targetLoc === 'map' ? undefined : targetLoc))
+    setGameScene('map')
+  }
+
+  const setDailyScreen = (screen: DailyScreen) => setAppRoute({ mode: 'daily', screen })
+  const returnToAdventure = () => {
+    setAppRoute(adventureRoute())
+    setCurrentLocation('map')
+    setGameScene('map')
   }
 
   // Handle building clicked on World Map
@@ -333,6 +352,7 @@ export function App() {
 
   return (
     <div className="app-container">
+      <OfflineStatus />
       {/* ── Fixed YouTube BGM Player ── */}
       <YouTubeBGMPlayer />
 
@@ -343,7 +363,7 @@ export function App() {
       />
 
       {/* Landscape Orientation Prompt for Mobile Devices */}
-      <OrientationPrompt />
+      {appRoute.mode === 'adventure' && !showHomeHub && gameScene !== 'splash' && (currentLocation === 'map' || currentLocation === 'quests') && <OrientationPrompt key={currentLocation} />}
 
       {isLocked && settings.pinHash ? (
         <LockScreen
@@ -353,11 +373,30 @@ export function App() {
             setIsLocked(false)
           }}
         />
+      ) : showSetupModal ? (
+        <CoupleSetupModal
+          isOpen={showSetupModal}
+          onComplete={handleSetupComplete}
+          onSkipToDemo={handleSkipSetupToDemo}
+        />
       ) : showLanding ? (
         <LandingPage onEnterApp={() => setShowLanding(false)} />
       ) : gameScene === 'splash' ? (
         /* 1. Splash Screen Scene */
         <SplashScreen onEnterGame={handleEnterFromSplash} profile={profile} />
+      ) : showHomeHub ? (
+        <HomeHub
+          profile={profile}
+          onSelectDaily={() => { setAppRoute({ mode: 'daily', screen: 'today' }); setShowHomeHub(false) }}
+          onSelectAdventure={() => { setAppRoute(adventureRoute()); setShowHomeHub(false); setCurrentLocation('map') }}
+        />
+      ) : appRoute.mode === 'daily' ? (
+        <DailyModeShell screen={appRoute.screen} onScreenChange={setDailyScreen} onChangeMode={() => setShowHomeHub(true)} onAdventure={returnToAdventure}>
+          {appRoute.screen === 'today' && <TodayView log={log} plan={plan} day={day} score={currentScore} settings={settings} profile={profile} toggleChecklist={toggleChecklist} addWater={addWater} toggleWorkout={toggleWorkout} updateLog={updateLog} setMetric={setMetric} onExercise={(exercise) => setSelectedExercise(exercise)} onOpenAddMeal={() => setShowAddMealModal(true)} />}
+          {appRoute.screen === 'plan' && <TrainingView day={day} plan={plan} log={log} onExercise={(exercise) => setSelectedExercise(exercise)} toggleWorkout={toggleWorkout} updateLog={updateLog} />}
+          {appRoute.screen === 'journal' && <JournalView logs={logs} day={day} updateLog={updateLog} setMetric={setMetric} />}
+          {appRoute.screen === 'settings' && <SettingsView settings={settings} setSettings={setSettings} profile={profile} onUpdateProfile={(nextProfile) => { coupleProfileRepository.saveProfile(nextProfile); setProfile(nextProfile) }} exportData={exportData} importData={importData} resetData={resetData} />}
+        </DailyModeShell>
       ) : (
         /* 2. Main Game World Scene */
         <div className={`game-canvas-container ${isHudHidden && currentLocation === 'map' ? 'hud-auto-hidden' : ''}`}>
@@ -371,7 +410,7 @@ export function App() {
                 isTimelineOpen={isTimelineOpen}
                 onToggleTimeline={() => setIsTimelineOpen((prev) => !prev)}
                 onOpenSettings={() => triggerTransition('gear', 'settings')}
-                onOpenHome={() => triggerTransition('heart', 'home')}
+                onOpenHome={() => { setAppRoute({ mode: 'daily', screen: 'today' }); setShowHomeHub(false) }}
                 onOpenQuests={() => triggerTransition('cloud', 'quests')}
                 onOpenLevelGuide={() => setIsLevelGuideOpen(true)}
                 onOpenCurrenciesGuide={() => setIsStarterGuideOpen(true)}
@@ -426,6 +465,8 @@ export function App() {
                     waterTarget={settings.waterTargetMl}
                     onSelectDay={(d) => setSettings((s) => ({ ...s, currentDay: d }))}
                     onNavigateToTraining={() => triggerTransition('cloud', 'gym')}
+                    profile={profile}
+                    endlessPlayer={activeRole === 'chiikawa' ? 'player1' : 'player2'}
                   />
                 )}
 
@@ -540,7 +581,9 @@ export function App() {
           <div className={`hud-bottom-wrapper ${isHudHidden && currentLocation === 'map' ? 'hud-slide-down' : ''}`}>
             <BottomHUD
               currentLocation={currentLocation}
-              onNavigate={(loc) => triggerTransition('cloud', loc)}
+              onNavigate={(loc) => loc === 'home'
+                ? (setAppRoute({ mode: 'daily', screen: 'today' }), setShowHomeHub(false))
+                : triggerTransition('cloud', loc)}
               onOpenInventory={() => setIsInventoryOpen(true)}
             />
           </div>
@@ -567,13 +610,6 @@ export function App() {
         isOpen={isInventoryOpen}
         onClose={() => setIsInventoryOpen(false)}
         items={inventoryItems}
-      />
-
-      {/* Onboarding Couple Setup Modal */}
-      <CoupleSetupModal
-        isOpen={showSetupModal}
-        onComplete={handleSetupComplete}
-        onSkipToDemo={handleSkipSetupToDemo}
       />
 
       {/* Floating Subtitle Toast for Speech & Narration Accessibility */}

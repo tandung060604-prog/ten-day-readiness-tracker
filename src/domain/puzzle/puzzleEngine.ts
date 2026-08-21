@@ -5,10 +5,19 @@ import type {
   LevelObjective,
   MatchGroup,
   SpecialType,
-  TileType
+  TileType,
+  TurnResolution
 } from './types'
 
 let tileCounter = 1
+
+export function createSeededRandom(seed: number): () => number {
+  let value = (seed >>> 0) || 1
+  return () => {
+    value = (value * 1664525 + 1013904223) >>> 0
+    return value / 4294967296
+  }
+}
 
 export function createTile(
   row: number,
@@ -30,7 +39,7 @@ export function createTile(
 /**
  * Generates initial board without auto-matches.
  */
-export function generateBoard(level: LevelDefinition): BoardTile[][] {
+export function generateBoard(level: LevelDefinition, random = level.seed === undefined ? Math.random : createSeededRandom(level.seed)): BoardTile[][] {
   const rows = level.gridRows
   const cols = level.gridCols
   const palette = level.allowedTileTypes
@@ -42,7 +51,7 @@ export function generateBoard(level: LevelDefinition): BoardTile[][] {
       // Pick random type ensuring no 3-in-a-row on spawn
       let chosenType: TileType
       do {
-        chosenType = palette[Math.floor(Math.random() * palette.length)]
+        chosenType = palette[Math.floor(random() * palette.length)]
       } while (
         (c >= 2 && rowList[c - 1]?.type === chosenType && rowList[c - 2]?.type === chosenType) ||
         (r >= 2 && board[r - 1][c]?.type === chosenType && board[r - 2][c]?.type === chosenType)
@@ -64,7 +73,9 @@ export function generateBoard(level: LevelDefinition): BoardTile[][] {
     board.push(rowList)
   }
 
-  return board
+  // A freshly opened level should always offer a move. Recursive retry is
+  // bounded by the very low probability of a random deadlock.
+  return hasValidMove(board) ? board : generateBoard(level, random)
 }
 
 /**
@@ -182,6 +193,95 @@ export function isValidSwap(
   return matches.length > 0
 }
 
+export function hasValidMove(board: BoardTile[][]): boolean {
+  for (let r = 0; r < board.length; r++) {
+    for (let c = 0; c < board[r].length; c++) {
+      if (c + 1 < board[r].length && isValidSwap(board, r, c, r, c + 1)) return true
+      if (r + 1 < board.length && isValidSwap(board, r, c, r + 1, c)) return true
+    }
+  }
+  return false
+}
+
+export function reshuffleBoard(board: BoardTile[][], palette: TileType[], random = Math.random): BoardTile[][] {
+  const movable = board.flat().filter(tile => tile.blocker === 'none')
+  for (let attempt = 0; attempt < 80; attempt++) {
+    const shuffled = [...movable].sort(() => random() - 0.5)
+    let index = 0
+    const next = board.map(row => row.map(tile => {
+      if (tile.blocker !== 'none') return { ...tile }
+      const source = shuffled[index++] ?? createTile(tile.row, tile.col, palette[0])
+      return { ...source, id: `tile_${tileCounter++}`, row: tile.row, col: tile.col, isMatched: false, isNew: true }
+    }))
+    if (findMatches(next).length === 0 && hasValidMove(next)) return next
+  }
+  // ponytail: rare fallback regenerates a clean board; preserve blocker layouts with a seeded sampler if level shapes expand.
+  return generateBoard({
+    levelNumber: 0, chapter: 1, chapterTitle: '', title: '', subtitle: '', storyBeat: '',
+    gridRows: board.length, gridCols: board[0].length, allowedTileTypes: palette, maxMoves: 1,
+    starThresholds: [0, 0, 0], objectives: [], companionIntro: { character: 'chiikawa', dialogue: '' },
+    rewards: { stars: 0, coins: 0, xp: 0, hearts: 0 }
+  })
+}
+
+export function resolveTurn(
+  board: BoardTile[][],
+  level: LevelDefinition,
+  selected: { r: number; c: number },
+  target: { r: number; c: number },
+  movesRemaining: number,
+  score: number,
+  objectives: LevelObjective[],
+  loveLinkCharge: number
+): TurnResolution {
+  if (!isValidSwap(board, selected.r, selected.c, target.r, target.c)) {
+    return { board, score, objectives, movesRemaining, loveLinkCharge, comboCount: 0, animationFrames: [], outcome: 'invalid' }
+  }
+
+  let nextBoard = swapTiles(board, selected.r, selected.c, target.r, target.c)
+  let nextScore = score
+  let nextObjectives = objectives.map(obj => ({ ...obj }))
+  let charge = loveLinkCharge
+  let comboCount = 0
+  const animationFrames: TurnResolution['animationFrames'] = [
+    { kind: 'swap', board: nextBoard, durationMs: 140 }
+  ]
+
+  while (true) {
+    const matches = findMatches(nextBoard)
+    if (matches.length === 0) break
+    comboCount++
+    const resolved = resolveMatches(nextBoard, matches)
+    nextScore += resolved.pointsEarned * comboCount
+    const clearedCount = resolved.clearedTileCount
+    charge = Math.min(100, charge + clearedCount * 5 + (comboCount >= 2 ? 15 : 0))
+    nextObjectives = updateObjectives(nextObjectives, resolved.clearedTiles, resolved.clearedBlockers, resolved.specialsActivated).nextObjectives
+    animationFrames.push({ kind: 'clear', board: resolved.nextBoard, durationMs: 160 })
+    const random = level.seed === undefined ? Math.random : createSeededRandom(level.seed + nextScore + comboCount * 101)
+    nextBoard = applyGravity(resolved.nextBoard, level.allowedTileTypes, random)
+    animationFrames.push({ kind: 'fall', board: nextBoard, durationMs: 180 })
+  }
+
+  const won = nextObjectives.every(obj => obj.currentCount >= obj.targetCount)
+  const nextMoves = Math.max(0, movesRemaining - 1)
+  const outcome: TurnResolution['outcome'] = won ? 'won' : nextMoves === 0 ? 'lost' : 'playing'
+  if (outcome === 'playing' && !hasValidMove(nextBoard)) {
+    const random = level.seed === undefined ? Math.random : createSeededRandom(level.seed + nextScore + 997)
+    nextBoard = reshuffleBoard(nextBoard, level.allowedTileTypes, random)
+    animationFrames.push({ kind: 'reshuffle', board: nextBoard, durationMs: 220 })
+  }
+  return {
+    board: nextBoard,
+    score: nextScore,
+    objectives: nextObjectives,
+    movesRemaining: nextMoves,
+    loveLinkCharge: charge,
+    comboCount,
+    animationFrames,
+    outcome
+  }
+}
+
 /**
  * Swaps two tiles on board.
  */
@@ -208,6 +308,7 @@ export function resolveMatches(
 ): {
   nextBoard: BoardTile[][]
   clearedTiles: { type: TileType; count: number }[]
+  clearedTileCount: number
   clearedBlockers: number
   specialsActivated: number
   pointsEarned: number
@@ -226,11 +327,15 @@ export function resolveMatches(
   }
   let clearedBlockers = 0
   let specialsActivated = 0
+  const specialSpawns: MatchGroup['specialToSpawn'][] = []
 
   for (const group of matchGroups) {
     tileCounts[group.type] += group.tiles.length
+    if (group.specialToSpawn) specialSpawns.push(group.specialToSpawn)
     for (const t of group.tiles) {
-      toClear.add(`${t.row}:${t.col}`)
+      if (!group.specialToSpawn || t.row !== group.specialToSpawn.row || t.col !== group.specialToSpawn.col) {
+        toClear.add(`${t.row}:${t.col}`)
+      }
 
       // If tile had special power, trigger line clear
       if (next[t.row][t.col].special === 'rocket_row') {
@@ -260,6 +365,14 @@ export function resolveMatches(
     }
   }
 
+  for (const key of toClear) {
+    const [row, col] = key.split(':').map(Number)
+    if (next[row][col].blocker === 'crate') {
+      next[row][col].blocker = 'none'
+      clearedBlockers++
+    }
+  }
+
   // Mark tiles to clear as null/matched
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
@@ -267,6 +380,12 @@ export function resolveMatches(
         next[r][c].isMatched = true
       }
     }
+  }
+
+  for (const spawn of specialSpawns) {
+    if (!spawn) continue
+    const source = next[spawn.row]?.[spawn.col]
+    if (source) next[spawn.row][spawn.col] = { ...source, special: spawn.type, isMatched: false }
   }
 
   const pointsEarned = toClear.size * 50 + clearedBlockers * 100 + specialsActivated * 200
@@ -277,6 +396,7 @@ export function resolveMatches(
       type: type as TileType,
       count
     })),
+    clearedTileCount: toClear.size,
     clearedBlockers,
     specialsActivated,
     pointsEarned
@@ -288,7 +408,8 @@ export function resolveMatches(
  */
 export function applyGravity(
   board: BoardTile[][],
-  palette: TileType[]
+  palette: TileType[],
+  random = Math.random
 ): BoardTile[][] {
   const rows = board.length
   const cols = board[0].length
@@ -310,7 +431,7 @@ export function applyGravity(
 
     // Spawn new tiles at top
     while (writeRow >= 0) {
-      const randomType = palette[Math.floor(Math.random() * palette.length)]
+      const randomType = palette[Math.floor(random() * palette.length)]
       next[writeRow][c] = createTile(writeRow, c, randomType, 'none', 'none')
       next[writeRow][c].isNew = true
       writeRow--
@@ -373,9 +494,6 @@ export function applyCarrotRocket(board: BoardTile[][], targetRow: number): Boar
   if (next[targetRow]) {
     for (let c = 0; c < next[targetRow].length; c++) {
       next[targetRow][c].isMatched = true
-      if (next[targetRow][c].blocker === 'crate') {
-        next[targetRow][c].blocker = 'none'
-      }
     }
   }
   return next

@@ -54,6 +54,10 @@ export interface LevelDefinition {
     materials?: { itemId: string; quantity: number }[]
   }
   buildingImpact?: string
+  mode?: 'campaign' | 'endless'
+  seed?: number
+  challengeDate?: string
+  endlessPlayer?: 'player1' | 'player2'
 }
 
 // ─── 3. MATCH & GAME STATE ───
@@ -77,6 +81,26 @@ export interface PuzzleGameState {
   isLost: boolean
   comboCount: number
   loveLinkCharge: number
+}
+
+export type TurnOutcome = 'playing' | 'won' | 'lost' | 'invalid'
+
+export interface TurnAnimationFrame {
+  kind: 'swap' | 'clear' | 'fall' | 'reshuffle'
+  board: BoardTile[][]
+  durationMs: number
+}
+
+/** Complete result of one user action. The UI only replays this snapshot. */
+export interface TurnResolution {
+  board: BoardTile[][]
+  score: number
+  objectives: LevelObjective[]
+  movesRemaining: number
+  loveLinkCharge: number
+  comboCount: number
+  animationFrames: TurnAnimationFrame[]
+  outcome: TurnOutcome
 }
 
 export interface PuzzleLevelProgress {

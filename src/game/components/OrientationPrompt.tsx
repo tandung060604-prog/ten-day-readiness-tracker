@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { ChiikawaSVG } from '../../components/common/ChiikawaSVG'
 import { audioSystem } from '../systems/GameAudioSystem'
 
-export function OrientationPrompt() {
+export function OrientationPrompt({ enabled = true }: { enabled?: boolean }) {
   const [isPortrait, setIsPortrait] = useState(false)
   const [countdown, setCountdown] = useState(5)
   const [dismissed, setDismissed] = useState(false)
@@ -43,7 +43,7 @@ export function OrientationPrompt() {
     return () => clearInterval(interval)
   }, [isPortrait, dismissed])
 
-  if (!isPortrait || dismissed) return null
+  if (!enabled || !isPortrait || dismissed) return null
 
   const handleDismiss = () => {
     audioSystem.playClick('pop')

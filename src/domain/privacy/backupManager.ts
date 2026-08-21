@@ -29,17 +29,21 @@ export const backupManager = {
       }
     }
 
+    const getStoredAny = (keys: string[]) => keys.map(getStored).find(value => value !== null) ?? null
+
     return {
       schemaVersion: 2,
       exportedAt: new Date().toISOString(),
       appVersion: '2.0.0',
-      coupleProfile: getStored('little_days_couple_profile_v2') || getStored('readiness_couple_profile'),
-      gameState: getStored('little_days_v2_gamestate'),
-      puzzleProgress: getStored('little_days_v2_puzzle_progress'),
+      coupleProfile: getStoredAny(['little_days_couple_profile_v1', 'little_days_couple_profile_v2', 'readiness_couple_profile']),
+      gameState: getStoredAny(['little_days_game_state_v1', 'little_days_gamestate', 'little_days_v2_gamestate']),
+      puzzleProgress: getStoredAny(['little_days_puzzle_progress_v1', 'little_days_v2_puzzle_progress']),
       answeredQuestions: getStored('little_days_v2_answered_questions'),
       loveLetters: getStored('little_days_v2_love_letters'),
       memoryCapsules: getStored('little_days_v2_memory_capsules'),
       bucketList: getStored('little_days_v2_bucket_list'),
+      wellnessLogs: getStored('ten-day-readiness-v1'),
+      appSettings: getStored('ten-day-readiness-settings-v1'),
       privacySettings: getStored('little_days_v2_privacy_settings') || {
         hideWellnessClinicOnMap: false,
         requirePinForJournal: false,
@@ -96,14 +100,15 @@ export const backupManager = {
       localStorage.setItem(PRE_RESTORE_SNAPSHOT_KEY, JSON.stringify(safetySnapshot))
 
       // 2. Restore sections cleanly
+      const setStoredKeys = (keys: string[], value: unknown) => keys.forEach(key => localStorage.setItem(key, JSON.stringify(value)))
       if (payload.coupleProfile) {
-        localStorage.setItem('little_days_couple_profile_v2', JSON.stringify(payload.coupleProfile))
+        setStoredKeys(['little_days_couple_profile_v1', 'little_days_couple_profile_v2'], payload.coupleProfile)
       }
       if (payload.gameState) {
-        localStorage.setItem('little_days_v2_gamestate', JSON.stringify(payload.gameState))
+        setStoredKeys(['little_days_game_state_v1', 'little_days_gamestate', 'little_days_v2_gamestate'], payload.gameState)
       }
       if (payload.puzzleProgress) {
-        localStorage.setItem('little_days_v2_puzzle_progress', JSON.stringify(payload.puzzleProgress))
+        setStoredKeys(['little_days_puzzle_progress_v1', 'little_days_v2_puzzle_progress'], payload.puzzleProgress)
       }
       if (payload.answeredQuestions) {
         localStorage.setItem('little_days_v2_answered_questions', JSON.stringify(payload.answeredQuestions))
@@ -116,6 +121,12 @@ export const backupManager = {
       }
       if (payload.bucketList) {
         localStorage.setItem('little_days_v2_bucket_list', JSON.stringify(payload.bucketList))
+      }
+      if (payload.wellnessLogs) {
+        localStorage.setItem('ten-day-readiness-v1', JSON.stringify(payload.wellnessLogs))
+      }
+      if (payload.appSettings) {
+        localStorage.setItem('ten-day-readiness-settings-v1', JSON.stringify(payload.appSettings))
       }
       if (payload.privacySettings) {
         localStorage.setItem('little_days_v2_privacy_settings', JSON.stringify(payload.privacySettings))

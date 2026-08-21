@@ -1,4 +1,5 @@
 import type { AppSettings, DailyLog, TrainingDay } from '../types'
+import { DEFAULT_PIN_HASH } from '../utils/security'
 
 const checklist = (labels: string[]) => labels.map((label, i) => ({ id: `c-${i}`, label, done: false }))
 
@@ -15,6 +16,8 @@ export const defaultSettings: AppSettings = {
   workoutStart: '18:15',
   waterTargetMl: 2500,
   currentDay: 3,
+  pinHash: DEFAULT_PIN_HASH,
+  isLockEnabled: true,
 }
 
 const baseChecklist = [

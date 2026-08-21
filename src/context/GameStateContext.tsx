@@ -3,6 +3,7 @@ import { rewardService } from '../domain/game/rewardService'
 import type { RewardProcessResult } from '../domain/game/rewardService'
 import { gameStateRepository } from '../storage/gameStateRepository'
 import type { CurrencyBalances, GameState, RewardGrant } from '../domain/game/types'
+import type { DailyChallengeDefinition } from '../domain/challenges/dailyChallenge'
 import type { LocationId } from '../game/types'
 
 interface GameStateContextValue {
@@ -11,6 +12,7 @@ interface GameStateContextValue {
   spendCurrency: (currency: keyof CurrencyBalances, amount: number) => boolean
   consumeItem: (itemId: string, quantity?: number) => boolean
   claimQuest: (questId: string) => { success: boolean; summary?: string }
+  claimDailyChallenge: (dateKey: string, challenge: DailyChallengeDefinition, completed: boolean) => { success: boolean; summary?: string }
   resetState: () => void
   updateState: (fn: (current: GameState) => GameState) => void
 }
@@ -55,6 +57,12 @@ export function GameStateProvider({ children }: { children: React.ReactNode }) {
     return { success: result.success, summary: result.summary }
   }
 
+  const claimDailyChallenge = (dateKey: string, challenge: DailyChallengeDefinition, completed: boolean): { success: boolean; summary?: string } => {
+    const result = gameStateRepository.claimDailyChallenge(state, dateKey, challenge, completed)
+    if (result.success) setState(result.nextState)
+    return { success: result.success, summary: result.summary }
+  }
+
   const resetState = () => {
     const fresh = gameStateRepository.resetGameState()
     setState(fresh)
@@ -76,6 +84,7 @@ export function GameStateProvider({ children }: { children: React.ReactNode }) {
         spendCurrency,
         consumeItem,
         claimQuest,
+        claimDailyChallenge,
         resetState,
         updateState
       }}

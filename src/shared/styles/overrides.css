@@ -78,6 +78,19 @@
 .release-notice__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
 .release-notice__actions button { min-height: 44px; padding: 8px 12px; border: 0; border-radius: 12px; background: var(--accent-berry); color: #fff; font-size: 12px; font-weight: 800; }
 .release-notice__actions .release-notice__dismiss { border: 1px solid var(--line); background: transparent; color: var(--muted); }
+.notification-onboarding-backdrop { position: fixed; inset: 0; z-index: 10002; display: grid; place-items: center; padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); background: rgba(13,10,18,.72); backdrop-filter: blur(10px); }
+.notification-onboarding-card { width: min(420px, 100%); padding: 28px 22px 20px; border: 1px solid rgba(216,93,131,.3); border-radius: 24px; background: linear-gradient(145deg, color-mix(in srgb, var(--panel) 96%, #d85d83 4%), var(--panel2)); color: var(--text); text-align: center; box-shadow: 0 24px 72px rgba(0,0,0,.4); }
+.notification-onboarding-icon { display: grid; place-items: center; width: 64px; height: 64px; margin: 0 auto 14px; border-radius: 20px; background: rgba(216,93,131,.16); font-size: 30px; }
+.notification-onboarding-eyebrow { color: var(--accent-berry); font-size: 10px; font-weight: 900; letter-spacing: .12em; }
+.notification-onboarding-card h1 { margin: 8px 0 8px; font-size: clamp(24px, 7vw, 32px); letter-spacing: -.04em; }
+.notification-onboarding-card > p { margin: 0 auto; max-width: 32ch; color: var(--muted); font-size: 14px; line-height: 1.55; }
+.notification-onboarding-points { display: grid; gap: 8px; margin: 18px 0; padding: 12px; border-radius: 14px; background: rgba(216,93,131,.08); color: var(--text); font-size: 12px; text-align: left; }
+.notification-onboarding-allow, .notification-onboarding-later { width: 100%; min-height: 48px; border-radius: 12px; font-weight: 800; }
+.notification-onboarding-allow { border: 0; background: var(--accent-berry); color: #fff; box-shadow: 0 10px 24px rgba(216,93,131,.24); }
+.notification-onboarding-later { margin-top: 8px; border: 1px solid var(--line); background: transparent; color: var(--muted); }
+.notification-onboarding-card button:disabled { cursor: wait; opacity: .62; }
+.notification-onboarding-card small { display: block; margin-top: 14px; color: var(--muted); font-size: 10px; line-height: 1.4; }
+.notification-onboarding-error { margin-top: 12px !important; color: var(--danger) !important; font-size: 12px !important; }
 .sync-section-card { border-color: rgba(216,93,131,.3); background: linear-gradient(135deg, rgba(216,93,131,.1), var(--panel)); }
 .sync-section-card input { width: min(100%, 420px); min-height: 44px; margin: 8px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel2); color: var(--text); }
 .campaign-selector { min-width: min(680px, 76vw); }
